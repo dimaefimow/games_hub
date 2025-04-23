@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Блокбастер</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background-color: #e0e5ec;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            touch-action: manipulation;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* Неоморфизм стили */
+        .neumorphic {
+            background: #e0e5ec;
+            border-radius: 15px;
+            box-shadow: 
+                8px 8px 15px rgba(163, 177, 198, 0.7),
+                -8px -8px 15px rgba(255, 255, 255, 0.8);
+        }
+        
+        .neumorphic-inset {
+            background: #e0e5ec;
+            border-radius: 15px;
+            box-shadow: 
+                inset 3px 3px 5px rgba(163, 177, 198, 0.7),
+                inset -3px -3px 5px rgba(255, 255, 255, 0.8);
+        }
+        
+        .neumorphic-btn {
+            background: #e0e5ec;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 
+                5px 5px 10px rgba(163, 177, 198, 0.7),
+                -5px -5px 10px rgba(255, 255, 255, 0.8);
+            user-select: none;
+        }
+        
+        .neumorphic-btn:active {
+            box-shadow: 
+                inset 2px 2px 5px rgba(163, 177, 198, 0.7),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Игровое поле */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .score {
+            font-size: 18px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        .game-board {
+            width: 100%;
+            aspect-ratio: 1/1;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 10px;
+            padding: 15px;
+        }
+        
+        .cell {
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .cell.selected {
+            box-shadow: 
+                inset 2px 2px 5px rgba(163, 177, 198, 0.7),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.8);
+        }
+        
+        .cell.hidden {
+            visibility: hidden;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 0 15px 15px;
+        }
+        
+        .controls button {
+            flex: 1;
+        }
+        
+        /* Цвета блоков */
+        .color-1 { background-color: #ff9aa2; color: #7a2b3a; }
+        .color-2 { background-color: #ffb7b2; color: #7a3b3a; }
+        .color-3 { background-color: #ffdac1; color: #7a4b3a; }
+        .color-4 { background-color: #e2f0cb; color: #4a5a3a; }
+        .color-5 { background-color: #b5ead7; color: #3a5a4a; }
+        .color-6 { background-color: #c7ceea; color: #3a4a7a; }
+        .color-7 { background-color: #d8b5ff; color: #4a3a7a; }
+        
+        /* Модальное окно */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            width: 80%;
+            max-width: 300px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #4a5568;
+            text-align: center;
+        }
+        
+        .modal-message {
+            font-size: 16px;
+            color: #4a5568;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container neumorphic">
+        <div class="game-header">
+            <div class="score">Очки: <span id="score">0</span></div>
+            <div class="score">Рекорд: <span id="high-score">0</span></div>
+        </div>
+        <div class="game-board neumorphic-inset" id="game-board"></div>
+        <div class="controls">
+            <button class="neumorphic-btn" id="shuffle-btn">Перемешать</button>
+            <button class="neumorphic-btn" id="hint-btn">Подсказка</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="game-over-modal">
+        <div class="modal-content neumorphic">
+            <h2 class="modal-title">Игра окончена!</h2>
+            <p class="modal-message">Ваш счет: <span id="final-score">0</span></p>
+            <button class="neumorphic-btn" id="restart-btn">Играть снова</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Инициализация игры
+            const boardSize = 5;
+            const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 'color-7'];
+            let board = [];
+            let selectedCells = [];
+            let score = 0;
+            let highScore = localStorage.getItem('blockbusterHighScore') || 0;
+            let hintTimeout = null;
+            
+            // Элементы DOM
+            const gameBoard = document.getElementById('game-board');
+            const scoreElement = document.getElementById('score');
+            const highScoreElement = document.getElementById('high-score');
+            const shuffleBtn = document.getElementById('shuffle-btn');
+            const hintBtn = document.getElementById('hint-btn');
+            const gameOverModal = document.getElementById('game-over-modal');
+            const finalScoreElement = document.getElementById('final-score');
+            const restartBtn = document.getElementById('restart-btn');
+            
+            // Инициализация игрового поля
+            function initBoard() {
+                gameBoard.innerHTML = '';
+                board = [];
+                selectedCells = [];
+                
+                // Создаем доску
+                for (let row = 0; row < boardSize; row++) {
+                    board[row] = [];
+                    for (let col = 0; col < boardSize; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = `cell ${getRandomColor()}`;
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        
+                        cell.addEventListener('click', () => handleCellClick(row, col));
+                        cell.addEventListener('touchstart', (e) => {
+                            e.preventDefault();
+                            handleCellClick(row, col);
+                        }, { passive: false });
+                        
+                        gameBoard.appendChild(cell);
+                        board[row][col] = cell;
+                    }
+                }
+                
+                updateScore(0);
+                highScoreElement.textContent = highScore;
+            }
+            
+            // Получить случайный цвет
+            function getRandomColor() {
+                return colors[Math.floor(Math.random() * colors.length)];
+            }
+            
+            // Обработка клика по клетке
+            function handleCellClick(row, col) {
+                const cell = board[row][col];
+                
+                // Если клетка уже выбрана, отменяем выбор
+                const selectedIndex = selectedCells.findIndex(c => c.row === row && c.col === col);
+                if (selectedIndex !== -1) {
+                    cell.classList.remove('selected');
+                    selectedCells.splice(selectedIndex, 1);
+                    return;
+                }
+                
+                // Если выбрано меньше 2 клеток, добавляем к выбранным
+                if (selectedCells.length < 2) {
+                    cell.classList.add('selected');
+                    selectedCells.push({ row, col, cell });
+                }
+                
+                // Если выбрано 2 клетки, проверяем на совпадение
+                if (selectedCells.length === 2) {
+                    const [first, second] = selectedCells;
+                    
+                    // Если цвета совпадают
+                    if (first.cell.className.includes(first.cell.className.split(' ')[1]) && 
+                        first.cell.className.split(' ')[1] === second.cell.className.split(' ')[1]) {
+                        
+                        // Удаляем клетки
+                        setTimeout(() => {
+                            first.cell.classList.add('hidden');
+                            second.cell.classList.add('hidden');
+                            
+                            // Перемещаем клетки сверху
+                            moveCellsDown(first.row, first.col);
+                            moveCellsDown(second.row, second.col);
+                            
+                            // Добавляем очки
+                            updateScore(score + 10);
+                            
+                            // Проверяем конец игры
+                            if (isGameOver()) {
+                                showGameOver();
+                            }
+                        }, 300);
+                    }
+                    
+                    // Сбрасываем выбор
+                    setTimeout(() => {
+                        selectedCells.forEach(c => c.cell.classList.remove('selected'));
+                        selectedCells = [];
+                    }, 300);
+                }
+            }
+            
+            // Перемещение клеток вниз
+            function moveCellsDown(row, col) {
+                for (let r = row; r > 0; r--) {
+                    const upperCell = board[r-1][col];
+                    const currentCell = board[r][col];
+                    
+                    if (upperCell.classList.contains('hidden')) continue;
+                    
+                    currentCell.className = upperCell.className;
+                    upperCell.className = `cell ${getRandomColor()}`;
+                }
+                
+                // Заполняем верхнюю клетку
+                board[0][col].className = `cell ${getRandomColor()}`;
+            }
+            
+            // Обновление счета
+            function updateScore(newScore) {
+                score = newScore;
+                scoreElement.textContent = score;
+                
+                if (score > highScore) {
+                    highScore = score;
+                    highScoreElement.textContent = highScore;
+                    localStorage.setItem('blockbusterHighScore', highScore);
+                }
+            }
+            
+            // Проверка на конец игры
+            function isGameOver() {
+                // Проверяем, есть ли еще возможные ходы
+                for (let row = 0; row < boardSize; row++) {
+                    for (let col = 0; col < boardSize; col++) {
+                        const currentColor = board[row][col].className.split(' ')[1];
+                        
+                        // Проверяем соседние клетки
+                        if (col < boardSize - 1 && board[row][col+1].className.split(' ')[1] === currentColor) {
+                            return false;
+                        }
+                        
+                        if (row < boardSize - 1 && board[row+1][col].className.split(' ')[1] === currentColor) {
+                            return false;
+                        }
+                    }
+                }
+                
+                return true;
+            }
+            
+            // Показать подсказку
+            function showHint() {
+                clearHint();
+                
+                // Ищем пару совпадающих клеток
+                for (let row = 0; row < boardSize; row++) {
+                    for (let col = 0; col < boardSize; col++) {
+                        const currentColor = board[row][col].className.split(' ')[1];
+                        
+                        // Проверяем правую клетку
+                        if (col < boardSize - 1 && board[row][col+1].className.split(' ')[1] === currentColor) {
+                            board[row][col].classList.add('selected');
+                            board[row][col+1].classList.add('selected');
+                            hintTimeout = setTimeout(clearHint, 1000);
+                            return;
+                        }
+                        
+                        // Проверяем нижнюю клетку
+                        if (row < boardSize - 1 && board[row+1][col].className.split(' ')[1] === currentColor) {
+                            board[row][col].classList.add('selected');
+                            board[row+1][col].classList.add('selected');
+                            hintTimeout = setTimeout(clearHint, 1000);
+                            return;
+                        }
+                    }
+                }
+            }
+            
+            // Очистить подсказку
+            function clearHint() {
+                if (hintTimeout) {
+                    clearTimeout(hintTimeout);
+                    hintTimeout = null;
+                }
+                
+                document.querySelectorAll('.cell.selected').forEach(cell => {
+                    if (!selectedCells.some(c => c.cell === cell)) {
+                        cell.classList.remove('selected');
+                    }
+                });
+            }
+            
+            // Перемешать доску
+            function shuffleBoard() {
+                clearHint();
+                selectedCells.forEach(c => c.cell.classList.remove('selected'));
+                selectedCells = [];
+                
+                for (let row = 0; row < boardSize; row++) {
+                    for (let col = 0; col < boardSize; col++) {
+                        board[row][col].className = `cell ${getRandomColor()}`;
+                    }
+                }
+                
+                // Штраф за перемешивание
+                updateScore(Math.max(0, score - 5));
+            }
+            
+            // Показать экран окончания игры
+            function showGameOver() {
+                finalScoreElement.textContent = score;
+                gameOverModal.classList.add('active');
+            }
+            
+            // Скрыть экран окончания игры
+            function hideGameOver() {
+                gameOverModal.classList.remove('active');
+            }
+            
+            // Обработчики событий
+            shuffleBtn.addEventListener('click', shuffleBoard);
+            hintBtn.addEventListener('click', showHint);
+            restartBtn.addEventListener('click', () => {
+                hideGameOver();
+                initBoard();
+            });
+            
+            // Инициализация игры
+            initBoard();
+            
+            // Интеграция с Telegram WebApp
+            if (window.Telegram && window.Telegram.WebApp) {
+                Telegram.WebApp.expand();
+                Telegram.WebApp.enableClosingConfirmation();
+                
+                // Можно добавить дополнительные интеграции, например:
+                // - Отправка счета в Telegram
+                // - Кнопка "Поделиться результатом"
+            }
+        });
+    </script>
+</body>
+</html>
