@@ -1,457 +1,293 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Блокбастер</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo Pong</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            background-color: #e0e5ec;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-            touch-action: manipulation;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        /* Неоморфизм стили */
-        .neumorphic {
-            background: #e0e5ec;
-            border-radius: 15px;
-            box-shadow: 
-                8px 8px 15px rgba(163, 177, 198, 0.7),
-                -8px -8px 15px rgba(255, 255, 255, 0.8);
-        }
-        
-        .neumorphic-inset {
-            background: #e0e5ec;
-            border-radius: 15px;
-            box-shadow: 
-                inset 3px 3px 5px rgba(163, 177, 198, 0.7),
-                inset -3px -3px 5px rgba(255, 255, 255, 0.8);
-        }
-        
-        .neumorphic-btn {
-            background: #e0e5ec;
-            border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #4a5568;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 
-                5px 5px 10px rgba(163, 177, 198, 0.7),
-                -5px -5px 10px rgba(255, 255, 255, 0.8);
-            user-select: none;
-        }
-        
-        .neumorphic-btn:active {
-            box-shadow: 
-                inset 2px 2px 5px rgba(163, 177, 198, 0.7),
-                inset -2px -2px 5px rgba(255, 255, 255, 0.8);
-        }
-        
-        /* Игровое поле */
-        .game-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            height: 100vh;
+            background-color: #e0e5ec;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            border-radius: 20px;
+            background: #e0e5ec;
+            box-shadow: 
+                10px 10px 20px #b8b9be, 
+                -10px -10px 20px #ffffff;
+            overflow: hidden;
+        }
+        
+        .paddle {
+            position: absolute;
+            width: 100px;
+            height: 20px;
+            background: #ff6b6b;
+            border-radius: 10px;
+            bottom: 30px;
+            left: 150px;
+            box-shadow: 
+                inset 3px 3px 5px rgba(0, 0, 0, 0.1),
+                inset -3px -3px 5px rgba(255, 255, 255, 0.5),
+                5px 5px 10px #b8b9be;
+        }
+        
+        .ball {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #4ecdc4;
+            border-radius: 50%;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.1),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.5),
+                3px 3px 6px #b8b9be;
+        }
+        
+        .brick {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: #ffb347;
+            border-radius: 5px;
+            box-shadow: 
+                inset 2px 2px 4px rgba(0, 0, 0, 0.1),
+                inset -2px -2px 4px rgba(255, 255, 255, 0.3),
+                3px 3px 6px #b8b9be;
         }
         
         .score {
-            font-size: 18px;
-            font-weight: 600;
-            color: #4a5568;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #6c757d;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
         
-        .game-board {
-            width: 100%;
-            aspect-ratio: 1/1;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            gap: 10px;
-            padding: 15px;
-        }
-        
-        .cell {
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 20px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        .cell.selected {
-            box-shadow: 
-                inset 2px 2px 5px rgba(163, 177, 198, 0.7),
-                inset -2px -2px 5px rgba(255, 255, 255, 0.8);
-        }
-        
-        .cell.hidden {
-            visibility: hidden;
-        }
-        
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-            padding: 0 15px 15px;
-        }
-        
-        .controls button {
-            flex: 1;
-        }
-        
-        /* Цвета блоков */
-        .color-1 { background-color: #ff9aa2; color: #7a2b3a; }
-        .color-2 { background-color: #ffb7b2; color: #7a3b3a; }
-        .color-3 { background-color: #ffdac1; color: #7a4b3a; }
-        .color-4 { background-color: #e2f0cb; color: #4a5a3a; }
-        .color-5 { background-color: #b5ead7; color: #3a5a4a; }
-        .color-6 { background-color: #c7ceea; color: #3a4a7a; }
-        .color-7 { background-color: #d8b5ff; color: #4a3a7a; }
-        
-        /* Модальное окно */
-        .modal {
-            position: fixed;
+        .game-over {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        
-        .modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .modal-content {
-            width: 80%;
-            max-width: 300px;
-            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            justify-content: center;
             align-items: center;
+            color: white;
+            font-size: 36px;
+            display: none;
         }
         
-        .modal-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #4a5568;
-            text-align: center;
+        .restart-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ff6b6b;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 
+                5px 5px 10px rgba(0, 0, 0, 0.2),
+                -5px -5px 10px rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
         }
         
-        .modal-message {
-            font-size: 16px;
-            color: #4a5568;
-            text-align: center;
+        .restart-btn:active {
+            box-shadow: 
+                inset 3px 3px 5px rgba(0, 0, 0, 0.2),
+                inset -3px -3px 5px rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
-    <div class="container neumorphic">
-        <div class="game-header">
-            <div class="score">Очки: <span id="score">0</span></div>
-            <div class="score">Рекорд: <span id="high-score">0</span></div>
-        </div>
-        <div class="game-board neumorphic-inset" id="game-board"></div>
-        <div class="controls">
-            <button class="neumorphic-btn" id="shuffle-btn">Перемешать</button>
-            <button class="neumorphic-btn" id="hint-btn">Подсказка</button>
+    <div class="game-container">
+        <div class="paddle" id="paddle"></div>
+        <div class="ball" id="ball"></div>
+        <div class="score">Score: <span id="score">0</span></div>
+        <div class="game-over" id="gameOver">
+            Game Over
+            <button class="restart-btn" id="restartBtn">Play Again</button>
         </div>
     </div>
-    
-    <div class="modal" id="game-over-modal">
-        <div class="modal-content neumorphic">
-            <h2 class="modal-title">Игра окончена!</h2>
-            <p class="modal-message">Ваш счет: <span id="final-score">0</span></p>
-            <button class="neumorphic-btn" id="restart-btn">Играть снова</button>
-        </div>
-    </div>
-    
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Инициализация игры
-            const boardSize = 5;
-            const colors = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 'color-7'];
-            let board = [];
-            let selectedCells = [];
-            let score = 0;
-            let highScore = localStorage.getItem('blockbusterHighScore') || 0;
-            let hintTimeout = null;
+        const paddle = document.getElementById('paddle');
+        const ball = document.getElementById('ball');
+        const gameContainer = document.querySelector('.game-container');
+        const scoreElement = document.getElementById('score');
+        const gameOverScreen = document.getElementById('gameOver');
+        const restartBtn = document.getElementById('restartBtn');
+        
+        let paddleX = 150;
+        let ballX = 190;
+        let ballY = 300;
+        let ballSpeedX = 3;
+        let ballSpeedY = -3;
+        let score = 0;
+        let gameRunning = true;
+        let bricks = [];
+        
+        // Create bricks
+        function createBricks() {
+            const brickWidth = 60;
+            const brickHeight = 20;
+            const brickMargin = 5;
+            const rows = 3;
+            const cols = 6;
             
-            // Элементы DOM
-            const gameBoard = document.getElementById('game-board');
-            const scoreElement = document.getElementById('score');
-            const highScoreElement = document.getElementById('high-score');
-            const shuffleBtn = document.getElementById('shuffle-btn');
-            const hintBtn = document.getElementById('hint-btn');
-            const gameOverModal = document.getElementById('game-over-modal');
-            const finalScoreElement = document.getElementById('final-score');
-            const restartBtn = document.getElementById('restart-btn');
-            
-            // Инициализация игрового поля
-            function initBoard() {
-                gameBoard.innerHTML = '';
-                board = [];
-                selectedCells = [];
-                
-                // Создаем доску
-                for (let row = 0; row < boardSize; row++) {
-                    board[row] = [];
-                    for (let col = 0; col < boardSize; col++) {
-                        const cell = document.createElement('div');
-                        cell.className = `cell ${getRandomColor()}`;
-                        cell.dataset.row = row;
-                        cell.dataset.col = col;
-                        
-                        cell.addEventListener('click', () => handleCellClick(row, col));
-                        cell.addEventListener('touchstart', (e) => {
-                            e.preventDefault();
-                            handleCellClick(row, col);
-                        }, { passive: false });
-                        
-                        gameBoard.appendChild(cell);
-                        board[row][col] = cell;
-                    }
-                }
-                
-                updateScore(0);
-                highScoreElement.textContent = highScore;
-            }
-            
-            // Получить случайный цвет
-            function getRandomColor() {
-                return colors[Math.floor(Math.random() * colors.length)];
-            }
-            
-            // Обработка клика по клетке
-            function handleCellClick(row, col) {
-                const cell = board[row][col];
-                
-                // Если клетка уже выбрана, отменяем выбор
-                const selectedIndex = selectedCells.findIndex(c => c.row === row && c.col === col);
-                if (selectedIndex !== -1) {
-                    cell.classList.remove('selected');
-                    selectedCells.splice(selectedIndex, 1);
-                    return;
-                }
-                
-                // Если выбрано меньше 2 клеток, добавляем к выбранным
-                if (selectedCells.length < 2) {
-                    cell.classList.add('selected');
-                    selectedCells.push({ row, col, cell });
-                }
-                
-                // Если выбрано 2 клетки, проверяем на совпадение
-                if (selectedCells.length === 2) {
-                    const [first, second] = selectedCells;
-                    
-                    // Если цвета совпадают
-                    if (first.cell.className.includes(first.cell.className.split(' ')[1]) && 
-                        first.cell.className.split(' ')[1] === second.cell.className.split(' ')[1]) {
-                        
-                        // Удаляем клетки
-                        setTimeout(() => {
-                            first.cell.classList.add('hidden');
-                            second.cell.classList.add('hidden');
-                            
-                            // Перемещаем клетки сверху
-                            moveCellsDown(first.row, first.col);
-                            moveCellsDown(second.row, second.col);
-                            
-                            // Добавляем очки
-                            updateScore(score + 10);
-                            
-                            // Проверяем конец игры
-                            if (isGameOver()) {
-                                showGameOver();
-                            }
-                        }, 300);
-                    }
-                    
-                    // Сбрасываем выбор
-                    setTimeout(() => {
-                        selectedCells.forEach(c => c.cell.classList.remove('selected'));
-                        selectedCells = [];
-                    }, 300);
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const brick = document.createElement('div');
+                    brick.className = 'brick';
+                    brick.style.left = (c * (brickWidth + brickMargin) + 20) + 'px';
+                    brick.style.top = (r * (brickHeight + brickMargin) + 60) + 'px';
+                    gameContainer.appendChild(brick);
+                    bricks.push({
+                        element: brick,
+                        x: c * (brickWidth + brickMargin) + 20,
+                        y: r * (brickHeight + brickMargin) + 60,
+                        width: brickWidth,
+                        height: brickHeight,
+                        active: true
+                    });
                 }
             }
+        }
+        
+        // Initialize game
+        function initGame() {
+            paddleX = 150;
+            ballX = 190;
+            ballY = 300;
+            ballSpeedX = 3;
+            ballSpeedY = -3;
+            score = 0;
+            gameRunning = true;
+            scoreElement.textContent = '0';
+            gameOverScreen.style.display = 'none';
             
-            // Перемещение клеток вниз
-            function moveCellsDown(row, col) {
-                for (let r = row; r > 0; r--) {
-                    const upperCell = board[r-1][col];
-                    const currentCell = board[r][col];
-                    
-                    if (upperCell.classList.contains('hidden')) continue;
-                    
-                    currentCell.className = upperCell.className;
-                    upperCell.className = `cell ${getRandomColor()}`;
+            // Remove existing bricks
+            bricks.forEach(brick => {
+                if (brick.element.parentNode) {
+                    gameContainer.removeChild(brick.element);
                 }
-                
-                // Заполняем верхнюю клетку
-                board[0][col].className = `cell ${getRandomColor()}`;
-            }
-            
-            // Обновление счета
-            function updateScore(newScore) {
-                score = newScore;
-                scoreElement.textContent = score;
-                
-                if (score > highScore) {
-                    highScore = score;
-                    highScoreElement.textContent = highScore;
-                    localStorage.setItem('blockbusterHighScore', highScore);
-                }
-            }
-            
-            // Проверка на конец игры
-            function isGameOver() {
-                // Проверяем, есть ли еще возможные ходы
-                for (let row = 0; row < boardSize; row++) {
-                    for (let col = 0; col < boardSize; col++) {
-                        const currentColor = board[row][col].className.split(' ')[1];
-                        
-                        // Проверяем соседние клетки
-                        if (col < boardSize - 1 && board[row][col+1].className.split(' ')[1] === currentColor) {
-                            return false;
-                        }
-                        
-                        if (row < boardSize - 1 && board[row+1][col].className.split(' ')[1] === currentColor) {
-                            return false;
-                        }
-                    }
-                }
-                
-                return true;
-            }
-            
-            // Показать подсказку
-            function showHint() {
-                clearHint();
-                
-                // Ищем пару совпадающих клеток
-                for (let row = 0; row < boardSize; row++) {
-                    for (let col = 0; col < boardSize; col++) {
-                        const currentColor = board[row][col].className.split(' ')[1];
-                        
-                        // Проверяем правую клетку
-                        if (col < boardSize - 1 && board[row][col+1].className.split(' ')[1] === currentColor) {
-                            board[row][col].classList.add('selected');
-                            board[row][col+1].classList.add('selected');
-                            hintTimeout = setTimeout(clearHint, 1000);
-                            return;
-                        }
-                        
-                        // Проверяем нижнюю клетку
-                        if (row < boardSize - 1 && board[row+1][col].className.split(' ')[1] === currentColor) {
-                            board[row][col].classList.add('selected');
-                            board[row+1][col].classList.add('selected');
-                            hintTimeout = setTimeout(clearHint, 1000);
-                            return;
-                        }
-                    }
-                }
-            }
-            
-            // Очистить подсказку
-            function clearHint() {
-                if (hintTimeout) {
-                    clearTimeout(hintTimeout);
-                    hintTimeout = null;
-                }
-                
-                document.querySelectorAll('.cell.selected').forEach(cell => {
-                    if (!selectedCells.some(c => c.cell === cell)) {
-                        cell.classList.remove('selected');
-                    }
-                });
-            }
-            
-            // Перемешать доску
-            function shuffleBoard() {
-                clearHint();
-                selectedCells.forEach(c => c.cell.classList.remove('selected'));
-                selectedCells = [];
-                
-                for (let row = 0; row < boardSize; row++) {
-                    for (let col = 0; col < boardSize; col++) {
-                        board[row][col].className = `cell ${getRandomColor()}`;
-                    }
-                }
-                
-                // Штраф за перемешивание
-                updateScore(Math.max(0, score - 5));
-            }
-            
-            // Показать экран окончания игры
-            function showGameOver() {
-                finalScoreElement.textContent = score;
-                gameOverModal.classList.add('active');
-            }
-            
-            // Скрыть экран окончания игры
-            function hideGameOver() {
-                gameOverModal.classList.remove('active');
-            }
-            
-            // Обработчики событий
-            shuffleBtn.addEventListener('click', shuffleBoard);
-            hintBtn.addEventListener('click', showHint);
-            restartBtn.addEventListener('click', () => {
-                hideGameOver();
-                initBoard();
             });
+            bricks = [];
             
-            // Инициализация игры
-            initBoard();
+            createBricks();
+            updateGame();
+        }
+        
+        // Mouse movement handler
+        gameContainer.addEventListener('mousemove', (e) => {
+            if (!gameRunning) return;
             
-            // Интеграция с Telegram WebApp
-            if (window.Telegram && window.Telegram.WebApp) {
-                Telegram.WebApp.expand();
-                Telegram.WebApp.enableClosingConfirmation();
-                
-                // Можно добавить дополнительные интеграции, например:
-                // - Отправка счета в Telegram
-                // - Кнопка "Поделиться результатом"
-            }
+            const containerRect = gameContainer.getBoundingClientRect();
+            const relativeX = e.clientX - containerRect.left;
+            
+            paddleX = relativeX - 50; // Center paddle on cursor
+            if (paddleX < 0) paddleX = 0;
+            if (paddleX > 300) paddleX = 300;
+            
+            paddle.style.left = paddleX + 'px';
         });
+        
+        // Ball collision with bricks
+        function checkBrickCollision() {
+            for (let i = 0; i < bricks.length; i++) {
+                const brick = bricks[i];
+                if (!brick.active) continue;
+                
+                if (ballX + 20 > brick.x && 
+                    ballX < brick.x + brick.width && 
+                    ballY + 20 > brick.y && 
+                    ballY < brick.y + brick.height) {
+                    
+                    brick.active = false;
+                    brick.element.style.display = 'none';
+                    ballSpeedY = -ballSpeedY;
+                    score += 10;
+                    scoreElement.textContent = score;
+                    
+                    // Check if all bricks are destroyed
+                    if (bricks.every(b => !b.active)) {
+                        gameRunning = false;
+                        gameOverScreen.textContent = 'You Win!';
+                        gameOverScreen.style.display = 'flex';
+                    }
+                    
+                    break;
+                }
+            }
+        }
+        
+        // Game loop
+        function updateGame() {
+            if (!gameRunning) return;
+            
+            // Move ball
+            ballX += ballSpeedX;
+            ballY += ballSpeedY;
+            
+            // Wall collision
+            if (ballX <= 0 || ballX >= 380) {
+                ballSpeedX = -ballSpeedX;
+            }
+            
+            if (ballY <= 0) {
+                ballSpeedY = -ballSpeedY;
+            }
+            
+            // Paddle collision
+            if (ballY + 20 >= 550 && 
+                ballY <= 570 && 
+                ballX + 20 >= paddleX && 
+                ballX <= paddleX + 100) {
+                
+                // Change ball direction based on where it hits the paddle
+                const hitPosition = (ballX - paddleX) / 100;
+                ballSpeedX = (hitPosition - 0.5) * 8; // -4 to 4
+                ballSpeedY = -Math.abs(ballSpeedY); // Ensure it goes up
+            }
+            
+            // Bottom collision (game over)
+            if (ballY >= 600) {
+                gameRunning = false;
+                gameOverScreen.textContent = 'Game Over';
+                gameOverScreen.style.display = 'flex';
+            }
+            
+            // Check brick collisions
+            checkBrickCollision();
+            
+            // Update ball position
+            ball.style.left = ballX + 'px';
+            ball.style.top = ballY + 'px';
+            
+            // Continue game loop
+            requestAnimationFrame(updateGame);
+        }
+        
+        // Restart game
+        restartBtn.addEventListener('click', initGame);
+        
+        // Start the game
+        initGame();
     </script>
 </body>
 </html>
