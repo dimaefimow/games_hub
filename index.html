@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neo Pong</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neo Pong Mobile</title>
     <style>
+        * {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
         body {
             margin: 0;
             padding: 0;
@@ -15,38 +20,43 @@
             background-color: #e0e5ec;
             font-family: 'Arial', sans-serif;
             overflow: hidden;
+            touch-action: none;
         }
         
         .game-container {
             position: relative;
-            width: 400px;
-            height: 600px;
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+            max-height: 600px;
             border-radius: 20px;
             background: #e0e5ec;
             box-shadow: 
                 10px 10px 20px #b8b9be, 
                 -10px -10px 20px #ffffff;
             overflow: hidden;
+            touch-action: none;
         }
         
         .paddle {
             position: absolute;
-            width: 100px;
-            height: 20px;
+            width: 25%;
+            height: 3.3%;
             background: #ff6b6b;
             border-radius: 10px;
-            bottom: 30px;
-            left: 150px;
+            bottom: 5%;
+            left: 37.5%;
             box-shadow: 
                 inset 3px 3px 5px rgba(0, 0, 0, 0.1),
                 inset -3px -3px 5px rgba(255, 255, 255, 0.5),
                 5px 5px 10px #b8b9be;
+            touch-action: none;
         }
         
         .ball {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 5%;
+            height: 5%;
             background: #4ecdc4;
             border-radius: 50%;
             box-shadow: 
@@ -57,8 +67,8 @@
         
         .brick {
             position: absolute;
-            width: 60px;
-            height: 20px;
+            width: 15%;
+            height: 3.3%;
             background: #ffb347;
             border-radius: 5px;
             box-shadow: 
@@ -69,9 +79,9 @@
         
         .score {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
+            top: 3.3%;
+            right: 5%;
+            font-size: 4vmin;
             color: #6c757d;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
@@ -88,18 +98,19 @@
             justify-content: center;
             align-items: center;
             color: white;
-            font-size: 36px;
+            font-size: 6vmin;
             display: none;
+            z-index: 10;
         }
         
         .restart-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
+            margin-top: 5%;
+            padding: 2% 5%;
             background: #ff6b6b;
             border: none;
             border-radius: 10px;
             color: white;
-            font-size: 18px;
+            font-size: 4vmin;
             cursor: pointer;
             box-shadow: 
                 5px 5px 10px rgba(0, 0, 0, 0.2),
@@ -112,6 +123,15 @@
                 inset 3px 3px 5px rgba(0, 0, 0, 0.2),
                 inset -3px -3px 5px rgba(255, 255, 255, 0.1);
         }
+        
+        .controls-info {
+            position: absolute;
+            bottom: 12%;
+            width: 100%;
+            text-align: center;
+            font-size: 3vmin;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -119,6 +139,7 @@
         <div class="paddle" id="paddle"></div>
         <div class="ball" id="ball"></div>
         <div class="score">Score: <span id="score">0</span></div>
+        <div class="controls-info">Touch and drag to move paddle</div>
         <div class="game-over" id="gameOver">
             Game Over
             <button class="restart-btn" id="restartBtn">Play Again</button>
@@ -133,20 +154,22 @@
         const gameOverScreen = document.getElementById('gameOver');
         const restartBtn = document.getElementById('restartBtn');
         
-        let paddleX = 150;
-        let ballX = 190;
-        let ballY = 300;
-        let ballSpeedX = 3;
-        let ballSpeedY = -3;
+        let paddleX = 37.5; // Percentage
+        let ballX = 47.5; // Percentage
+        let ballY = 50; // Percentage
+        let ballSpeedX = 0.75; // Percentage per frame
+        let ballSpeedY = -0.75; // Percentage per frame
         let score = 0;
         let gameRunning = true;
         let bricks = [];
+        let touchStartX = 0;
+        let paddleStartX = 0;
         
         // Create bricks
         function createBricks() {
-            const brickWidth = 60;
-            const brickHeight = 20;
-            const brickMargin = 5;
+            const brickWidth = 15; // Percentage
+            const brickHeight = 3.3; // Percentage
+            const brickMargin = 1.25; // Percentage
             const rows = 3;
             const cols = 6;
             
@@ -154,13 +177,13 @@
                 for (let c = 0; c < cols; c++) {
                     const brick = document.createElement('div');
                     brick.className = 'brick';
-                    brick.style.left = (c * (brickWidth + brickMargin) + 20) + 'px';
-                    brick.style.top = (r * (brickHeight + brickMargin) + 60) + 'px';
+                    brick.style.left = (c * (brickWidth + brickMargin) + 5) + '%';
+                    brick.style.top = (r * (brickHeight + brickMargin) + 10) + '%';
                     gameContainer.appendChild(brick);
                     bricks.push({
                         element: brick,
-                        x: c * (brickWidth + brickMargin) + 20,
-                        y: r * (brickHeight + brickMargin) + 60,
+                        x: c * (brickWidth + brickMargin) + 5,
+                        y: r * (brickHeight + brickMargin) + 10,
                         width: brickWidth,
                         height: brickHeight,
                         active: true
@@ -171,11 +194,11 @@
         
         // Initialize game
         function initGame() {
-            paddleX = 150;
-            ballX = 190;
-            ballY = 300;
-            ballSpeedX = 3;
-            ballSpeedY = -3;
+            paddleX = 37.5;
+            ballX = 47.5;
+            ballY = 50;
+            ballSpeedX = 0.75;
+            ballSpeedY = -0.75;
             score = 0;
             gameRunning = true;
             scoreElement.textContent = '0';
@@ -193,19 +216,37 @@
             updateGame();
         }
         
-        // Mouse movement handler
-        gameContainer.addEventListener('mousemove', (e) => {
+        // Touch start handler
+        gameContainer.addEventListener('touchstart', (e) => {
             if (!gameRunning) return;
             
+            const touch = e.touches[0];
             const containerRect = gameContainer.getBoundingClientRect();
-            const relativeX = e.clientX - containerRect.left;
+            touchStartX = touch.clientX - containerRect.left;
+            paddleStartX = parseFloat(paddle.style.left) || 0;
+            e.preventDefault();
+        }, { passive: false });
+        
+        // Touch move handler
+        gameContainer.addEventListener('touchmove', (e) => {
+            if (!gameRunning) return;
             
-            paddleX = relativeX - 50; // Center paddle on cursor
+            const touch = e.touches[0];
+            const containerRect = gameContainer.getBoundingClientRect();
+            const touchX = touch.clientX - containerRect.left;
+            const containerWidth = containerRect.width;
+            
+            // Calculate new paddle position based on touch movement
+            const deltaX = touchX - touchStartX;
+            paddleX = (paddleStartX + deltaX) / containerWidth * 100;
+            
+            // Limit paddle movement
             if (paddleX < 0) paddleX = 0;
-            if (paddleX > 300) paddleX = 300;
+            if (paddleX > 75) paddleX = 75; // 100% - paddle width (25%)
             
-            paddle.style.left = paddleX + 'px';
-        });
+            paddle.style.left = paddleX + '%';
+            e.preventDefault();
+        }, { passive: false });
         
         // Ball collision with bricks
         function checkBrickCollision() {
@@ -213,9 +254,9 @@
                 const brick = bricks[i];
                 if (!brick.active) continue;
                 
-                if (ballX + 20 > brick.x && 
+                if (ballX + 5 > brick.x && 
                     ballX < brick.x + brick.width && 
-                    ballY + 20 > brick.y && 
+                    ballY + 5 > brick.y && 
                     ballY < brick.y + brick.height) {
                     
                     brick.active = false;
@@ -245,7 +286,7 @@
             ballY += ballSpeedY;
             
             // Wall collision
-            if (ballX <= 0 || ballX >= 380) {
+            if (ballX <= 0 || ballX >= 95) { // 100% - ball width (5%)
                 ballSpeedX = -ballSpeedX;
             }
             
@@ -254,19 +295,19 @@
             }
             
             // Paddle collision
-            if (ballY + 20 >= 550 && 
-                ballY <= 570 && 
-                ballX + 20 >= paddleX && 
-                ballX <= paddleX + 100) {
+            if (ballY + 5 >= 91.7 && // 100% - paddle height (3.3%) - bottom margin (5%)
+                ballY <= 95 && 
+                ballX + 5 >= paddleX && 
+                ballX <= paddleX + 25) {
                 
                 // Change ball direction based on where it hits the paddle
-                const hitPosition = (ballX - paddleX) / 100;
-                ballSpeedX = (hitPosition - 0.5) * 8; // -4 to 4
+                const hitPosition = (ballX - paddleX) / 25;
+                ballSpeedX = (hitPosition - 0.5) * 2; // -1 to 1
                 ballSpeedY = -Math.abs(ballSpeedY); // Ensure it goes up
             }
             
             // Bottom collision (game over)
-            if (ballY >= 600) {
+            if (ballY >= 100) {
                 gameRunning = false;
                 gameOverScreen.textContent = 'Game Over';
                 gameOverScreen.style.display = 'flex';
@@ -276,8 +317,8 @@
             checkBrickCollision();
             
             // Update ball position
-            ball.style.left = ballX + 'px';
-            ball.style.top = ballY + 'px';
+            ball.style.left = ballX + '%';
+            ball.style.top = ballY + '%';
             
             // Continue game loop
             requestAnimationFrame(updateGame);
@@ -285,6 +326,10 @@
         
         // Restart game
         restartBtn.addEventListener('click', initGame);
+        restartBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            initGame();
+        });
         
         // Start the game
         initGame();
