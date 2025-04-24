@@ -1,782 +1,493 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neo Games</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Puzzle 2048</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #faf8ef;
+            color: #776e65;
             touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 10px;
             box-sizing: border-box;
         }
         
-        body {
-            margin: 0;
-            padding: 0;
+        .header {
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #e0e5ec;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
         
-        .game-selector {
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .scores {
             display: flex;
-            margin-bottom: 15px;
-            width: 100%;
-            max-width: 400px;
-            justify-content: space-around;
+            gap: 10px;
         }
         
-        .game-btn {
-            padding: 10px 20px;
-            background: #e0e5ec;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 
-                5px 5px 10px #b8b9be, 
-                -5px -5px 10px #ffffff;
-            transition: all 0.2s;
-            outline: none;
+        .score-box {
+            background: #bbada0;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-align: center;
         }
         
-        .game-btn.active {
-            box-shadow: 
-                inset 3px 3px 5px #b8b9be, 
-                inset -3px -3px 5px #ffffff;
+        .score-title {
+            font-size: 12px;
+        }
+        
+        .score-value {
+            font-size: 18px;
+            font-weight: bold;
         }
         
         .game-container {
+            background: #bbada0;
+            border-radius: 6px;
+            padding: 10px;
             position: relative;
-            width: 100%;
+            margin: 0 auto;
+            width: calc(100vw - 40px);
+            height: calc(100vw - 40px);
             max-width: 400px;
-            height: 500px;
-            border-radius: 20px;
-            background: #e0e5ec;
-            box-shadow: 
-                10px 10px 20px #b8b9be, 
-                -10px -10px 20px #ffffff;
-            overflow: hidden;
-            display: none;
+            max-height: 400px;
         }
         
-        .game-container.active {
-            display: block;
-        }
-        
-        /* Стили для Pong */
-        .paddle {
-            position: absolute;
-            width: 25%;
-            height: 3.3%;
-            background: #ff6b6b;
-            border-radius: 10px;
-            bottom: 5%;
-            left: 37.5%;
-            box-shadow: 
-                inset 3px 3px 5px rgba(0, 0, 0, 0.1),
-                inset -3px -3px 5px rgba(255, 255, 255, 0.5),
-                5px 5px 10px #b8b9be;
-        }
-        
-        .ball {
-            position: absolute;
-            width: 5%;
-            height: 5%;
-            background: #4ecdc4;
-            border-radius: 50%;
-            box-shadow: 
-                inset 2px 2px 4px rgba(0, 0, 0, 0.1),
-                inset -2px -2px 4px rgba(255, 255, 255, 0.5),
-                3px 3px 6px #b8b9be;
-        }
-        
-        .brick {
-            position: absolute;
-            width: 15%;
-            height: 3.3%;
-            background: #ffb347;
-            border-radius: 5px;
-            box-shadow: 
-                inset 2px 2px 4px rgba(0, 0, 0, 0.1),
-                inset -2px -2px 4px rgba(255, 255, 255, 0.3),
-                3px 3px 6px #b8b9be;
-        }
-        
-        .score {
-            position: absolute;
-            top: 3.3%;
-            right: 5%;
-            font-size: 4vmin;
-            color: #6c757d;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
-        
-        .game-over {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 6vmin;
-            display: none;
-            z-index: 10;
-        }
-        
-        .restart-btn {
-            margin-top: 5%;
-            padding: 2% 5%;
-            background: #ff6b6b;
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-size: 4vmin;
-            cursor: pointer;
-            box-shadow: 
-                5px 5px 10px rgba(0, 0, 0, 0.2),
-                -5px -5px 10px rgba(255, 255, 255, 0.1);
-            transition: all 0.2s;
-        }
-        
-        .controls-info {
-            position: absolute;
-            bottom: 12%;
-            width: 100%;
-            text-align: center;
-            font-size: 3vmin;
-            color: #6c757d;
-        }
-        
-        /* Стили для 2048 */
-        .game-2048 {
+        .grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(4, 1fr);
             gap: 10px;
-            width: 90%;
-            height: 90%;
-            margin: 5%;
+            width: 100%;
+            height: 100%;
         }
         
-        .tile {
-            background: #e0e5ec;
-            border-radius: 10px;
+        .cell {
+            background: rgba(238, 228, 218, 0.35);
+            border-radius: 3px;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 24px;
             font-weight: bold;
-            color: #6c757d;
-            box-shadow: 
-                5px 5px 10px #b8b9be, 
-                -5px -5px 10px #ffffff;
         }
         
-        .tile-2 { background: #ffecb3; }
-        .tile-4 { background: #ffd54f; }
-        .tile-8 { background: #ffb74d; }
-        .tile-16 { background: #ff8a65; }
-        .tile-32 { background: #ff7043; }
-        .tile-64 { background: #ff5722; }
-        .tile-128 { background: #f9a825; }
-        .tile-256 { background: #f57f17; }
-        .tile-512 { background: #ff6b6b; }
-        .tile-1024 { background: #4ecdc4; }
-        .tile-2048 { background: #1de9b6; }
-        
-        .game-header {
+        .tile {
+            position: absolute;
+            width: calc(25% - 12.5px);
+            height: calc(25% - 12.5px);
             display: flex;
-            justify-content: space-between;
-            padding: 10px 5%;
-        }
-        
-        .score-container {
-            background: #e0e5ec;
-            padding: 10px 15px;
-            border-radius: 10px;
-            box-shadow: 
-                5px 5px 10px #b8b9be, 
-                -5px -5px 10px #ffffff;
-            text-align: center;
-        }
-        
-        .score-title {
-            font-size: 14px;
-            color: #6c757d;
-        }
-        
-        .score-value {
-            font-size: 20px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 3px;
+            font-size: 24px;
             font-weight: bold;
+            transition: all 0.1s ease-in-out;
+            z-index: 1;
         }
         
-        .new-game-btn {
-            background: #e0e5ec;
+        .tile-2 { background: #eee4da; color: #776e65; }
+        .tile-4 { background: #ede0c8; color: #776e65; }
+        .tile-8 { background: #f2b179; color: white; }
+        .tile-16 { background: #f59563; color: white; }
+        .tile-32 { background: #f67c5f; color: white; }
+        .tile-64 { background: #f65e3b; color: white; }
+        .tile-128 { background: #edcf72; color: white; font-size: 20px; }
+        .tile-256 { background: #edcc61; color: white; font-size: 20px; }
+        .tile-512 { background: #edc850; color: white; font-size: 20px; }
+        .tile-1024 { background: #edc53f; color: white; font-size: 16px; }
+        .tile-2048 { background: #edc22e; color: white; font-size: 16px; }
+        
+        .game-message {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(238, 228, 218, 0.73);
+            z-index: 2;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+        
+        .game-message.game-won { background: rgba(237, 194, 46, 0.5); }
+        .game-message.game-over { background: rgba(238, 228, 218, 0.73); }
+        
+        .game-message p {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0 0 20px;
+        }
+        
+        .btn {
+            background: #8f7a66;
+            color: white;
             border: none;
-            border-radius: 10px;
-            padding: 10px 15px;
+            border-radius: 3px;
+            padding: 10px 20px;
             font-size: 16px;
-            box-shadow: 
-                5px 5px 10px #b8b9be, 
-                -5px -5px 10px #ffffff;
+            font-weight: bold;
             cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #9f8b77;
+        }
+        
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        @media (min-width: 500px) {
+            .game-container {
+                width: 400px;
+                height: 400px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="game-selector">
-        <button class="game-btn active" id="pongBtn">Pong</button>
-        <button class="game-btn" id="game2048Btn">2048</button>
-    </div>
-    
-    <!-- Игра Pong -->
-    <div class="game-container active" id="pongGame">
-        <div class="paddle" id="paddle"></div>
-        <div class="ball" id="ball"></div>
-        <div class="score">Score: <span id="score">0</span></div>
-        <div class="controls-info">Touch and drag to move paddle</div>
-        <div class="game-over" id="gameOver">
-            Game Over
-            <button class="restart-btn" id="restartBtn">Play Again</button>
-        </div>
-    </div>
-    
-    <!-- Игра 2048 -->
-    <div class="game-container" id="game2048">
-        <div class="game-header">
-            <div class="score-container">
-                <div class="score-title">SCORE</div>
-                <div class="score-value" id="score2048">0</div>
+    <div class="container">
+        <div class="header">
+            <div class="title">Block Puzzle 2048</div>
+            <div class="scores">
+                <div class="score-box">
+                    <div class="score-title">Счёт</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-title">Рекорд</div>
+                    <div class="score-value" id="best-score">0</div>
+                </div>
             </div>
-            <button class="new-game-btn" id="newGameBtn">New Game</button>
         </div>
-        <div class="game-2048" id="grid"></div>
+        
+        <div class="game-container">
+            <div class="grid">
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+            </div>
+            
+            <div class="game-message" id="game-message">
+                <p id="message-text"></p>
+                <button class="btn" id="keep-playing">Продолжить</button>
+                <button class="btn" id="try-again">Попробовать снова</button>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <p>Используйте свайпы влево, вправо, вверх и вниз, чтобы двигать блоки. Когда два одинаковых блока соприкасаются, они объединяются в один!</p>
+            <button class="btn" id="new-game">Новая игра</button>
+        </div>
     </div>
 
     <script>
-        // ==================== Pong Game ====================
-        const paddle = document.getElementById('paddle');
-        const ball = document.getElementById('ball');
-        const gameContainerPong = document.getElementById('pongGame');
-        const scoreElement = document.getElementById('score');
-        const gameOverScreen = document.getElementById('gameOver');
-        const restartBtn = document.getElementById('restartBtn');
-        
-        let paddleX = 37.5;
-        let ballX = 47.5;
-        let ballY = 50;
-        let ballSpeedX = 0.75;
-        let ballSpeedY = -0.75;
-        let score = 0;
-        let gameRunning = true;
-        let bricks = [];
-        let isDragging = false;
-        let dragStartX = 0;
-        let paddleStartX = 37.5;
-        
-        // Create bricks
-        function createBricks() {
-            const brickWidth = 15;
-            const brickHeight = 3.3;
-            const brickMargin = 1.25;
-            const rows = 3;
-            const cols = 6;
+        document.addEventListener('DOMContentLoaded', () => {
+            // Инициализация Telegram WebApp
+            const tg = window.Telegram.WebApp;
+            tg.expand();
             
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    const brick = document.createElement('div');
-                    brick.className = 'brick';
-                    brick.style.left = (c * (brickWidth + brickMargin) + 5) + '%';
-                    brick.style.top = (r * (brickHeight + brickMargin) + 10 + '%';
-                    gameContainerPong.appendChild(brick);
-                    bricks.push({
-                        element: brick,
-                        x: c * (brickWidth + brickMargin) + 5,
-                        y: r * (brickHeight + brickMargin) + 10,
-                        width: brickWidth,
-                        height: brickHeight,
-                        active: true
-                    });
+            // Элементы DOM
+            const scoreDisplay = document.getElementById('score');
+            const bestScoreDisplay = document.getElementById('best-score');
+            const gameMessage = document.getElementById('game-message');
+            const messageText = document.getElementById('message-text');
+            const keepPlayingBtn = document.getElementById('keep-playing');
+            const tryAgainBtn = document.getElementById('try-again');
+            const newGameBtn = document.getElementById('new-game');
+            
+            // Переменные игры
+            let grid = [];
+            let score = 0;
+            let bestScore = localStorage.getItem('bestScore') || 0;
+            let gameOver = false;
+            let won = false;
+            let keepPlaying = false;
+            
+            // Инициализация игры
+            function initGame() {
+                grid = [
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0],
+                    [0, 0, 0, 0]
+                ];
+                
+                score = 0;
+                gameOver = false;
+                won = false;
+                keepPlaying = false;
+                
+                updateScore();
+                addRandomTile();
+                addRandomTile();
+                updateView();
+                
+                gameMessage.style.display = 'none';
+            }
+            
+            // Обновление счёта
+            function updateScore() {
+                scoreDisplay.textContent = score;
+                bestScoreDisplay.textContent = bestScore;
+                
+                if (score > bestScore) {
+                    bestScore = score;
+                    localStorage.setItem('bestScore', bestScore);
                 }
             }
-        }
-        
-        // Initialize game
-        function initPongGame() {
-            paddleX = 37.5;
-            ballX = 47.5;
-            ballY = 50;
-            ballSpeedX = 0.75;
-            ballSpeedY = -0.75;
-            score = 0;
-            gameRunning = true;
-            scoreElement.textContent = '0';
-            gameOverScreen.style.display = 'none';
             
-            // Remove existing bricks
-            bricks.forEach(brick => {
-                if (brick.element.parentNode) {
-                    gameContainerPong.removeChild(brick.element);
-                }
-            });
-            bricks = [];
-            
-            createBricks();
-            updatePongGame();
-        }
-        
-        // Touch start handler
-        gameContainerPong.addEventListener('touchstart', (e) => {
-            if (!gameRunning) return;
-            
-            const touch = e.touches[0];
-            const containerRect = gameContainerPong.getBoundingClientRect();
-            dragStartX = touch.clientX;
-            paddleStartX = paddleX;
-            isDragging = true;
-            e.preventDefault();
-        }, { passive: false });
-        
-        // Touch move handler
-        gameContainerPong.addEventListener('touchmove', (e) => {
-            if (!gameRunning || !isDragging) return;
-            
-            const touch = e.touches[0];
-            const containerRect = gameContainerPong.getBoundingClientRect();
-            const containerWidth = containerRect.width;
-            
-            // Calculate new paddle position based on touch movement
-            const deltaX = (touch.clientX - dragStartX) / containerWidth * 100;
-            paddleX = paddleStartX + deltaX;
-            
-            // Limit paddle movement
-            paddleX = Math.max(0, Math.min(75, paddleX));
-            
-            paddle.style.left = paddleX + '%';
-            e.preventDefault();
-        }, { passive: false });
-        
-        // Touch end handler
-        gameContainerPong.addEventListener('touchend', () => {
-            isDragging = false;
-        });
-        
-        // Ball collision with bricks
-        function checkBrickCollision() {
-            for (let i = 0; i < bricks.length; i++) {
-                const brick = bricks[i];
-                if (!brick.active) continue;
+            // Добавление случайной плитки (2 или 4)
+            function addRandomTile() {
+                const emptyCells = [];
                 
-                if (ballX + 5 > brick.x && 
-                    ballX < brick.x + brick.width && 
-                    ballY + 5 > brick.y && 
-                    ballY < brick.y + brick.height) {
-                    
-                    brick.active = false;
-                    brick.element.style.display = 'none';
-                    ballSpeedY = -ballSpeedY;
-                    score += 10;
-                    scoreElement.textContent = score;
-                    
-                    // Check if all bricks are destroyed
-                    if (bricks.every(b => !b.active)) {
-                        gameRunning = false;
-                        gameOverScreen.textContent = 'You Win!';
-                        gameOverScreen.style.display = 'flex';
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (grid[r][c] === 0) {
+                            emptyCells.push({ r, c });
+                        }
                     }
-                    
-                    break;
                 }
-            }
-        }
-        
-        // Game loop
-        function updatePongGame() {
-            if (!gameRunning) return;
-            
-            // Move ball
-            ballX += ballSpeedX;
-            ballY += ballSpeedY;
-            
-            // Wall collision
-            if (ballX <= 0 || ballX >= 95) {
-                ballSpeedX = -ballSpeedX;
-            }
-            
-            if (ballY <= 0) {
-                ballSpeedY = -ballSpeedY;
-            }
-            
-            // Paddle collision
-            if (ballY + 5 >= 91.7 && 
-                ballY <= 95 && 
-                ballX + 5 >= paddleX && 
-                ballX <= paddleX + 25) {
                 
-                // Change ball direction based on where it hits the paddle
-                const hitPosition = (ballX - paddleX) / 25;
-                ballSpeedX = (hitPosition - 0.5) * 2;
-                ballSpeedY = -Math.abs(ballSpeedY);
-            }
-            
-            // Bottom collision (game over)
-            if (ballY >= 100) {
-                gameRunning = false;
-                gameOverScreen.textContent = 'Game Over';
-                gameOverScreen.style.display = 'flex';
-            }
-            
-            // Check brick collisions
-            checkBrickCollision();
-            
-            // Update ball position
-            ball.style.left = ballX + '%';
-            ball.style.top = ballY + '%';
-            
-            // Continue game loop
-            requestAnimationFrame(updatePongGame);
-        }
-        
-        // Restart game
-        restartBtn.addEventListener('click', initPongGame);
-        restartBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            initPongGame();
-        });
-        
-        // ==================== 2048 Game ====================
-        const grid = document.getElementById('grid');
-        const score2048Element = document.getElementById('score2048');
-        const newGameBtn = document.getElementById('newGameBtn');
-        
-        let board = [];
-        let score2048 = 0;
-        let isGameOver = false;
-        
-        // Initialize 2048 game
-        function init2048Game() {
-            board = [
-                [0, 0, 0, 0],
-                [0, 0, 0, 0],
-                [0, 0, 0, 0],
-                [0, 0, 0, 0]
-            ];
-            score2048 = 0;
-            isGameOver = false;
-            score2048Element.textContent = '0';
-            
-            // Clear the grid
-            grid.innerHTML = '';
-            
-            // Create tiles
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
-                    const tile = document.createElement('div');
-                    tile.className = 'tile';
-                    tile.id = `tile-${i}-${j}`;
-                    grid.appendChild(tile);
+                if (emptyCells.length > 0) {
+                    const { r, c } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                    grid[r][c] = Math.random() < 0.9 ? 2 : 4;
                 }
             }
             
-            // Add two initial tiles
-            addRandomTile();
-            addRandomTile();
-            updateBoard();
-        }
-        
-        // Add a random tile (2 or 4)
-        function addRandomTile() {
-            const emptyCells = [];
-            
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
-                    if (board[i][j] === 0) {
-                        emptyCells.push({i, j});
+            // Обновление отображения
+            function updateView() {
+                // Удаляем все плитки
+                document.querySelectorAll('.tile').forEach(tile => tile.remove());
+                
+                // Добавляем новые плитки
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        const value = grid[r][c];
+                        if (value !== 0) {
+                            const tile = document.createElement('div');
+                            tile.className = `tile tile-${value}`;
+                            tile.textContent = value;
+                            tile.style.top = `${r * 25 + 12.5}%`;
+                            tile.style.left = `${c * 25 + 12.5}%`;
+                            document.querySelector('.game-container').appendChild(tile);
+                        }
                     }
                 }
             }
             
-            if (emptyCells.length > 0) {
-                const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-                board[randomCell.i][randomCell.j] = Math.random() < 0.9 ? 2 : 4;
-            }
-        }
-        
-        // Update the board display
-        function updateBoard() {
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
-                    const tile = document.getElementById(`tile-${i}-${j}`);
-                    const value = board[i][j];
-                    
-                    tile.className = 'tile';
-                    tile.textContent = '';
-                    
-                    if (value > 0) {
-                        tile.textContent = value;
-                        tile.classList.add(`tile-${value}`);
+            // Проверка на возможность хода
+            function canMove() {
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (grid[r][c] === 0) {
+                            return true;
+                        }
+                        
+                        if (c < 3 && grid[r][c] === grid[r][c + 1]) {
+                            return true;
+                        }
+                        
+                        if (r < 3 && grid[r][c] === grid[r + 1][c]) {
+                            return true;
+                        }
                     }
                 }
-            }
-        }
-        
-        // Move tiles left
-        function moveLeft() {
-            let moved = false;
-            
-            for (let i = 0; i < 4; i++) {
-                // Remove zeros
-                let row = board[i].filter(val => val !== 0);
                 
-                // Merge tiles
-                for (let j = 0; j < row.length - 1; j++) {
-                    if (row[j] === row[j + 1]) {
-                        row[j] *= 2;
-                        row[j + 1] = 0;
-                        score2048 += row[j];
+                return false;
+            }
+            
+            // Проверка на победу (2048)
+            function checkWin() {
+                for (let r = 0; r < 4; r++) {
+                    for (let c = 0; c < 4; c++) {
+                        if (grid[r][c] === 2048) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            
+            // Обработка движения
+            function move(direction) {
+                if (gameOver && !keepPlaying) return false;
+                
+                let moved = false;
+                const oldGrid = JSON.parse(JSON.stringify(grid));
+                
+                // Вращаем сетку для упрощения логики движения
+                if (direction === 'up' || direction === 'down') {
+                    grid = transpose(grid);
+                }
+                
+                if (direction === 'right' || direction === 'down') {
+                    grid = grid.map(row => row.reverse());
+                }
+                
+                // Обрабатываем каждую строку
+                for (let r = 0; r < 4; r++) {
+                    let row = grid[r].filter(val => val !== 0);
+                    let newRow = [];
+                    
+                    for (let i = 0; i < row.length; i++) {
+                        if (i < row.length - 1 && row[i] === row[i + 1]) {
+                            const merged = row[i] * 2;
+                            newRow.push(merged);
+                            score += merged;
+                            i++;
+                            moved = true;
+                        } else {
+                            newRow.push(row[i]);
+                        }
+                    }
+                    
+                    while (newRow.length < 4) {
+                        newRow.push(0);
+                    }
+                    
+                    if (JSON.stringify(grid[r]) !== JSON.stringify(newRow)) {
                         moved = true;
                     }
+                    
+                    grid[r] = newRow;
                 }
                 
-                // Remove zeros again
-                row = row.filter(val => val !== 0);
-                
-                // Fill with zeros
-                while (row.length < 4) {
-                    row.push(0);
+                // Возвращаем сетку в исходное состояние
+                if (direction === 'right' || direction === 'down') {
+                    grid = grid.map(row => row.reverse());
                 }
                 
-                // Check if row changed
-                if (JSON.stringify(board[i]) !== JSON.stringify(row)) {
-                    moved = true;
+                if (direction === 'up' || direction === 'down') {
+                    grid = transpose(grid);
                 }
                 
-                board[i] = row;
-            }
-            
-            return moved;
-        }
-        
-        // Move tiles right
-        function moveRight() {
-            // Reverse each row, move left, then reverse back
-            for (let i = 0; i < 4; i++) {
-                board[i].reverse();
-            }
-            
-            const moved = moveLeft();
-            
-            for (let i = 0; i < 4; i++) {
-                board[i].reverse();
-            }
-            
-            return moved;
-        }
-        
-        // Move tiles up
-        function moveUp() {
-            // Transpose board, move left, then transpose back
-            transposeBoard();
-            const moved = moveLeft();
-            transposeBoard();
-            return moved;
-        }
-        
-        // Move tiles down
-        function moveDown() {
-            // Transpose board, move right, then transpose back
-            transposeBoard();
-            const moved = moveRight();
-            transposeBoard();
-            return moved;
-        }
-        
-        // Transpose the board (rows become columns)
-        function transposeBoard() {
-            const newBoard = [[], [], [], []];
-            
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
-                    newBoard[j][i] = board[i][j];
+                if (moved) {
+                    addRandomTile();
+                    updateScore();
+                    updateView();
+                    
+                    if (checkWin() && !won && !keepPlaying) {
+                        won = true;
+                        messageText.textContent = 'Вы победили!';
+                        document.querySelector('#keep-playing').style.display = 'block';
+                        document.querySelector('#try-again').style.display = 'block';
+                        gameMessage.classList.add('game-won');
+                        gameMessage.style.display = 'flex';
+                    }
+                    
+                    if (!canMove()) {
+                        gameOver = true;
+                        messageText.textContent = 'Игра окончена!';
+                        document.querySelector('#keep-playing').style.display = 'none';
+                        document.querySelector('#try-again').style.display = 'block';
+                        gameMessage.classList.add('game-over');
+                        gameMessage.style.display = 'flex';
+                    }
                 }
+                
+                return moved;
             }
             
-            board = newBoard;
-        }
-        
-        // Check if game is over
-        function checkGameOver() {
-            // If there are empty cells, game is not over
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
-                    if (board[i][j] === 0) {
-                        return false;
+            // Транспонирование матрицы
+            function transpose(matrix) {
+                return matrix[0].map((_, i) => matrix.map(row => row[i]));
+            }
+            
+            // Обработчики событий
+            newGameBtn.addEventListener('click', initGame);
+            keepPlayingBtn.addEventListener('click', () => {
+                keepPlaying = true;
+                gameMessage.style.display = 'none';
+            });
+            tryAgainBtn.addEventListener('click', initGame);
+            
+            // Обработка свайпов
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchEndX = 0;
+            let touchEndY = 0;
+            
+            document.addEventListener('touchstart', e => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, false);
+            
+            document.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].clientX;
+                touchEndY = e.changedTouches[0].clientY;
+                handleSwipe();
+            }, false);
+            
+            function handleSwipe() {
+                const dx = touchEndX - touchStartX;
+                const dy = touchEndY - touchStartY;
+                
+                if (Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 50) {
+                        move('right');
+                    } else if (dx < -50) {
+                        move('left');
+                    }
+                } else {
+                    if (dy > 50) {
+                        move('down');
+                    } else if (dy < -50) {
+                        move('up');
                     }
                 }
             }
             
-            // Check for possible merges
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 3; j++) {
-                    if (board[i][j] === board[i][j + 1]) {
-                        return false;
-                    }
+            // Обработка клавиатуры (для тестирования на ПК)
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowUp') {
+                    move('up');
+                } else if (e.key === 'ArrowRight') {
+                    move('right');
+                } else if (e.key === 'ArrowDown') {
+                    move('down');
+                } else if (e.key === 'ArrowLeft') {
+                    move('left');
                 }
-            }
+            });
             
-            for (let j = 0; j < 4; j++) {
-                for (let i = 0; i < 3; i++) {
-                    if (board[i][j] === board[i + 1][j]) {
-                        return false;
-                    }
-                }
-            }
-            
-            return true;
-        }
-        
-        // Handle keyboard input
-        document.addEventListener('keydown', (e) => {
-            if (!gameContainer2048.classList.contains('active')) return;
-            
-            let moved = false;
-            
-            switch (e.key) {
-                case 'ArrowLeft':
-                    moved = moveLeft();
-                    break;
-                case 'ArrowRight':
-                    moved = moveRight();
-                    break;
-                case 'ArrowUp':
-                    moved = moveUp();
-                    break;
-                case 'ArrowDown':
-                    moved = moveDown();
-                    break;
-                default:
-                    return;
-            }
-            
-            if (moved) {
-                addRandomTile();
-                updateBoard();
-                score2048Element.textContent = score2048;
-                
-                if (checkGameOver()) {
-                    setTimeout(() => {
-                        alert('Game Over! Your score: ' + score2048);
-                    }, 100);
-                }
-            }
+            // Начало игры
+            initGame();
         });
-        
-        // Handle touch swipes
-        let touchStartX, touchStartY, touchEndX, touchEndY;
-        
-        gameContainer2048.addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-        
-        gameContainer2048.addEventListener('touchmove', (e) => {
-            if (!touchStartX || !touchStartY) return;
-            
-            touchEndX = e.touches[0].clientX;
-            touchEndY = e.touches[0].clientY;
-            
-            const diffX = touchStartX - touchEndX;
-            const diffY = touchStartY - touchEndY;
-            
-            // Only detect horizontal or vertical swipes
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-                // Horizontal swipe
-                if (diffX > 50) {
-                    // Left swipe
-                    if (moveLeft()) {
-                        addRandomTile();
-                        updateBoard();
-                        score2048Element.textContent = score2048;
-                    }
-                    touchStartX = touchStartY = null;
-                } else if (diffX < -50) {
-                    // Right swipe
-                    if (moveRight()) {
-                        addRandomTile();
-                        updateBoard();
-                        score2048Element.textContent = score2048;
-                    }
-                    touchStartX = touchStartY = null;
-                }
-            } else {
-                // Vertical swipe
-                if (diffY > 50) {
-                    // Up swipe
-                    if (moveUp()) {
-                        addRandomTile();
-                        updateBoard();
-                        score2048Element.textContent = score2048;
-                    }
-                    touchStartX = touchStartY = null;
-                } else if (diffY < -50) {
-                    // Down swipe
-                    if (moveDown()) {
-                        addRandomTile();
-                        updateBoard();
-                        score2048Element.textContent = score2048;
-                    }
-                    touchStartX = touchStartY = null;
-                }
-            }
-            
-            if (checkGameOver()) {
-                setTimeout(() => {
-                    alert('Game Over! Your score: ' + score2048);
-                }, 100);
-            }
-        }, { passive: true });
-        
-        // New game button
-        newGameBtn.addEventListener('click', init2048Game);
-        
-        // ==================== Game Switching ====================
-        const pongBtn = document.getElementById('pongBtn');
-        const game2048Btn = document.getElementById('game2048Btn');
-        const gameContainer2048 = document.getElementById('game2048');
-        
-        pongBtn.addEventListener('click', () => {
-            pongBtn.classList.add('active');
-            game2048Btn.classList.remove('active');
-            gameContainerPong.classList.add('active');
-            gameContainer2048.classList.remove('active');
-        });
-        
-        game2048Btn.addEventListener('click', () => {
-            game2048Btn.classList.add('active');
-            pongBtn.classList.remove('active');
-            gameContainer2048.classList.add('active');
-            gameContainerPong.classList.remove('active');
-            
-            // Initialize 2048 game if not already initialized
-            if (board.length === 0) {
-                init2048Game();
-            }
-        });
-        
-        // Initialize Pong game first
-        initPongGame();
     </script>
 </body>
 </html>
