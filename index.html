@@ -98,6 +98,9 @@
             font-weight: bold;
             transition: all 0.1s ease-in-out;
             z-index: 1;
+            margin: 5px;
+            box-sizing: border-box;
+            transform: translate(2px, -2px);
         }
         
         .tile-2 { background: #eee4da; color: #776e65; }
@@ -302,8 +305,15 @@
                             const tile = document.createElement('div');
                             tile.className = `tile tile-${value}`;
                             tile.textContent = value;
-                            tile.style.top = `${r * 25 + 12.5}%`;
-                            tile.style.left = `${c * 25 + 12.5}%`;
+                            
+                            // Точное позиционирование с небольшим смещением
+                            const tileSize = 25; // 25% от размера контейнера
+                            const gapSize = 2.5; // 10px gap is ~2.5% of 400px
+                            
+                            // Смещение на 2px вправо (+2px) и 2px вверх (-2px)
+                            tile.style.top = `calc(${r * tileSize}% + ${r * gapSize}px - 2px)`;
+                            tile.style.left = `calc(${c * tileSize}% + ${c * gapSize}px + 2px)`;
+                            
                             document.querySelector('.game-container').appendChild(tile);
                         }
                     }
