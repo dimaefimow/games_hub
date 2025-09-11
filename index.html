@@ -74,6 +74,19 @@
             letter-spacing: 2px;
         }
         
+        .save-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.8rem;
+            color: #00ffcc;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            opacity: 0.7;
+        }
+        
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -221,6 +234,13 @@
             box-shadow: none;
         }
         
+        .reset-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            padding: 12px 25px;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+        
         .history {
             margin-top: 35px;
             max-height: 250px;
@@ -265,8 +285,18 @@
             100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
         }
         
+        @keyframes saveFlash {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
         .pulse {
             animation: pulse 0.6s ease-in-out, glow 0.6s ease-in-out;
+        }
+        
+        .save-flash {
+            animation: saveFlash 0.5s ease-in-out;
         }
         
         @media (max-width: 600px) {
@@ -305,6 +335,7 @@
 <body>
     <div class="container">
         <div class="glass-panel">
+            <div class="save-indicator" id="save-indicator">Автосохранение</div>
             <h1>САБОТАЖ</h1>
             
             <div class="stats-grid">
@@ -333,6 +364,7 @@
             </div>
             
             <button class="action-button" id="action-btn">СТАРТ</button>
+            <button class="action-button reset-button" id="reset-btn">СБРОСИТЬ ИГРУ</button>
             
             <div class="history">
                 <div class="history-item" id="history-header">
@@ -348,6 +380,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const actionBtn = document.getElementById('action-btn');
+            const resetBtn = document.getElementById('reset-btn');
             const timerDisplay = document.getElementById('timer');
             const currentRoundDisplay = document.getElementById('current-round');
             const lastTimeDisplay = document.getElementById('last-time');
@@ -355,6 +388,7 @@
             const totalPointsDisplay = document.getElementById('total-points');
             const requirementDisplay = document.getElementById('requirement');
             const historyContainer = document.getElementById('history-container');
+            const saveIndicator = document.getElementById('save-indicator');
             
             let startTime = 0;
             let round = 0;
@@ -362,8 +396,139 @@
             let currentPoints = 0;
             let totalPoints = 0;
             let timerInterval = null;
-            let pointsInterval = null;
             let history = [];
+            let gameState = 'idle'; // idle, running, waiting, finished
+            
+            // Ключи для localStorage
+            const STORAGE_KEYS = {
+                GAME_STATE: 'sabotage_game_state',
+                START_TIME: 'sabotage_start_time',
+                ROUND: 'sabotage_round',
+                LAST_INTERVAL: 'sabotage_last_interval',
+                TOTAL_POINTS: 'sabotage_total_points',
+                HISTORY: 'sabotage_history'
+            };
+            
+            // Сохранение состояния игры
+            function saveGameState() {
+                const gameData = {
+                    gameState,
+                    startTime,
+                    round,
+                    lastInterval,
+                    totalPoints,
+                    history,
+                    timestamp: Date.now()
+                };
+                
+                localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify(gameData));
+                
+                // Показать анимацию сохранения
+                saveIndicator.classList.add('save-flash');
+                setTimeout(() => saveIndicator.classList.remove('save-flash'), 500);
+            }
+            
+            // Загрузка состояния игры
+            function loadGameState() {
+                try {
+                    const savedData = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
+                    if (!savedData) return false;
+                    
+                    const gameData = JSON.parse(savedData);
+                    
+                    // Проверяем, не устарели ли данные (больше 24 часов)
+                    const now = Date.now();
+                    if (now - gameData.timestamp > 24 * 60 * 60 * 1000) {
+                        localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
+                        return false;
+                    }
+                    
+                    gameState = gameData.gameState;
+                    startTime = gameData.startTime;
+                    round = gameData.round;
+                    lastInterval = gameData.lastInterval;
+                    totalPoints = gameData.totalPoints;
+                    history = gameData.history || [];
+                    
+                    // Восстанавливаем интерфейс
+                    currentRoundDisplay.textContent = round;
+                    lastTimeDisplay.textContent = formatTime(lastInterval);
+                    totalPointsDisplay.textContent = totalPoints;
+                    updateHistory();
+                    
+                    // Если игра была запущена, продолжаем таймер
+                    if (gameState === 'running') {
+                        const elapsed = now - startTime;
+                        timerDisplay.textContent = formatTime(elapsed);
+                        
+                        // Продолжаем обновление таймера
+                        timerInterval = setInterval(updateTimer, 10);
+                        
+                        requirementDisplay.textContent = `Раунд ${round} запущен. Нажмите чтобы завершить.`;
+                        actionBtn.textContent = "СТОП";
+                        actionBtn.disabled = false;
+                    } else if (gameState === 'waiting') {
+                        requirementDisplay.textContent = `Ожидание следующего раунда...`;
+                        actionBtn.textContent = "СТОП";
+                        actionBtn.disabled = true;
+                        
+                        // Включаем кнопку когда пройдет достаточно времени
+                        const timePassed = now - startTime;
+                        const timeLeft = lastInterval - timePassed;
+                        
+                        if (timeLeft <= 0) {
+                            actionBtn.disabled = false;
+                            requirementDisplay.textContent = `Можно нажимать! Завершите раунд ${round}.`;
+                        } else {
+                            setTimeout(() => {
+                                actionBtn.disabled = false;
+                                requirementDisplay.textContent = `Можно нажимать! Завершите раунд ${round}.`;
+                            }, timeLeft);
+                        }
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Ошибка загрузки сохранения:', error);
+                    return false;
+                }
+            }
+            
+            // Сброс игры
+            function resetGame() {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                
+                startTime = 0;
+                round = 0;
+                lastInterval = 0;
+                currentPoints = 0;
+                totalPoints = 0;
+                gameState = 'idle';
+                history = [];
+                
+                timerDisplay.textContent = '0.000';
+                currentRoundDisplay.textContent = '1';
+                lastTimeDisplay.textContent = '0.000';
+                currentPointsDisplay.textContent = '0';
+                totalPointsDisplay.textContent = '0';
+                requirementDisplay.textContent = 'Нажмите кнопку, чтобы начать первый раунд';
+                actionBtn.textContent = "СТАРТ";
+                actionBtn.disabled = false;
+                
+                historyContainer.innerHTML = '';
+                
+                // Удаляем сохранение
+                localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
+                
+                saveIndicator.textContent = 'Игра сброшена';
+                saveIndicator.classList.add('save-flash');
+                setTimeout(() => {
+                    saveIndicator.textContent = 'Автосохранение';
+                    saveIndicator.classList.remove('save-flash');
+                }, 1000);
+            }
             
             // Форматирование времени в секундах с миллисекундами
             function formatTime(ms) {
@@ -381,15 +546,20 @@
                 const elapsed = currentTime - startTime;
                 timerDisplay.textContent = formatTime(elapsed);
                 
-                // Обновляем текущие очки каждую секунду
+                // Обновляем текущие очки
                 currentPoints = calculatePoints(elapsed);
                 currentPointsDisplay.textContent = currentPoints;
+                
+                // Автосохранение каждые 5 секунд
+                if (Math.floor(elapsed / 1000) % 5 === 0) {
+                    saveGameState();
+                }
             }
             
             // Начать новый раунд
             function startRound() {
                 round++;
-                currentRoundDisplay.textContent = round;
+                gameState = 'running';
                 startTime = Date.now();
                 currentPoints = 0;
                 currentPointsDisplay.textContent = '0';
@@ -404,16 +574,21 @@
                     requirementDisplay.textContent = "Первый раунд начался! Нажмите еще раз чтобы завершить раунд.";
                     actionBtn.textContent = "СТОП";
                 } else {
+                    gameState = 'waiting';
                     requirementDisplay.textContent = `Раунд ${round} начался! Подождите至少 ${formatTime(lastInterval)} секунд перед следующим нажатием.`;
                     actionBtn.disabled = true;
                     
                     // Включим кнопку когда пройдет достаточно времени
                     setTimeout(() => {
+                        gameState = 'running';
                         actionBtn.disabled = false;
                         actionBtn.textContent = "СТОП";
                         requirementDisplay.textContent = `Можно нажимать! Завершите раунд ${round}.`;
+                        saveGameState();
                     }, lastInterval);
                 }
+                
+                saveGameState();
             }
             
             // Завершить текущий раунд
@@ -427,9 +602,11 @@
                 
                 if (round > 1) {
                     if (elapsed < lastInterval) {
+                        gameState = 'finished';
                         requirementDisplay.textContent = `Слишком рано! Нужно было ждать ${formatTime(lastInterval)} секунд. Игра окончена.`;
                         actionBtn.textContent = "ИГРА ОКОНЧЕНА";
                         actionBtn.disabled = true;
+                        saveGameState();
                         return;
                     }
                 }
@@ -451,12 +628,15 @@
                 updateHistory();
                 
                 // Подготовка к следующему раунду
+                gameState = 'idle';
                 requirementDisplay.textContent = `Раунд ${round} завершен. Получено очков: ${roundPoints}. Нажмите чтобы начать раунд ${round + 1}.`;
                 actionBtn.textContent = "СЛЕДУЮЩИЙ РАУНД";
                 
                 // Анимация
                 timerDisplay.classList.add('pulse');
                 setTimeout(() => timerDisplay.classList.remove('pulse'), 600);
+                
+                saveGameState();
             }
             
             // Обновление истории
@@ -484,6 +664,25 @@
                     endRound();
                 }
             });
+            
+            // Обработчик сброса игры
+            resetBtn.addEventListener('click', resetGame);
+            
+            // Автосохранение при закрытии/обновлении страницы
+            window.addEventListener('beforeunload', saveGameState);
+            
+            // Загружаем сохраненную игру при запуске
+            const loaded = loadGameState();
+            if (!loaded) {
+                // Если сохранение не загружено, инициализируем значения по умолчанию
+                currentRoundDisplay.textContent = '1';
+                lastTimeDisplay.textContent = '0.000';
+                currentPointsDisplay.textContent = '0';
+                totalPointsDisplay.textContent = '0';
+            }
+            
+            // Периодическое автосохранение
+            setInterval(saveGameState, 30000); // Сохраняем каждые 30 секунд
         });
     </script>
 </body>
