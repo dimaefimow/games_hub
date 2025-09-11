@@ -256,13 +256,31 @@
                 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
+        .history-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 12px;
+            border-bottom: 2px solid rgba(0, 255, 204, 0.3);
+            font-weight: bold;
+            color: #00ffcc;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, 
+                rgba(0, 0, 0, 0.4), 
+                rgba(0, 0, 0, 0.3));
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+        
         .history-item {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+            gap: 10px;
             padding: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: background 0.3s ease;
+            font-size: 0.95rem;
         }
         
         .history-item:hover {
@@ -271,6 +289,38 @@
         
         .history-item:last-child {
             border-bottom: none;
+        }
+        
+        .history-container {
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 255, 204, 0.3) rgba(0, 0, 0, 0.2);
+        }
+        
+        .history-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .history-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+        
+        .history-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 204, 0.3);
+            border-radius: 3px;
+        }
+        
+        .history-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 204, 0.5);
+        }
+        
+        .no-history {
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+            font-style: italic;
         }
         
         @keyframes pulse {
@@ -301,33 +351,125 @@
         
         @media (max-width: 600px) {
             .glass-panel {
-                padding: 25px;
+                padding: 20px;
             }
             
             h1 {
                 font-size: 2.2rem;
+                margin-bottom: 20px;
             }
             
             .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 12px;
-            }
-            
-            .timer-display {
-                font-size: 3.2rem;
+                margin-bottom: 20px;
             }
             
             .stat-box {
                 padding: 15px;
+                min-width: auto;
             }
             
             .stat-value {
                 font-size: 1.6rem;
             }
             
+            .timer-display {
+                font-size: 3.2rem;
+                margin: 20px 0;
+            }
+            
+            .timer-requirement {
+                font-size: 1.1rem;
+                margin-bottom: 20px;
+                padding: 10px;
+            }
+            
             .action-button {
                 padding: 16px 35px;
                 font-size: 1.3rem;
+                margin: 10px 0;
+            }
+            
+            .points-display {
+                font-size: 1.5rem;
+                margin: 15px 0;
+                padding: 12px;
+            }
+            
+            .history {
+                margin-top: 25px;
+                padding: 15px;
+                max-height: 200px;
+            }
+            
+            .history-header {
+                grid-template-columns: 0.8fr 1.2fr 1fr;
+                gap: 8px;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .history-item {
+                grid-template-columns: 0.8fr 1.2fr 1fr;
+                gap: 8px;
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            
+            .history-container {
+                max-height: 150px;
+            }
+            
+            .reset-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .glass-panel {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stat-box {
+                padding: 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.4rem;
+            }
+            
+            .stat-label {
+                font-size: 0.8rem;
+            }
+            
+            .timer-display {
+                font-size: 2.8rem;
+            }
+            
+            .action-button {
+                padding: 14px 30px;
+                font-size: 1.1rem;
+            }
+            
+            .history-header,
+            .history-item {
+                grid-template-columns: 0.7fr 1.3fr 1fr;
+                gap: 6px;
+                padding: 8px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Стили для iOS Safari */
+        @supports (-webkit-touch-callout: none) {
+            .history-container {
+                -webkit-overflow-scrolling: touch;
             }
         }
     </style>
@@ -367,12 +509,14 @@
             <button class="action-button reset-button" id="reset-btn">СБРОСИТЬ ИГРУ</button>
             
             <div class="history">
-                <div class="history-item" id="history-header">
+                <div class="history-header">
                     <span>Раунд</span>
                     <span>Время</span>
                     <span>Очки</span>
                 </div>
-                <div id="history-container"></div>
+                <div class="history-container" id="history-container">
+                    <div class="no-history">История раундов пуста</div>
+                </div>
             </div>
         </div>
     </div>
@@ -397,14 +541,12 @@
             let totalPoints = 0;
             let timerInterval = null;
             let history = [];
-            let gameState = 'idle'; // idle, running, waiting, finished
+            let gameState = 'idle';
             
-            // Ключи для localStorage
             const STORAGE_KEYS = {
                 GAME_STATE: 'sabotage_game_state_v2'
             };
             
-            // Сохранение состояния игры
             function saveGameState() {
                 const gameData = {
                     gameState,
@@ -420,8 +562,6 @@
                 
                 try {
                     localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify(gameData));
-                    
-                    // Показать анимацию сохранения
                     saveIndicator.classList.add('save-flash');
                     setTimeout(() => saveIndicator.classList.remove('save-flash'), 500);
                 } catch (error) {
@@ -429,22 +569,19 @@
                 }
             }
             
-            // Загрузка состояния игры
             function loadGameState() {
                 try {
                     const savedData = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
                     if (!savedData) return false;
                     
                     const gameData = JSON.parse(savedData);
-                    
-                    // Проверяем, не устарели ли данные (больше 7 дней)
                     const now = Date.now();
+                    
                     if (now - gameData.timestamp > 7 * 24 * 60 * 60 * 1000) {
                         localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
                         return false;
                     }
                     
-                    // Восстанавливаем все данные
                     gameState = gameData.gameState || 'idle';
                     startTime = gameData.startTime || 0;
                     round = gameData.round || 0;
@@ -453,7 +590,6 @@
                     currentPoints = gameData.currentPoints || 0;
                     history = gameData.history || [];
                     
-                    // Восстанавливаем интерфейс
                     currentRoundDisplay.textContent = round > 0 ? round : 1;
                     lastTimeDisplay.textContent = formatTime(lastInterval);
                     currentPointsDisplay.textContent = currentPoints;
@@ -462,13 +598,10 @@
                     
                     const currentTime = Date.now();
                     
-                    // Обрабатываем разные состояния игры
                     switch (gameState) {
                         case 'running':
-                            // Игра была запущена - продолжаем таймер
                             const elapsedRunning = currentTime - startTime;
                             timerDisplay.textContent = formatTime(elapsedRunning);
-                            
                             timerInterval = setInterval(updateTimer, 10);
                             requirementDisplay.textContent = `Раунд ${round} запущен. Нажмите чтобы завершить.`;
                             actionBtn.textContent = "СТОП";
@@ -476,17 +609,13 @@
                             break;
                             
                         case 'waiting':
-                            // Ожидание между раундами
                             const timePassed = currentTime - startTime;
-                            
                             if (timePassed >= lastInterval) {
-                                // Время ожидания истекло
                                 gameState = 'idle';
                                 requirementDisplay.textContent = `Раунд ${round} завершен. Нажмите чтобы начать раунд ${round + 1}.`;
                                 actionBtn.textContent = "СЛЕДУЮЩИЙ РАУНД";
                                 actionBtn.disabled = false;
                             } else {
-                                // Все еще ждем
                                 const timeLeft = lastInterval - timePassed;
                                 timerDisplay.textContent = formatTime(timePassed);
                                 requirementDisplay.textContent = `Ожидание следующего раунда...`;
@@ -509,7 +638,6 @@
                             break;
                             
                         default:
-                            // idle состояние
                             if (round > 0) {
                                 requirementDisplay.textContent = `Раунд ${round} завершен. Нажмите чтобы начать раунд ${round + 1}.`;
                                 actionBtn.textContent = "СЛЕДУЮЩИЙ РАУНД";
@@ -521,7 +649,6 @@
                             break;
                     }
                     
-                    console.log('Игра восстановлена:', gameData);
                     return true;
                     
                 } catch (error) {
@@ -530,7 +657,6 @@
                 }
             }
             
-            // Сброс игры
             function resetGame() {
                 if (timerInterval) {
                     clearInterval(timerInterval);
@@ -554,9 +680,7 @@
                 actionBtn.textContent = "СТАРТ";
                 actionBtn.disabled = false;
                 
-                historyContainer.innerHTML = '';
-                
-                // Удаляем сохранение
+                updateHistory();
                 localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
                 
                 saveIndicator.textContent = 'Игра сброшена';
@@ -567,33 +691,26 @@
                 }, 1000);
             }
             
-            // Форматирование времени в секундах с миллисекундами
             function formatTime(ms) {
                 return (ms / 1000).toFixed(3);
             }
             
-            // Расчет очков (10 минут = 1 очко)
             function calculatePoints(timeMs) {
-                return Math.floor(timeMs / 600000); // 600000 ms = 10 минут
+                return Math.floor(timeMs / 600000);
             }
             
-            // Обновление таймера
             function updateTimer() {
                 const currentTime = Date.now();
                 const elapsed = currentTime - startTime;
                 timerDisplay.textContent = formatTime(elapsed);
-                
-                // Обновляем текущие очки
                 currentPoints = calculatePoints(elapsed);
                 currentPointsDisplay.textContent = currentPoints;
                 
-                // Автосохранение каждые 2 секунды
                 if (elapsed % 2000 < 20) {
                     saveGameState();
                 }
             }
             
-            // Начать новый раунд
             function startRound() {
                 if (round === 0) {
                     round = 1;
@@ -621,7 +738,6 @@
                     requirementDisplay.textContent = `Раунд ${round} начался! Подождите ${formatTime(lastInterval)} секунд перед следующим нажатием.`;
                     actionBtn.disabled = true;
                     
-                    // Включим кнопку когда пройдет достаточно времени
                     setTimeout(() => {
                         if (gameState === 'waiting') {
                             gameState = 'running';
@@ -636,7 +752,6 @@
                 saveGameState();
             }
             
-            // Завершить текущий раунд
             function endRound() {
                 if (timerInterval) {
                     clearInterval(timerInterval);
@@ -660,12 +775,10 @@
                 lastInterval = elapsed;
                 lastTimeDisplay.textContent = formatTime(elapsed);
                 
-                // Добавляем очки за раунд
                 const roundPoints = calculatePoints(elapsed);
                 totalPoints += roundPoints;
                 totalPointsDisplay.textContent = totalPoints;
                 
-                // Добавляем в историю
                 history.push({ 
                     round, 
                     time: elapsed, 
@@ -673,37 +786,41 @@
                 });
                 updateHistory();
                 
-                // Подготовка к следующему раунду
                 gameState = 'idle';
                 requirementDisplay.textContent = `Раунд ${round} завершен. Получено очков: ${roundPoints}. Нажмите чтобы начать раунд ${round + 1}.`;
                 actionBtn.textContent = "СЛЕДУЮЩИЙ РАУНД";
                 
-                // Анимация
                 timerDisplay.classList.add('pulse');
                 setTimeout(() => timerDisplay.classList.remove('pulse'), 600);
                 
                 saveGameState();
             }
             
-            // Обновление истории
             function updateHistory() {
-                historyContainer.innerHTML = '';
-                // Сортируем историю по раундам (от новых к старым)
+                if (history.length === 0) {
+                    historyContainer.innerHTML = '<div class="no-history">История раундов пуста</div>';
+                    return;
+                }
+                
                 const sortedHistory = [...history].sort((a, b) => b.round - a.round);
+                let html = '';
                 
                 sortedHistory.forEach(item => {
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'history-item';
-                    historyItem.innerHTML = `
-                        <span>${item.round}</span>
-                        <span>${formatTime(item.time)} сек</span>
-                        <span>${item.points} очков</span>
+                    html += `
+                        <div class="history-item">
+                            <span>${item.round}</span>
+                            <span>${formatTime(item.time)} сек</span>
+                            <span>${item.points} очков</span>
+                        </div>
                     `;
-                    historyContainer.appendChild(historyItem);
                 });
+                
+                historyContainer.innerHTML = html;
+                
+                // Автоматическая прокрутка к верху истории
+                historyContainer.scrollTop = 0;
             }
             
-            // Обработчик нажатия кнопки
             actionBtn.addEventListener('click', function() {
                 if (actionBtn.textContent === "ИГРА ОКОНЧЕНА") return;
                 
@@ -714,32 +831,24 @@
                 }
             });
             
-            // Обработчик сброса игры
             resetBtn.addEventListener('click', resetGame);
             
-            // Сохранение при закрытии страницы
             window.addEventListener('beforeunload', function(e) {
                 saveGameState();
-                // Не показываем стандартное сообщение браузера
                 e.preventDefault();
                 e.returnValue = '';
             });
             
-            // Сохранение при потере фокуса (переключении вкладок/приложений)
             window.addEventListener('blur', saveGameState);
-            
-            // Сохранение при изменении видимости страницы
             document.addEventListener('visibilitychange', function() {
                 if (document.hidden) {
                     saveGameState();
                 }
             });
             
-            // Загружаем сохраненную игру при запуске
             setTimeout(() => {
                 const loaded = loadGameState();
                 if (!loaded) {
-                    // Если сохранение не загружено, инициализируем значения по умолчанию
                     currentRoundDisplay.textContent = '1';
                     lastTimeDisplay.textContent = '0.000';
                     currentPointsDisplay.textContent = '0';
@@ -748,11 +857,7 @@
                 }
             }, 100);
             
-            // Периодическое автосохранение
-            setInterval(saveGameState, 10000); // Сохраняем каждые 10 секунд
-            
-            // Дебаг информация
-            console.log('Игра инициализирована. Состояние загружено.');
+            setInterval(saveGameState, 10000);
         });
     </script>
 </body>
