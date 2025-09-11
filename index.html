@@ -468,23 +468,34 @@
                         actionBtn.textContent = "СТОП";
                         actionBtn.disabled = false;
                     } else if (gameState === 'waiting') {
-                        requirementDisplay.textContent = `Ожидание следующего раунда...`;
-                        actionBtn.textContent = "СТОП";
-                        actionBtn.disabled = true;
-                        
-                        // Включаем кнопку когда пройдет достаточно времени
+                        // Исправляем баг: если состояние 'waiting', значит мы ждем следующего раунда
+                        // но таймер не должен быть запущен в этом состоянии
+                        const now = Date.now();
                         const timePassed = now - startTime;
-                        const timeLeft = lastInterval - timePassed;
                         
-                        if (timeLeft <= 0) {
+                        if (timePassed >= lastInterval) {
+                            // Время ожидания уже прошло
+                            gameState = 'idle';
+                            requirementDisplay.textContent = `Раунд ${round} завершен. Нажмите чтобы начать раунд ${round + 1}.`;
+                            actionBtn.textContent = "СЛЕДУЮЩИЙ РАУНД";
                             actionBtn.disabled = false;
-                            requirementDisplay.textContent = `Можно нажимать! Завершите раунд ${round}.`;
                         } else {
+                            // Все еще ждем
+                            const timeLeft = lastInterval - timePassed;
+                            requirementDisplay.textContent = `Ожидание следующего раунда...`;
+                            actionBtn.textContent = "СТОП";
+                            actionBtn.disabled = true;
+                            
+                            // Включаем кнопку когда пройдет достаточно времени
                             setTimeout(() => {
                                 actionBtn.disabled = false;
                                 requirementDisplay.textContent = `Можно нажимать! Завершите раунд ${round}.`;
                             }, timeLeft);
                         }
+                    } else if (gameState === 'finished') {
+                        requirementDisplay.textContent = `Игра окончена. Начните заново.`;
+                        actionBtn.textContent = "ИГРА ОКОНЧЕНА";
+                        actionBtn.disabled = true;
                     }
                     
                     return true;
@@ -498,6 +509,7 @@
             function resetGame() {
                 if (timerInterval) {
                     clearInterval(timerInterval);
+                    timerInterval = null;
                 }
                 
                 startTime = 0;
@@ -566,6 +578,7 @@
                 
                 if (timerInterval) {
                     clearInterval(timerInterval);
+                    timerInterval = null;
                 }
                 
                 timerInterval = setInterval(updateTimer, 10);
@@ -595,6 +608,7 @@
             function endRound() {
                 if (timerInterval) {
                     clearInterval(timerInterval);
+                    timerInterval = null;
                 }
                 
                 const endTime = Date.now();
