@@ -575,7 +575,7 @@
                     actionBtn.textContent = "СТОП";
                 } else {
                     gameState = 'waiting';
-                    requirementDisplay.textContent = `Раунд ${round} начался! Подождите至少 ${formatTime(lastInterval)} секунд перед следующим нажатием.`;
+                    requirementDisplay.textContent = `Раунд ${round} начался! Подождите ${formatTime(lastInterval)} секунд перед следующим нажатием.`;
                     actionBtn.disabled = true;
                     
                     // Включим кнопку когда пройдет достаточно времени
