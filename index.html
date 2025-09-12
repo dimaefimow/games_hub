@@ -17,7 +17,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background: #e0e5ec;
             padding: 20px;
         }
         
@@ -27,51 +27,30 @@
             text-align: center;
         }
         
-        .glass-panel {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+        .neomorph-panel {
+            background: #e0e5ec;
             border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 
-                0 15px 35px rgba(0, 0, 0, 0.5),
-                0 5px 15px rgba(0, 255, 255, 0.2),
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
             padding: 35px;
-            color: white;
+            color: #6a7383;
             margin-bottom: 25px;
-            transform: translateZ(10px);
+            box-shadow: 
+                10px 10px 20px #b8bec7, 
+                -10px -10px 20px #ffffff,
+                inset 1px 1px 3px #ffffff,
+                inset -2px -2px 5px #b8bec7;
             position: relative;
             overflow: hidden;
-        }
-        
-        .glass-panel::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: linear-gradient(45deg, 
-                rgba(0, 255, 255, 0.1), 
-                rgba(0, 255, 153, 0.1), 
-                transparent);
-            z-index: -1;
-            border-radius: 30px;
         }
         
         h1 {
             font-size: 3rem;
             margin-bottom: 25px;
-            text-shadow: 
-                0 0 20px rgba(0, 255, 255, 0.7),
-                0 0 40px rgba(0, 255, 153, 0.4);
-            background: linear-gradient(45deg, #00ffff, #00ff99, #00ccff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: #6a7383;
             font-weight: 800;
             letter-spacing: 2px;
+            text-shadow: 
+                2px 2px 4px #b8bec7, 
+                -2px -2px 4px #ffffff;
         }
         
         .save-indicator {
@@ -79,11 +58,13 @@
             top: 15px;
             right: 15px;
             font-size: 0.8rem;
-            color: #00ffcc;
-            background: rgba(0, 0, 0, 0.3);
+            color: #6a7383;
+            background: #e0e5ec;
             padding: 5px 10px;
             border-radius: 15px;
-            border: 1px solid rgba(0, 255, 204, 0.3);
+            box-shadow: 
+                3px 3px 6px #b8bec7, 
+                -3px -3px 6px #ffffff;
             opacity: 0.7;
         }
         
@@ -97,32 +78,19 @@
         .stat-box {
             padding: 20px;
             border-radius: 20px;
-            background: linear-gradient(135deg, 
-                rgba(0, 0, 0, 0.3), 
-                rgba(0, 0, 0, 0.1));
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 
-                0 8px 20px rgba(0, 0, 0, 0.3),
-                inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            background: #e0e5ec;
             min-width: 120px;
             position: relative;
             overflow: hidden;
-        }
-        
-        .stat-box::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #00ffcc, #00ccff);
+            box-shadow: 
+                5px 5px 10px #b8bec7, 
+                -5px -5px 10px #ffffff;
         }
         
         .stat-label {
             font-size: 0.9rem;
             margin-bottom: 8px;
-            color: #ccc;
+            color: #6a7383;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
@@ -131,110 +99,103 @@
         .stat-value {
             font-size: 2rem;
             font-weight: bold;
-            color: #00ffcc;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            color: #6a7383;
         }
         
         .timer-display {
             font-size: 4.5rem;
             font-weight: bold;
             margin: 30px 0;
-            text-shadow: 
-                0 0 20px rgba(0, 255, 255, 0.8),
-                0 0 40px rgba(0, 255, 204, 0.4);
-            color: #00ffcc;
-            background: linear-gradient(45deg, #00ffff, #00ff99);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: #6a7383;
             padding: 10px;
+            text-shadow: 
+                2px 2px 4px #b8bec7, 
+                -2px -2px 4px #ffffff;
+            background: #e0e5ec;
+            border-radius: 20px;
+            box-shadow: 
+                inset 3px 3px 6px #b8bec7, 
+                inset -3px -3px 6px #ffffff;
+        }
+        
+        .timer-display.long-time {
+            font-size: 3.5rem;
         }
         
         .timer-requirement {
             font-size: 1.3rem;
             margin-bottom: 30px;
-            color: #ff9966;
-            text-shadow: 0 0 10px rgba(255, 153, 102, 0.3);
+            color: #6a7383;
             padding: 12px;
             border-radius: 10px;
-            background: rgba(255, 153, 102, 0.1);
-            border: 1px solid rgba(255, 153, 102, 0.2);
+            background: #e0e5ec;
+            box-shadow: 
+                inset 2px 2px 5px #b8bec7, 
+                inset -2px -2px 5px #ffffff;
         }
         
         .min-time-indicator {
             font-size: 1.1rem;
             margin-bottom: 15px;
-            color: #00ccff;
+            color: #6a7383;
             padding: 8px;
             border-radius: 8px;
-            background: rgba(0, 204, 255, 0.1);
-            border: 1px solid rgba(0, 204, 255, 0.2);
+            background: #e0e5ec;
+            box-shadow: 
+                inset 2px 2px 5px #b8bec7, 
+                inset -2px -2px 5px #ffffff;
         }
         
         .action-button {
-            background: linear-gradient(45deg, #00ffcc, #00ccff);
+            background: #e0e5ec;
             border: none;
             border-radius: 50px;
             padding: 20px 45px;
             font-size: 1.5rem;
             font-weight: bold;
-            color: #003333;
+            color: #6a7383;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 
-                0 8px 25px rgba(0, 255, 255, 0.5),
-                0 5px 15px rgba(0, 255, 255, 0.3),
-                inset 0 2px 5px rgba(255, 255, 255, 0.3);
+                5px 5px 10px #b8bec7, 
+                -5px -5px 10px #ffffff;
             margin: 15px 0;
             position: relative;
             overflow: hidden;
         }
         
-        .action-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 255, 255, 0.4), 
-                transparent);
-            transition: left 0.5s ease;
-        }
-        
         .action-button:hover {
-            transform: translateY(-5px) scale(1.05);
             box-shadow: 
-                0 12px 35px rgba(0, 255, 255, 0.7),
-                0 8px 25px rgba(0, 255, 255, 0.4);
-        }
-        
-        .action-button:hover::before {
-            left: 100%;
+                3px 3px 6px #b8bec7, 
+                -3px -3px 6px #ffffff;
+            transform: translateY(2px);
         }
         
         .action-button:active {
-            transform: translateY(2px);
             box-shadow: 
-                0 5px 15px rgba(0, 255, 255, 0.4),
-                inset 0 2px 5px rgba(0, 0, 0, 0.2);
+                inset 3px 3px 6px #b8bec7, 
+                inset -3px -3px 6px #ffffff;
+            transform: translateY(4px);
         }
         
         .action-button:disabled {
-            background: linear-gradient(45deg, #555, #777);
-            color: #999;
+            color: #b8bec7;
             cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+            box-shadow: 
+                inset 3px 3px 6px #b8bec7, 
+                inset -3px -3px 6px #ffffff;
         }
         
         .reset-button {
-            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
             padding: 12px 25px;
             font-size: 1rem;
             margin-top: 10px;
+        }
+        
+        .new-game-button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            margin-top: 20px;
         }
         
         .history {
@@ -243,13 +204,10 @@
             overflow-y: auto;
             padding: 20px;
             border-radius: 20px;
-            background: linear-gradient(135deg, 
-                rgba(0, 0, 0, 0.25), 
-                rgba(0, 0, 0, 0.15));
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #e0e5ec;
             box-shadow: 
-                inset 0 2px 10px rgba(0, 0, 0, 0.3),
-                0 5px 15px rgba(0, 0, 0, 0.2);
+                inset 3px 3px 6px #b8bec7, 
+                inset -3px -3px 6px #ffffff;
         }
         
         .history-item {
@@ -257,12 +215,13 @@
             grid-template-columns: 1fr 1fr 1fr;
             gap: 15px;
             padding: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(106, 115, 131, 0.2);
             transition: background 0.3s ease;
         }
         
         .history-item:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
         }
         
         .history-item:last-child {
@@ -275,27 +234,31 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(224, 229, 236, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             border-radius: 25px;
             z-index: 100;
+            box-shadow: 
+                inset 5px 5px 10px #b8bec7, 
+                inset -5px -5px 10px #ffffff;
         }
         
         .game-over-text {
             font-size: 3rem;
             color: #ff6b6b;
             font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 107, 107, 0.7);
             margin-bottom: 20px;
-            animation: pulse 1s infinite;
+            text-shadow: 
+                2px 2px 4px #b8bec7, 
+                -2px -2px 4px #ffffff;
         }
         
         .game-over-reason {
             font-size: 1.5rem;
-            color: #fff;
+            color: #6a7383;
             text-align: center;
             margin-bottom: 30px;
             max-width: 80%;
@@ -303,20 +266,14 @@
         
         .game-over-stats {
             font-size: 1.2rem;
-            color: #00ffcc;
+            color: #6a7383;
             margin-bottom: 30px;
         }
         
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.9; }
             100% { transform: scale(1); opacity: 1; }
-        }
-        
-        @keyframes glow {
-            0% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.8); }
-            100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
         }
         
         @keyframes saveFlash {
@@ -326,15 +283,19 @@
         }
         
         .pulse {
-            animation: pulse 0.6s ease-in-out, glow 0.6s ease-in-out;
+            animation: pulse 0.6s ease-in-out;
         }
         
         .save-flash {
             animation: saveFlash 0.5s ease-in-out;
         }
         
+        .error {
+            color: #ff6b6b !important;
+        }
+        
         @media (max-width: 600px) {
-            .glass-panel {
+            .neomorph-panel {
                 padding: 25px;
             }
             
@@ -349,6 +310,10 @@
             
             .timer-display {
                 font-size: 3.2rem;
+            }
+            
+            .timer-display.long-time {
+                font-size: 2.5rem;
             }
             
             .stat-box {
@@ -376,7 +341,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="glass-panel" id="glass-panel">
+        <div class="neomorph-panel" id="glass-panel">
             <div class="save-indicator" id="save-indicator">Автосохранение</div>
             <h1>ТАЙМЕР РАУНДОВ</h1>
             
@@ -445,8 +410,60 @@
             
             // Ключи для localStorage
             const STORAGE_KEYS = {
-                GAME_STATE: 'round_timer_state_v5'
+                GAME_STATE: 'round_timer_state_v6'
             };
+            
+            // Функция форматирования времени
+            function formatTime(ms) {
+                const seconds = ms / 1000;
+                
+                if (seconds < 60) {
+                    // Менее минуты - показываем секунды с миллисекундами
+                    return seconds.toFixed(3) + ' сек';
+                } else if (seconds < 3600) {
+                    // Менее часа - показываем минуты и секунды
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = (seconds % 60).toFixed(1);
+                    return `${minutes} мин ${remainingSeconds} сек`;
+                } else {
+                    // Более часа - показываем часы, минуты и секунды
+                    const hours = Math.floor(seconds / 3600);
+                    const minutes = Math.floor((seconds % 3600) / 60);
+                    const remainingSeconds = (seconds % 60).toFixed(0);
+                    return `${hours} ч ${minutes} мин ${remainingSeconds} сек`;
+                }
+            }
+            
+            // Функция форматирования времени для отображения в таймере
+            function formatTimerTime(ms) {
+                const seconds = ms / 1000;
+                
+                if (seconds < 60) {
+                    // Менее минуты - показываем секунды с миллисекундами
+                    return seconds.toFixed(3);
+                } else if (seconds < 3600) {
+                    // Менее часа - показываем минуты:секунды.миллисекунды
+                    const minutes = Math.floor(seconds / 60);
+                    const remainingSeconds = (seconds % 60).toFixed(3);
+                    return `${minutes}:${remainingSeconds.padStart(6, '0')}`;
+                } else {
+                    // Более часа - показываем часы:минуты:секунды
+                    const hours = Math.floor(seconds / 3600);
+                    const minutes = Math.floor((seconds % 3600) / 60);
+                    const remainingSeconds = (seconds % 60).toFixed(0).padStart(2, '0');
+                    return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds}`;
+                }
+            }
+            
+            // Функция для обновления класса длительного времени
+            function updateTimerClass(ms) {
+                const seconds = ms / 1000;
+                if (seconds >= 60) {
+                    timerDisplay.classList.add('long-time');
+                } else {
+                    timerDisplay.classList.remove('long-time');
+                }
+            }
             
             // Сохранение состояния игры
             function saveGameState() {
@@ -503,7 +520,7 @@
                     currentRoundDisplay.textContent = currentRound;
                     lastTimeDisplay.textContent = formatTime(lastRoundTime);
                     totalRoundsDisplay.textContent = totalRounds;
-                    minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)} сек`;
+                    minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
                     updateHistory();
                     
                     if (gameOver) {
@@ -514,12 +531,14 @@
                     // Если таймер был запущен, продолжаем его
                     if (isTimerRunning) {
                         const elapsed = Date.now() - startTime;
-                        timerDisplay.textContent = formatTime(elapsed);
+                        timerDisplay.textContent = formatTimerTime(elapsed);
+                        updateTimerClass(elapsed);
                         timerInterval = setInterval(updateTimer, 10);
                         actionBtn.textContent = "СТОП";
                         requirementDisplay.textContent = `Раунд ${currentRound} запущен. Нажмите чтобы завершить.`;
                     } else {
                         timerDisplay.textContent = '0.000';
+                        timerDisplay.classList.remove('long-time');
                         actionBtn.textContent = "СТАРТ";
                         requirementDisplay.textContent = totalRounds > 0 
                             ? `Нажмите чтобы начать раунд ${currentRound}`
@@ -543,48 +562,34 @@
                     <div class="game-over-text">ПРОИГРЫШ!</div>
                     <div class="game-over-reason">
                         Раунд ${currentRound} длился меньше минимального времени!<br>
-                        Нужно было: ${formatTime(minRequiredTime)} сек<br>
-                        Ваше время: ${formatTime(Date.now() - startTime)} сек
+                        Нужно было: ${formatTime(minRequiredTime)}<br>
+                        Ваше время: ${formatTime(Date.now() - startTime)}
                     </div>
                     <div class="game-over-stats">
                         Пройдено раундов: ${totalRounds}<br>
-                        Лучшее время: ${formatTime(Math.max(...history.map(h => h.time), 0))} сек
+                        Лучшее время: ${formatTime(Math.max(...history.map(h => h.time), 0))}
                     </div>
-                    <button class="action-button reset-button" onclick="location.reload()">НОВАЯ ИГРА</button>
+                    <button class="action-button new-game-button" id="new-game-btn">НОВАЯ ИГРА</button>
                 `;
                 
                 glassPanel.appendChild(gameOverScreen);
                 
-                // Блокируем кнопки
+                // Добавляем обработчик для кнопки новой игры
+                document.getElementById('new-game-btn').addEventListener('click', function() {
+                    resetGame();
+                });
+                
+                // Блокируем основные кнопки
                 actionBtn.disabled = true;
                 resetBtn.disabled = true;
             }
             
-            // Сброс игры
+            // Полный сброс игры
             function resetGame() {
                 if (timerInterval) {
                     clearInterval(timerInterval);
                     timerInterval = null;
                 }
-                
-                startTime = 0;
-                currentRound = 1;
-                lastRoundTime = 0;
-                totalRounds = 0;
-                isTimerRunning = false;
-                history = [];
-                minRequiredTime = 0;
-                gameOver = false;
-                
-                timerDisplay.textContent = '0.000';
-                currentRoundDisplay.textContent = '1';
-                lastTimeDisplay.textContent = '0.000';
-                totalRoundsDisplay.textContent = '0';
-                minTimeIndicator.textContent = 'Минимальное время: 0.000 сек';
-                requirementDisplay.textContent = 'Нажмите кнопку, чтобы начать первый раунд';
-                actionBtn.textContent = "СТАРТ";
-                actionBtn.disabled = false;
-                resetBtn.disabled = false;
                 
                 // Удаляем экран проигрыша, если есть
                 const gameOverScreen = document.querySelector('.game-over');
@@ -592,25 +597,50 @@
                     gameOverScreen.remove();
                 }
                 
-                updateHistory();
+                // Сбрасываем все переменные
+                isTimerRunning = false;
+                startTime = 0;
+                currentRound = 1;
+                lastRoundTime = 0;
+                totalRounds = 0;
+                history = [];
+                gameOver = false;
+                
+                // Обновляем интерфейс
+                timerDisplay.textContent = '0.000';
+                timerDisplay.classList.remove('long-time');
+                currentRoundDisplay.textContent = currentRound;
+                lastTimeDisplay.textContent = formatTime(lastRoundTime);
+                totalRoundsDisplay.textContent = totalRounds;
+                actionBtn.textContent = "СТАРТ";
+                actionBtn.disabled = false;
+                resetBtn.disabled = false;
+                requirementDisplay.textContent = 'Нажмите кнопку, чтобы начать первый раунд';
+                minRequiredTime = 0;
+                minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
+                
+                // Очищаем историю
+                historyContainer.innerHTML = '';
+                
+                // Сохраняем сброшенное состояние
                 saveGameState();
-            }
-            
-            // Форматирование времени
-            function formatTime(ms) {
-                return (ms / 1000).toFixed(3);
             }
             
             // Обновление таймера
             function updateTimer() {
-                const elapsed = Date.now() - startTime;
-                timerDisplay.textContent = formatTime(elapsed);
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+                timerDisplay.textContent = formatTimerTime(elapsed);
+                updateTimerClass(elapsed);
                 
-                // Проверяем, достигнуто ли минимальное время
+                // Если игра окончена, не обновляем
+                if (gameOver) return;
+                
+                // Проверяем, не истекло ли минимальное время
                 if (minRequiredTime > 0 && elapsed < minRequiredTime) {
-                    timerDisplay.style.color = '#ff6b6b';
+                    timerDisplay.classList.add('error');
                 } else {
-                    timerDisplay.style.color = '';
+                    timerDisplay.classList.remove('error');
                 }
             }
             
@@ -638,94 +668,101 @@
                 });
             }
             
-            // Обработчик кнопки действия
+            // Обработчик клика по основной кнопке
             actionBtn.addEventListener('click', function() {
                 if (gameOver) return;
                 
-                if (isTimerRunning) {
-                    // Останавливаем таймер и сохраняем результат
+                if (!isTimerRunning) {
+                    // Запуск таймера
+                    startTime = Date.now();
+                    timerInterval = setInterval(updateTimer, 10);
+                    isTimerRunning = true;
+                    actionBtn.textContent = "СТОП";
+                    requirementDisplay.textContent = `Раунд ${currentRound} запущен. Нажмите чтобы завершить.`;
+                    timerDisplay.classList.remove('error');
+                    timerDisplay.classList.remove('long-time');
+                } else {
+                    // Остановка таймера
                     clearInterval(timerInterval);
                     timerInterval = null;
+                    const endTime = Date.now();
+                    const roundTime = endTime - startTime;
                     
-                    const elapsed = Date.now() - startTime;
-                    
-                    // Проверяем, достаточно ли длился раунд
-                    if (minRequiredTime > 0 && elapsed < minRequiredTime) {
-                        // Раунд слишком короткий - проигрыш
+                    // Проверяем минимальное время
+                    if (minRequiredTime > 0 && roundTime < minRequiredTime) {
+                        // Игра окончена
                         gameOver = true;
                         showGameOver();
                         saveGameState();
                         return;
                     }
                     
-                    // Раунд успешно завершен
-                    lastRoundTime = elapsed;
+                    // Обновляем минимальное время для следующего раунда
+                    minRequiredTime = roundTime;
                     
-                    // Сохраняем результат
-                    history.push({
+                    // Сохраняем данные раунда
+                    lastRoundTime = roundTime;
+                    const historyEntry = {
                         round: currentRound,
-                        time: elapsed,
+                        time: roundTime,
                         date: new Date().toLocaleString('ru-RU')
-                    });
+                    };
                     
-                    // Устанавливаем минимальное время для следующего раунда
-                    minRequiredTime = elapsed;
-                    
+                    history.push(historyEntry);
                     totalRounds++;
                     currentRound++;
                     
                     // Обновляем интерфейс
-                    lastTimeDisplay.textContent = formatTime(elapsed);
-                    totalRoundsDisplay.textContent = totalRounds;
+                    timerDisplay.textContent = formatTimerTime(roundTime);
+                    updateTimerClass(roundTime);
                     currentRoundDisplay.textContent = currentRound;
-                    minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)} сек`;
-                    timerDisplay.textContent = '0.000';
-                    timerDisplay.style.color = '';
+                    lastTimeDisplay.textContent = formatTime(roundTime);
+                    totalRoundsDisplay.textContent = totalRounds;
+                    minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
                     actionBtn.textContent = "СТАРТ";
+                    requirementDisplay.textContent = `Нажмите чтобы начать раунд ${currentRound}`;
                     isTimerRunning = false;
                     
-                    requirementDisplay.textContent = `Раунд ${currentRound - 1} завершен. Нажмите чтобы начать следующий.`;
-                    
+                    // Обновляем историю
                     updateHistory();
-                    saveGameState();
                     
-                } else {
-                    // Запускаем таймер
-                    startTime = Date.now();
-                    timerInterval = setInterval(updateTimer, 10);
-                    isTimerRunning = true;
-                    actionBtn.textContent = "СТОП";
-                    
-                    requirementDisplay.textContent = `Раунд ${currentRound} запущен. Нажмите чтобы завершить.`;
-                    saveGameState();
+                    // Анимация обновления статистики
+                    document.querySelectorAll('.stat-box').forEach(box => {
+                        box.classList.add('pulse');
+                        setTimeout(() => box.classList.remove('pulse'), 600);
+                    });
                 }
                 
-                // Анимация кнопки
-                actionBtn.classList.add('pulse');
-                setTimeout(() => actionBtn.classList.remove('pulse'), 600);
-            });
-            
-            // Обработчик кнопки сброса
-            resetBtn.addEventListener('click', function() {
-                if (confirm('Вы уверены, что хотите сбросить игру? Все данные будут удалены.')) {
-                    resetGame();
-                }
-                
-                // Анимация кнопки
-                resetBtn.classList.add('pulse');
-                setTimeout(() => resetBtn.classList.remove('pulse'), 600);
-            });
-            
-            // Автосохранение при закрытии/обновлении страницы
-            window.addEventListener('beforeunload', function() {
                 saveGameState();
             });
             
-            // Загружаем состояние игры при запуске
-            if (!loadGameState()) {
-                // Если сохранение не загружено, инициализируем новую игру
-                resetGame();
+            // Обработчик сброса игры
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Вы уверены, что хотите сбросить игру? Все данные будут потеряны.')) {
+                    resetGame();
+                }
+            });
+            
+            // Автосохранение каждые 30 секунд
+            setInterval(saveGameState, 30000);
+            
+            // Попытка загрузить сохраненную игру
+            const loaded = loadGameState();
+            if (!loaded) {
+                // Если не удалось загрузить, инициализируем значения по умолчанию
+                currentRoundDisplay.textContent = currentRound;
+                lastTimeDisplay.textContent = formatTime(lastRoundTime);
+                totalRoundsDisplay.textContent = totalRounds;
+                minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
             }
+            
+            // Анимация при загрузке
+            setTimeout(() => {
+                document.querySelectorAll('.neomorph-panel, .stat-box, .action-button').forEach(el => {
+                    el.style.transition = 'all 0.5s ease';
+                    el.style.opacity = 1;
+                });
+            }, 100);
         });
     </script>
 </body>
