@@ -692,6 +692,7 @@
             const glassPanel = document.getElementById('glass-panel');
             const body = document.body;
             
+            // Инициализация переменных с значениями по умолчанию
             let startTime = 0;
             let currentRound = 1;
             let lastRoundTime = 0;
@@ -711,8 +712,8 @@
             
             // Ключи для localStorage
             const STORAGE_KEYS = {
-                GAME_STATE: 'round_timer_state_v10',
-                GOLDEN_MASTER: 'golden_master_state_v4'
+                GAME_STATE: 'round_timer_state_v11',
+                GOLDEN_MASTER: 'golden_master_state_v5'
             };
             
             // Функция форматирования времени
@@ -859,7 +860,7 @@
                 saveGoldenMasterState();
             }
             
-            // Запуск таймера Golden Master (без интервала)
+            // Запуск таймера Golden Master
             function startGoldenMasterTimer() {
                 if (!goldenMasterActive) return;
                 
@@ -999,16 +1000,23 @@
                     minRequiredTime,
                     isTimerRunning,
                     startTime: isTimerRunning ? startTime : 0,
-                    gameOver
+                    gameOver,
+                    savedAt: Date.now()
                 };
                 
-                localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify(gameState));
-                
-                // Показываем индикатор сохранения
-                saveIndicator.classList.add('save-flash');
-                setTimeout(() => {
-                    saveIndicator.classList.remove('save-flash');
-                }, 500);
+                try {
+                    localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify(gameState));
+                    
+                    // Показываем индикатор сохранения
+                    saveIndicator.classList.add('save-flash');
+                    setTimeout(() => {
+                        saveIndicator.classList.remove('save-flash');
+                    }, 500);
+                    
+                    console.log('Игра сохранена:', gameState);
+                } catch (error) {
+                    console.error('Ошибка сохранения игры:', error);
+                }
             }
             
             // Функция сохранения состояния Golden Master
@@ -1017,72 +1025,93 @@
                 
                 const goldenMasterState = {
                     active: goldenMasterActive,
-                    startTime: goldenMasterStartTime
+                    startTime: goldenMasterStartTime,
+                    savedAt: Date.now()
                 };
                 
-                localStorage.setItem(STORAGE_KEYS.GOLDEN_MASTER, JSON.stringify(goldenMasterState));
+                try {
+                    localStorage.setItem(STORAGE_KEYS.GOLDEN_MASTER, JSON.stringify(goldenMasterState));
+                    console.log('Golden Master сохранен:', goldenMasterState);
+                } catch (error) {
+                    console.error('Ошибка сохранения Golden Master:', error);
+                }
             }
             
             // Функция загрузки состояния игры
             function loadGameState() {
-                const savedState = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
-                
-                if (savedState) {
-                    const gameState = JSON.parse(savedState);
+                try {
+                    const savedState = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
                     
-                    currentRound = gameState.currentRound || 1;
-                    lastRoundTime = gameState.lastRoundTime || 0;
-                    totalRounds = gameState.totalRounds || 0;
-                    history = gameState.history || [];
-                    minRequiredTime = gameState.minRequiredTime || 0;
-                    gameOver = gameState.gameOver || false;
-                    
-                    // Восстанавливаем таймер, если он был активен
-                    if (gameState.isTimerRunning && gameState.startTime) {
-                        startTime = gameState.startTime;
-                        isTimerRunning = true;
-                        startTimer(); // Запускаем таймер с учетом прошедшего времени
-                        actionBtn.textContent = 'СТОП';
+                    if (savedState) {
+                        const gameState = JSON.parse(savedState);
+                        console.log('Загружено состояние игры:', gameState);
+                        
+                        // Восстанавливаем все переменные
+                        currentRound = gameState.currentRound || 1;
+                        lastRoundTime = gameState.lastRoundTime || 0;
+                        totalRounds = gameState.totalRounds || 0;
+                        history = gameState.history || [];
+                        minRequiredTime = gameState.minRequiredTime || 0;
+                        gameOver = gameState.gameOver || false;
+                        
+                        // Восстанавливаем таймер, если он был активен
+                        if (gameState.isTimerRunning && gameState.startTime) {
+                            startTime = gameState.startTime;
+                            isTimerRunning = true;
+                            startTimer(); // Запускаем таймер с учетом прошедшего времени
+                            actionBtn.textContent = 'СТОП';
+                        }
+                        
+                        updateDisplay();
+                        updateHistory();
+                        return true;
                     }
-                    
-                    updateDisplay();
-                    updateHistory();
+                } catch (error) {
+                    console.error('Ошибка загрузки состояния игры:', error);
                 }
+                return false;
             }
             
             // Функция загрузки состояния Golden Master
             function loadGoldenMasterState() {
-                const savedState = localStorage.getItem(STORAGE_KEYS.GOLDEN_MASTER);
-                
-                if (savedState) {
-                    const goldenMasterState = JSON.parse(savedState);
+                try {
+                    const savedState = localStorage.getItem(STORAGE_KEYS.GOLDEN_MASTER);
                     
-                    if (goldenMasterState.active) {
-                        goldenMasterActive = true;
-                        goldenMasterStartTime = goldenMasterState.startTime;
+                    if (savedState) {
+                        const goldenMasterState = JSON.parse(savedState);
+                        console.log('Загружено состояние Golden Master:', goldenMasterState);
                         
-                        // Проверяем, не истекло ли время Golden Master
-                        const currentTime = Date.now();
-                        const elapsed = currentTime - goldenMasterStartTime;
-                        
-                        if (elapsed >= GOLDEN_MASTER_DURATION) {
-                            // Время истекло - победа
-                            goldenMasterWin();
-                        } else {
-                            // Продолжаем отсчет
-                            body.classList.add('golden-master');
-                            timerDisplay.classList.add('golden-timer', 'countdown-pulse');
-                            actionBtn.disabled = true;
-                            goldenMasterBtn.disabled = true;
-                            requirementDisplay.textContent = 'Golden Master активен! Обратный отсчет 50 дней...';
+                        if (goldenMasterState.active) {
+                            goldenMasterActive = true;
+                            goldenMasterStartTime = goldenMasterState.startTime;
                             
-                            startGoldenMasterTimer();
+                            // Проверяем, не истекло ли время Golden Master
+                            const currentTime = Date.now();
+                            const elapsed = currentTime - goldenMasterStartTime;
+                            
+                            if (elapsed >= GOLDEN_MASTER_DURATION) {
+                                // Время истекло - победа
+                                goldenMasterWin();
+                            } else {
+                                // Продолжаем отсчет
+                                body.classList.add('golden-master');
+                                timerDisplay.classList.add('golden-timer', 'countdown-pulse');
+                                actionBtn.disabled = true;
+                                goldenMasterBtn.disabled = true;
+                                requirementDisplay.textContent = 'Golden Master активен! Обратный отсчет 50 дней...';
+                                
+                                startGoldenMasterTimer();
+                            }
+                            return true;
                         }
                     }
+                } catch (error) {
+                    console.error('Ошибка загрузки состояния Golden Master:', error);
                 }
+                return false;
             }
             
-            // Запуск таймера (без интервала)
+            // Запуск таймера
             function startTimer() {
                 if (!isTimerRunning) return;
                 
@@ -1193,6 +1222,8 @@
                 // Очищаем localStorage
                 localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
                 localStorage.removeItem(STORAGE_KEYS.GOLDEN_MASTER);
+                
+                console.log('Игра сброшена');
             }
             
             // Обработчик для кнопки старт/стоп
@@ -1282,10 +1313,10 @@
                         // Проверяем автоактивацию Golden Master
                         checkForGoldenMasterActivation();
                     }
-                    
-                    // Сохраняем состояние
-                    saveGameState();
                 }
+                
+                // Сохраняем состояние после каждого действия
+                saveGameState();
             });
             
             // Обработчик для кнопки сброса
@@ -1310,17 +1341,36 @@
             });
             
             // Загружаем состояние при загрузке страницы
-            loadGameState();
-            loadGoldenMasterState();
+            window.addEventListener('load', function() {
+                console.log('Загрузка состояния...');
+                loadGameState();
+                loadGoldenMasterState();
+            });
             
-            // Автосохранение каждые 30 секунд
-            setInterval(saveGameState, 30000);
+            // Автосохранение каждые 10 секунд
+            setInterval(saveGameState, 10000);
             
             // Сохраняем состояние при закрытии страницы
             window.addEventListener('beforeunload', function() {
+                console.log('Сохранение перед закрытием...');
                 saveGameState();
                 if (goldenMasterActive) {
                     saveGoldenMasterState();
+                }
+            });
+            
+            // Сохраняем состояние при изменении видимости страницы
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    console.log('Страница скрыта, сохраняем состояние...');
+                    saveGameState();
+                    if (goldenMasterActive) {
+                        saveGoldenMasterState();
+                    }
+                } else {
+                    console.log('Страница видима, проверяем состояние...');
+                    // При возвращении на страницу обновляем отображение
+                    updateDisplay();
                 }
             });
         });
