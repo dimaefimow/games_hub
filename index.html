@@ -711,8 +711,8 @@
             
             // Ключи для localStorage
             const STORAGE_KEYS = {
-                GAME_STATE: 'round_timer_state_v9',
-                GOLDEN_MASTER: 'golden_master_state_v3'
+                GAME_STATE: 'round_timer_state_v10',
+                GOLDEN_MASTER: 'golden_master_state_v4'
             };
             
             // Функция форматирования времени
@@ -852,34 +852,49 @@
                 requirementDisplay.textContent = 'Golden Master активен! Обратный отсчет 50 дней...';
                 
                 // Запускаем таймер Golden Master
-                goldenMasterInterval = setInterval(updateGoldenMasterTimer, 1000);
-                updateGoldenMasterTimer();
+                startGoldenMasterTimer();
                 
                 // Сохраняем состояние
                 saveGameState();
                 saveGoldenMasterState();
             }
             
-            // Обновление таймера Golden Master
-            function updateGoldenMasterTimer() {
-                const currentTime = Date.now();
-                const elapsed = currentTime - goldenMasterStartTime;
-                const remaining = GOLDEN_MASTER_DURATION - elapsed;
+            // Запуск таймера Golden Master (без интервала)
+            function startGoldenMasterTimer() {
+                if (!goldenMasterActive) return;
                 
-                if (remaining <= 0) {
-                    // Победа в Golden Master!
+                // Очищаем предыдущий интервал
+                if (goldenMasterInterval) {
                     clearInterval(goldenMasterInterval);
-                    goldenMasterWin();
-                    return;
                 }
                 
-                timerDisplay.innerHTML = formatGoldenMasterTime(remaining);
+                // Используем requestAnimationFrame для более точного таймера
+                function updateGoldenMaster() {
+                    if (!goldenMasterActive) return;
+                    
+                    const currentTime = Date.now();
+                    const elapsed = currentTime - goldenMasterStartTime;
+                    const remaining = GOLDEN_MASTER_DURATION - elapsed;
+                    
+                    if (remaining <= 0) {
+                        // Победа в Golden Master!
+                        goldenMasterWin();
+                        return;
+                    }
+                    
+                    timerDisplay.innerHTML = formatGoldenMasterTime(remaining);
+                    
+                    // Продолжаем обновление
+                    requestAnimationFrame(updateGoldenMaster);
+                }
+                
+                // Запускаем обновление
+                updateGoldenMaster();
             }
             
             // Победа в Golden Master
             function goldenMasterWin() {
                 goldenMasterActive = false;
-                clearInterval(goldenMasterInterval);
                 
                 // Показываем экран победы
                 const gameOverScreen = document.createElement('div');
@@ -928,7 +943,6 @@
             // Деактивация Golden Master (при сбое)
             function deactivateGoldenMaster() {
                 goldenMasterActive = false;
-                clearInterval(goldenMasterInterval);
                 body.classList.remove('golden-master');
                 timerDisplay.classList.remove('golden-timer', 'countdown-pulse');
                 
@@ -1027,7 +1041,7 @@
                     if (gameState.isTimerRunning && gameState.startTime) {
                         startTime = gameState.startTime;
                         isTimerRunning = true;
-                        timerInterval = setInterval(updateTimer, 10);
+                        startTimer(); // Запускаем таймер с учетом прошедшего времени
                         actionBtn.textContent = 'СТОП';
                     }
                     
@@ -1062,21 +1076,38 @@
                             goldenMasterBtn.disabled = true;
                             requirementDisplay.textContent = 'Golden Master активен! Обратный отсчет 50 дней...';
                             
-                            goldenMasterInterval = setInterval(updateGoldenMasterTimer, 1000);
-                            updateGoldenMasterTimer();
+                            startGoldenMasterTimer();
                         }
                     }
                 }
             }
             
-            // Функция обновления таймера
-            function updateTimer() {
-                const currentTime = Date.now();
-                const elapsed = currentTime - startTime;
+            // Запуск таймера (без интервала)
+            function startTimer() {
+                if (!isTimerRunning) return;
                 
-                timerDisplay.textContent = formatTimerTime(elapsed);
-                updateTimerColor(elapsed);
-                updateTimerClass(elapsed);
+                // Очищаем предыдущий интервал
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                }
+                
+                // Используем requestAnimationFrame для более точного таймера
+                function updateTimer() {
+                    if (!isTimerRunning) return;
+                    
+                    const currentTime = Date.now();
+                    const elapsed = currentTime - startTime;
+                    
+                    timerDisplay.textContent = formatTimerTime(elapsed);
+                    updateTimerColor(elapsed);
+                    updateTimerClass(elapsed);
+                    
+                    // Продолжаем обновление
+                    requestAnimationFrame(updateTimer);
+                }
+                
+                // Запускаем обновление
+                updateTimer();
             }
             
             // Функция обновления отображения
@@ -1133,29 +1164,28 @@
             
             // Функция сброса игры
             function resetGame() {
-                clearInterval(timerInterval);
-                clearInterval(goldenMasterInterval);
+                // Останавливаем все таймеры
+                isTimerRunning = false;
+                goldenMasterActive = false;
                 
+                // Сбрасываем все переменные
                 startTime = 0;
                 currentRound = 1;
                 lastRoundTime = 0;
                 totalRounds = 0;
                 history = [];
-                isTimerRunning = false;
                 minRequiredTime = 0;
                 gameOver = false;
                 
-                // Сбрасываем Golden Master
-                goldenMasterActive = false;
+                // Сбрасываем интерфейс
                 body.classList.remove('golden-master');
-                timerDisplay.classList.remove('golden-timer', 'countdown-pulse');
+                timerDisplay.classList.remove('golden-timer', 'countdown-pulse', 'danger-time', 'safe-time', 'long-time');
                 
                 actionBtn.disabled = false;
                 goldenMasterBtn.disabled = false;
                 actionBtn.textContent = 'СТАРТ';
                 
                 timerDisplay.textContent = '0.000';
-                timerDisplay.classList.remove('danger-time', 'safe-time', 'long-time');
                 
                 updateDisplay();
                 updateHistory();
@@ -1179,7 +1209,7 @@
                     
                     startTime = Date.now();
                     isTimerRunning = true;
-                    timerInterval = setInterval(updateTimer, 10);
+                    startTimer();
                     actionBtn.textContent = 'СТОП';
                     
                     // Обновляем требование для текущего раунда
@@ -1188,7 +1218,7 @@
                     }
                 } else {
                     // Остановка таймера
-                    clearInterval(timerInterval);
+                    isTimerRunning = false;
                     const endTime = Date.now();
                     const roundTime = endTime - startTime;
                     
@@ -1243,7 +1273,6 @@
                         }
                         
                         currentRound++;
-                        isTimerRunning = false;
                         actionBtn.textContent = 'СТАРТ';
                         
                         // Обновляем отображение
@@ -1286,6 +1315,14 @@
             
             // Автосохранение каждые 30 секунд
             setInterval(saveGameState, 30000);
+            
+            // Сохраняем состояние при закрытии страницы
+            window.addEventListener('beforeunload', function() {
+                saveGameState();
+                if (goldenMasterActive) {
+                    saveGoldenMasterState();
+                }
+            });
         });
     </script>
 </body>
