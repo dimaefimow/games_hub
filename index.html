@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Таймер раундов</title>
     <style>
-        /* Стили остаются без изменений */
         * {
             margin: 0;
             padding: 0;
@@ -20,11 +19,6 @@
             min-height: 100vh;
             background: #e0e5ec;
             padding: 20px;
-            transition: background 0.5s ease;
-        }
-        
-        body.golden-master {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
         }
         
         .container {
@@ -46,18 +40,6 @@
                 inset -2px -2px 5px #b8bec7;
             position: relative;
             overflow: hidden;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master .neomorph-panel {
-            background: linear-gradient(145deg, #2c2c2c, #1f1f1f);
-            color: #d4af37;
-            box-shadow: 
-                15px 15px 30px #0f0f0f, 
-                -15px -15px 30px #3a3a3a,
-                inset 2px 2px 5px rgba(255, 215, 0, 0.2),
-                inset -3px -3px 7px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(212, 175, 55, 0.3);
         }
         
         h1 {
@@ -69,15 +51,6 @@
             text-shadow: 
                 2px 2px 4px #b8bec7, 
                 -2px -2px 4px #ffffff;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master h1 {
-            color: #d4af37;
-            text-shadow: 
-                0 0 10px rgba(212, 175, 55, 0.7),
-                0 0 20px rgba(212, 175, 55, 0.5),
-                2px 2px 4px rgba(0, 0, 0, 0.8);
         }
         
         .save-indicator {
@@ -93,15 +66,6 @@
                 3px 3px 6px #b8bec7, 
                 -3px -3px 6px #ffffff;
             opacity: 0.7;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master .save-indicator {
-            color: #d4af37;
-            background: #2c2c2c;
-            box-shadow: 
-                3px 3px 6px #0f0f0f, 
-                -3px -3px 6px #3a3a3a;
         }
         
         .stats-grid {
@@ -121,16 +85,6 @@
             box-shadow: 
                 5px 5px 10px #b8bec7, 
                 -5px -5px 10px #ffffff;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master .stat-box {
-            background: linear-gradient(145deg, #2c2c2c, #1f1f1f);
-            color: #d4af37;
-            box-shadow: 
-                5px 5px 10px #0f0f0f, 
-                -5px -5px 10px #3a3a3a;
-            border: 1px solid rgba(212, 175, 55, 0.2);
         }
         
         .stat-label {
@@ -140,22 +94,12 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master .stat-label {
-            color: #d4af37;
         }
         
         .stat-value {
             font-size: 2rem;
             font-weight: bold;
             color: #6a7383;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master .stat-value {
-            color: #d4af37;
         }
         
         .timer-display {
@@ -172,36 +116,6 @@
             box-shadow: 
                 inset 3px 3px 6px #b8bec7, 
                 inset -3px -3px 6px #ffffff;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .timer-display.safe-time {
-            color: #2c2c2c !important;
-            text-shadow: 
-                2px 2px 4px #b8bec7, 
-                -2px -2px 4px #ffffff !important;
-        }
-        
-        .timer-display.danger-time {
-            color: #ff6b6b !important;
-            text-shadow: 
-                0 0 10px rgba(255, 107, 107, 0.7),
-                2px 2px 4px #b8bec7 !important;
-        }
-        
-        .golden-master .timer-display {
-            background: linear-gradient(145deg, #2c2c2c, #1f1f1f);
-            color: #d4af37;
-            text-shadow: 
-                0 0 10px rgba(212, 175, 55, 0.7),
-                0 0 20px rgba(212, 175, 55, 0.5);
-            box-shadow: 
-                inset 3px 3px 6px #0f0f0f, 
-                inset -3px -3px 6px #3a3a3a,
-                0 0 15px rgba(212, 175, 55, 0.3);
-            border: 1px solid rgba(212, 175, 55, 0.3);
         }
         
         .timer-display.long-time {
@@ -218,16 +132,6 @@
             box-shadow: 
                 inset 2px 2px 5px #b8bec7, 
                 inset -2px -2px 5px #ffffff;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master .timer-requirement {
-            background: linear-gradient(145deg, #2c2c2c, #1f1f1f);
-            color: #d4af37;
-            box-shadow: 
-                inset 2px 2px 5px #0f0f0f, 
-                inset -2px -2px 5px #3a3a3a;
-            border: 1px solid rgba(212, 175, 55, 0.2);
         }
         
         .min-time-indicator {
@@ -240,16 +144,6 @@
             box-shadow: 
                 inset 2px 2px 5px #b8bec7, 
                 inset -2px -2px 5px #ffffff;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master .min-time-indicator {
-            background: linear-gradient(145deg, #2c2c2c, #1f1f1f);
-            color: #d4af37;
-            box-shadow: 
-                inset 2px 2px 5px #0f0f0f, 
-                inset -2px -2px 5px #3a3a3a;
-            border: 1px solid rgba(212, 175, 55, 0.2);
         }
         
         .action-button {
@@ -270,28 +164,11 @@
             overflow: hidden;
         }
         
-        .golden-master .action-button {
-            background: linear-gradient(145deg, #2c2c2c, #1f1f1f);
-            color: #d4af37;
-            box-shadow: 
-                5px 5px 10px #0f0f0f, 
-                -5px -5px 10px #3a3a3a,
-                0 0 10px rgba(212, 175, 55, 0.3);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-        
         .action-button:hover {
             box-shadow: 
                 3px 3px 6px #b8bec7, 
                 -3px -3px 6px #ffffff;
             transform: translateY(2px);
-        }
-        
-        .golden-master .action-button:hover {
-            box-shadow: 
-                3px 3px 6px #0f0f0f, 
-                -3px -3px 6px #3a3a3a,
-                0 0 15px rgba(212, 175, 55, 0.5);
         }
         
         .action-button:active {
@@ -301,25 +178,12 @@
             transform: translateY(4px);
         }
         
-        .golden-master .action-button:active {
-            box-shadow: 
-                inset 3px 3px 6px #0f0f0f, 
-                inset -3px -3px 6px #3a3a3a;
-        }
-        
         .action-button:disabled {
             color: #b8bec7;
             cursor: not-allowed;
             box-shadow: 
                 inset 3px 3px 6px #b8bec7, 
                 inset -3px -3px 6px #ffffff;
-        }
-        
-        .golden-master .action-button:disabled {
-            color: #5a4d1c;
-            box-shadow: 
-                inset 3px 3px 6px #0f0f0f, 
-                inset -3px -3px 6px #3a3a3a;
         }
         
         .reset-button {
@@ -334,27 +198,6 @@
             margin-top: 20px;
         }
         
-        .golden-master-button {
-            background: linear-gradient(145deg, #d4af37, #b8941f);
-            color: #2c2c2c;
-            font-weight: bold;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            margin-top: 10px;
-            box-shadow: 
-                0 0 15px rgba(212, 175, 55, 0.7),
-                5px 5px 10px #0f0f0f, 
-                -5px -5px 10px #3a3a3a;
-        }
-        
-        .golden-master-button:hover {
-            background: linear-gradient(145deg, #e6c158, #c9a42a);
-            box-shadow: 
-                0 0 20px rgba(212, 175, 55, 0.9),
-                3px 3px 6px #0f0f0f, 
-                -3px -3px 6px #3a3a3a;
-        }
-        
         .history {
             margin-top: 35px;
             max-height: 250px;
@@ -365,15 +208,6 @@
             box-shadow: 
                 inset 3px 3px 6px #b8bec7, 
                 inset -3px -3px 6px #ffffff;
-            transition: all 0.5s ease;
-        }
-        
-        .golden-master .history {
-            background: linear-gradient(145deg, #2c2c2c, #1f1f1f);
-            box-shadow: 
-                inset 3px 3px 6px #0f0f0f, 
-                inset -3px -3px 6px #3a3a3a;
-            border: 1px solid rgba(212, 175, 55, 0.2);
         }
         
         .history-item {
@@ -385,17 +219,9 @@
             transition: background 0.3s ease;
         }
         
-        .golden-master .history-item {
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-        
         .history-item:hover {
             background: rgba(255, 255, 255, 0.5);
             border-radius: 10px;
-        }
-        
-        .golden-master .history-item:hover {
-            background: rgba(212, 175, 55, 0.1);
         }
         
         .history-item:last-child {
@@ -420,13 +246,6 @@
                 inset -5px -5px 10px #ffffff;
         }
         
-        .golden-master .game-over {
-            background: rgba(44, 44, 44, 0.95);
-            box-shadow: 
-                inset 5px 5px 10px #0f0f0f, 
-                inset -5px -5px 10px #3a3a3a;
-        }
-        
         .game-over-text {
             font-size: 3rem;
             color: #ff6b6b;
@@ -437,13 +256,6 @@
                 -2px -2px 4px #ffffff;
         }
         
-        .golden-master .game-over-text {
-            color: #ff6b6b;
-            text-shadow: 
-                0 0 10px rgba(255, 107, 107, 0.7),
-                2px 2px 4px rgba(0, 0, 0, 0.8);
-        }
-        
         .game-over-reason {
             font-size: 1.5rem;
             color: #6a7383;
@@ -452,68 +264,181 @@
             max-width: 80%;
         }
         
-        .golden-master .game-over-reason {
-            color: #d4af37;
-        }
-        
         .game-over-stats {
             font-size: 1.2rem;
             color: #6a7383;
             margin-bottom: 30px;
         }
         
-        .golden-master .game-over-stats {
+        /* Golden Master стили */
+        .golden-master-toggle {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+        }
+        
+        .gm-toggle-btn {
+            background: #e0e5ec;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 0.8rem;
+            color: #6a7383;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                3px 3px 6px #b8bec7, 
+                -3px -3px 6px #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .gm-toggle-btn:hover {
+            box-shadow: 
+                2px 2px 4px #b8bec7, 
+                -2px -2px 4px #ffffff;
+        }
+        
+        .gm-toggle-btn.active {
+            box-shadow: 
+                inset 2px 2px 4px #b8bec7, 
+                inset -2px -2px 4px #ffffff;
             color: #d4af37;
         }
         
-        .golden-timer {
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .golden-timer::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
-            animation: goldenShine 3s linear infinite;
-        }
-        
-        .countdown-digits {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .digit-block {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin: 0 2px;
-            min-width: 60px;
-        }
-        
-        .digit-label {
-            font-size: 0.7rem;
-            opacity: 0.7;
-            margin-top: 5px;
-        }
-        
-        .explosion {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, #ff6b6b 0%, transparent 70%);
+        .gm-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            z-index: 1000;
+            background: #d4af37;
+            box-shadow: 
+                0 0 10px #d4af37,
+                inset 0 0 5px rgba(255, 255, 255, 0.5);
+            animation: gmGlow 2s infinite alternate;
+        }
+        
+        .gm-active .timer-display {
+            color: #d4af37;
+            text-shadow: 
+                2px 2px 4px rgba(212, 175, 55, 0.3), 
+                -2px -2px 4px rgba(255, 255, 255, 0.8);
+        }
+        
+        .gm-active .stat-value {
+            color: #d4af37;
+        }
+        
+        .gm-active .action-button {
+            color: #d4af37;
+        }
+        
+        .gm-active .neomorph-panel {
+            box-shadow: 
+                10px 10px 20px rgba(212, 175, 55, 0.2), 
+                -10px -10px 20px #ffffff,
+                inset 1px 1px 3px #ffffff,
+                inset -2px -2px 5px rgba(212, 175, 55, 0.1);
+        }
+        
+        .gm-timer-display {
+            font-size: 1.1rem;
+            margin-top: 10px;
+            color: #d4af37;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            box-shadow: 
+                inset 2px 2px 4px rgba(212, 175, 55, 0.2), 
+                inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+        }
+        
+        .gm-countdown {
+            font-size: 1.3rem;
+            margin: 10px 0;
+            color: #4caf50;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 15px;
+            background: rgba(76, 175, 80, 0.1);
+            box-shadow: 
+                inset 2px 2px 4px rgba(76, 175, 80, 0.2), 
+                inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+            animation: countdownPulse 2s infinite;
+        }
+        
+        .gm-countdown.warning {
+            color: #ffa726;
+            background: rgba(255, 167, 38, 0.1);
+            animation: warningPulse 1s infinite;
+        }
+        
+        .gm-countdown.danger {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            animation: dangerPulse 0.5s infinite;
+        }
+        
+        .victory-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(224, 229, 236, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 25px;
+            z-index: 100;
+            box-shadow: 
+                inset 5px 5px 10px #b8bec7, 
+                inset -5px -5px 10px #ffffff;
+        }
+        
+        .victory-text {
+            font-size: 3rem;
+            color: #4caf50;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 
+                2px 2px 4px #b8bec7, 
+                -2px -2px 4px #ffffff;
+        }
+        
+        .victory-stats {
+            font-size: 1.5rem;
+            color: #6a7383;
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 80%;
+        }
+        
+        @keyframes gmGlow {
+            0% { box-shadow: 0 0 5px #d4af37, inset 0 0 3px rgba(255, 255, 255, 0.5); }
+            100% { box-shadow: 0 0 15px #d4af37, inset 0 0 5px rgba(255, 255, 255, 0.7); }
+        }
+        
+        @keyframes countdownPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes warningPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        @keyframes dangerPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
         
         @keyframes pulse {
@@ -528,29 +453,6 @@
             100% { opacity: 1; }
         }
         
-        @keyframes goldenShine {
-            0% { transform: rotate(0deg) translate(-10%, -10%); }
-            100% { transform: rotate(360deg) translate(-10%, -10%); }
-        }
-        
-        @keyframes countdownPulse {
-            0% { transform: scale(1); text-shadow: 0 0 10px rgba(212, 175, 55, 0.7); }
-            50% { transform: scale(1.05); text-shadow: 0 0 20px rgba(212, 175, 55, 1); }
-            100% { transform: scale(1); text-shadow: 0 0 10px rgba(212, 175, 55, 0.7); }
-        }
-        
-        @keyframes explosion {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            50% { transform: translate(-50%, -50%) scale(3); opacity: 0.7; }
-            100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
         .pulse {
             animation: pulse 0.6s ease-in-out;
         }
@@ -559,25 +461,8 @@
             animation: saveFlash 0.5s ease-in-out;
         }
         
-        .countdown-pulse {
-            animation: countdownPulse 2s ease-in-out infinite;
-        }
-        
-        .explosion-animation {
-            animation: explosion 0.8s ease-out forwards;
-        }
-        
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
-        
         .error {
             color: #ff6b6b !important;
-        }
-        
-        .golden-master .error {
-            color: #ff6b6b !important;
-            text-shadow: 0 0 10px rgba(255, 107, 107, 0.7) !important;
         }
         
         @media (max-width: 600px) {
@@ -623,9 +508,24 @@
                 font-size: 1.2rem;
             }
             
-            .digit-block {
-                min-width: 40px;
-                padding: 3px 6px;
+            .golden-master-toggle {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+            }
+            
+            .gm-countdown {
+                font-size: 1.1rem;
+                padding: 8px 15px;
+            }
+            
+            .victory-text {
+                font-size: 2.2rem;
+            }
+            
+            .victory-stats {
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -633,6 +533,12 @@
 <body>
     <div class="container">
         <div class="neomorph-panel" id="glass-panel">
+            <div class="golden-master-toggle">
+                <button class="gm-toggle-btn" id="gm-toggle">
+                    <span class="gm-indicator" id="gm-indicator"></span>
+                    Golden Master
+                </button>
+            </div>
             <div class="save-indicator" id="save-indicator">Автосохранение</div>
             <h1>ТАЙМЕР РАУНДОВ</h1>
             
@@ -653,6 +559,14 @@
             
             <div class="timer-display" id="timer">0.000</div>
             
+            <div class="gm-timer-display" id="gm-timer-display" style="display: none;">
+                Golden Master: <span id="gm-timer">0:00</span>
+            </div>
+            
+            <div class="gm-countdown" id="gm-countdown" style="display: none;">
+                До победы: <span id="gm-countdown-timer">50 дней 00:00:00</span>
+            </div>
+            
             <div class="min-time-indicator" id="min-time-indicator">
                 Минимальное время: 0.000 сек
             </div>
@@ -663,7 +577,6 @@
             
             <button class="action-button" id="action-btn">СТАРТ</button>
             <button class="action-button reset-button" id="reset-btn">СБРОСИТЬ ИГРУ</button>
-            <button class="action-button golden-master-button" id="golden-master-btn">GOLDEN MASTER</button>
             
             <div class="history">
                 <div class="history-item" id="history-header">
@@ -680,7 +593,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             const actionBtn = document.getElementById('action-btn');
             const resetBtn = document.getElementById('reset-btn');
-            const goldenMasterBtn = document.getElementById('golden-master-btn');
             const timerDisplay = document.getElementById('timer');
             const currentRoundDisplay = document.getElementById('current-round');
             const lastTimeDisplay = document.getElementById('last-time');
@@ -690,9 +602,13 @@
             const historyContainer = document.getElementById('history-container');
             const saveIndicator = document.getElementById('save-indicator');
             const glassPanel = document.getElementById('glass-panel');
-            const body = document.body;
+            const gmToggle = document.getElementById('gm-toggle');
+            const gmIndicator = document.getElementById('gm-indicator');
+            const gmTimerDisplay = document.getElementById('gm-timer-display');
+            const gmTimerElement = document.getElementById('gm-timer');
+            const gmCountdownDisplay = document.getElementById('gm-countdown');
+            const gmCountdownTimer = document.getElementById('gm-countdown-timer');
             
-            // Инициализация переменных с значениями по умолчанию
             let startTime = 0;
             let currentRound = 1;
             let lastRoundTime = 0;
@@ -703,17 +619,18 @@
             let minRequiredTime = 0;
             let gameOver = false;
             
-            // Golden Master режим
-            let goldenMasterActive = false;
-            let goldenMasterStartTime = 0;
-            let goldenMasterInterval = null;
-            const GOLDEN_MASTER_DURATION = 50 * 24 * 60 * 60 * 1000; // 50 дней в миллисекундах
-            const GOLDEN_MASTER_AUTO_TRIGGER = 50 * 60 * 60 * 1000; // 50 часов в миллисекундах
+            // Golden Master переменные
+            let isGoldenMasterActive = false;
+            let gmChallengeActive = false;
+            let gmChallengeStartTime = 0;
+            let gmChallengeEndTime = 0;
+            let gmCountdownInterval = null;
+            const GM_CHALLENGE_DURATION = 50 * 24 * 60 * 60 * 1000; // 50 дней в миллисекундах
             
             // Ключи для localStorage
             const STORAGE_KEYS = {
-                GAME_STATE: 'round_timer_state_v11',
-                GOLDEN_MASTER: 'golden_master_state_v5'
+                GAME_STATE: 'round_timer_state_v9',
+                GOLDEN_MASTER: 'golden_master_state_v4'
             };
             
             // Функция форматирования времени
@@ -752,23 +669,32 @@
                 }
             }
             
-            // Функция для обновления цвета таймера в обычном режиме
-            function updateTimerColor(ms) {
-                if (currentRound === 1) {
-                    // Первый раунд - всегда черный (можно нажимать в любой момент)
-                    timerDisplay.classList.remove('danger-time');
-                    timerDisplay.classList.add('safe-time');
-                    return;
-                }
+            // Функция форматирования времени для Golden Master
+            function formatGMTime(ms) {
+                const totalSeconds = Math.floor(ms / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
                 
-                if (ms < minRequiredTime) {
-                    // Время еще не достигло минимума - красный цвет (опасно)
-                    timerDisplay.classList.remove('safe-time');
-                    timerDisplay.classList.add('danger-time');
+                if (hours > 0) {
+                    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 } else {
-                    // Время достигло минимума - черный цвет (безопасно)
-                    timerDisplay.classList.remove('danger-time');
-                    timerDisplay.classList.add('safe-time');
+                    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+            
+            // Функция форматирования времени обратного отсчета
+            function formatCountdownTime(ms) {
+                const totalSeconds = Math.floor(ms / 1000);
+                const days = Math.floor(totalSeconds / (24 * 3600));
+                const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                
+                if (days > 0) {
+                    return `${days} дней ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                } else {
+                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                 }
             }
             
@@ -782,597 +708,505 @@
                 }
             }
             
-            // Функция форматирования времени для Golden Master
-            function formatGoldenMasterTime(ms) {
-                const days = Math.floor(ms / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+            // Сохранение состояния игры
+            function saveGameState() {
+                const gameData = {
+                    isTimerRunning,
+                    startTime,
+                    currentRound,
+                    lastRoundTime,
+                    totalRounds,
+                    history,
+                    minRequiredTime,
+                    gameOver,
+                    timestamp: Date.now()
+                };
                 
-                return `
-                    <div class="countdown-digits">
-                        <div>
-                            <div class="digit-block">${days.toString().padStart(2, '0')}</div>
-                            <div class="digit-label">ДНЕЙ</div>
-                        </div>
-                        <div>
-                            <div class="digit-block">${hours.toString().padStart(2, '0')}</div>
-                            <div class="digit-label">ЧАСОВ</div>
-                        </div>
-                        <div>
-                            <div class="digit-block">${minutes.toString().padStart(2, '0')}</div>
-                            <div class="digit-label">МИНУТ</div>
-                        </div>
-                        <div>
-                            <div class="digit-block">${seconds.toString().padStart(2, '0')}</div>
-                            <div class="digit-label">СЕКУНД</div>
-                        </div>
-                    </div>
-                `;
+                const gmData = {
+                    isActive: isGoldenMasterActive,
+                    challengeActive: gmChallengeActive,
+                    challengeStartTime: gmChallengeStartTime,
+                    challengeEndTime: gmChallengeEndTime,
+                    timestamp: Date.now()
+                };
+                
+                try {
+                    localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify(gameData));
+                    localStorage.setItem(STORAGE_KEYS.GOLDEN_MASTER, JSON.stringify(gmData));
+                    
+                    saveIndicator.classList.add('save-flash');
+                    setTimeout(() => saveIndicator.classList.remove('save-flash'), 500);
+                } catch (error) {
+                    console.error('Ошибка сохранения:', error);
+                }
             }
             
-            // Анимация взрыва при проигрыше в Golden Master
-            function createExplosionAnimation() {
-                const explosion = document.createElement('div');
-                explosion.className = 'explosion explosion-animation';
-                glassPanel.appendChild(explosion);
-                
-                // Тряска интерфейса
-                glassPanel.classList.add('shake');
-                
-                setTimeout(() => {
-                    explosion.remove();
-                    glassPanel.classList.remove('shake');
-                }, 1000);
-            }
-            
-            // Автоактивация Golden Master после достижения 50 часов
-            function checkForGoldenMasterActivation() {
-                if (goldenMasterActive) return;
-                
-                // Проверяем, достигнуто ли время для автоактивации
-                if (minRequiredTime >= GOLDEN_MASTER_AUTO_TRIGGER) {
-                    if (confirm('Поздравляем! Вы достигли 50 часов минимального времени. Активировать Golden Master режим? Это запустит обратный отсчет 50 дней. Если вы остановите таймер до завершения, вы проиграете!')) {
-                        activateGoldenMaster();
+            // Загрузка состояния игры
+            function loadGameState() {
+                try {
+                    const savedData = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
+                    const savedGMData = localStorage.getItem(STORAGE_KEYS.GOLDEN_MASTER);
+                    
+                    if (savedData) {
+                        const gameData = JSON.parse(savedData);
+                        
+                        const now = Date.now();
+                        if (now - gameData.timestamp > 7 * 24 * 60 * 60 * 1000) {
+                            localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
+                        } else {
+                            isTimerRunning = gameData.isTimerRunning || false;
+                            startTime = gameData.startTime || 0;
+                            currentRound = gameData.currentRound || 1;
+                            lastRoundTime = gameData.lastRoundTime || 0;
+                            totalRounds = gameData.totalRounds || 0;
+                            history = gameData.history || [];
+                            minRequiredTime = gameData.minRequiredTime || 0;
+                            gameOver = gameData.gameOver || false;
+                            
+                            currentRoundDisplay.textContent = currentRound;
+                            lastTimeDisplay.textContent = formatTime(lastRoundTime);
+                            totalRoundsDisplay.textContent = totalRounds;
+                            minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
+                            updateHistory();
+                            
+                            if (gameOver) {
+                                showGameOver();
+                            } else if (isTimerRunning) {
+                                const elapsed = Date.now() - startTime;
+                                timerDisplay.textContent = formatTimerTime(elapsed);
+                                updateTimerClass(elapsed);
+                                timerInterval = setInterval(updateTimer, 10);
+                                actionBtn.textContent = "СТОП";
+                                requirementDisplay.textContent = `Раунд ${currentRound} запущен. Нажмите чтобы завершить.`;
+                            } else {
+                                timerDisplay.textContent = '0.000';
+                                timerDisplay.classList.remove('long-time');
+                                actionBtn.textContent = "СТАРТ";
+                                requirementDisplay.textContent = totalRounds > 0 
+                                    ? `Нажмите чтобы начать раунд ${currentRound}`
+                                    : 'Нажмите кнопку, чтобы начать первый раунд';
+                            }
+                        }
                     }
+                    
+                    if (savedGMData) {
+                        const gmData = JSON.parse(savedGMData);
+                        const now = Date.now();
+                        
+                        if (now - gmData.timestamp > 7 * 24 * 60 * 60 * 1000) {
+                            localStorage.removeItem(STORAGE_KEYS.GOLDEN_MASTER);
+                        } else {
+                            isGoldenMasterActive = gmData.isActive || false;
+                            gmChallengeActive = gmData.challengeActive || false;
+                            gmChallengeStartTime = gmData.challengeStartTime || 0;
+                            gmChallengeEndTime = gmData.challengeEndTime || 0;
+                            
+                            if (gmChallengeActive) {
+                                const remaining = gmChallengeEndTime - now;
+                                if (remaining > 0) {
+                                    startCountdownTimer();
+                                } else {
+                                    // Выигрыш - 50 дней прошли
+                                    showVictoryScreen();
+                                }
+                            }
+                            
+                            updateGoldenMasterUI();
+                        }
+                    }
+                    
+                    return true;
+                    
+                } catch (error) {
+                    console.error('Ошибка загрузки сохранения:', error);
+                    return false;
                 }
             }
             
-            // Активация Golden Master режима
-            function activateGoldenMaster() {
-                if (goldenMasterActive) return;
+            // Запуск обратного отсчета
+            function startCountdownTimer() {
+                if (gmCountdownInterval) {
+                    clearInterval(gmCountdownInterval);
+                }
                 
-                goldenMasterActive = true;
-                goldenMasterStartTime = Date.now();
-                body.classList.add('golden-master');
-                timerDisplay.classList.add('golden-timer', 'countdown-pulse');
+                gmCountdownDisplay.style.display = 'block';
+                updateCountdownTimer();
                 
-                // Обновляем интерфейс
+                gmCountdownInterval = setInterval(updateCountdownTimer, 1000);
+            }
+            
+            // Обновление обратного отсчета
+            function updateCountdownTimer() {
+                const now = Date.now();
+                const remaining = gmChallengeEndTime - now;
+                
+                if (remaining <= 0) {
+                    // Выигрыш - 50 дней прошли
+                    clearInterval(gmCountdownInterval);
+                    gmCountdownInterval = null;
+                    showVictoryScreen();
+                    return;
+                }
+                
+                // Обновляем стили в зависимости от оставшегося времени
+                const daysRemaining = Math.floor(remaining / (24 * 60 * 60 * 1000));
+                
+                if (daysRemaining <= 7) {
+                    gmCountdownDisplay.classList.add('warning');
+                    gmCountdownDisplay.classList.remove('danger');
+                } else if (daysRemaining <= 1) {
+                    gmCountdownDisplay.classList.remove('warning');
+                    gmCountdownDisplay.classList.add('danger');
+                } else {
+                    gmCountdownDisplay.classList.remove('warning', 'danger');
+                }
+                
+                gmCountdownTimer.textContent = formatCountdownTime(remaining);
+            }
+            
+            // Показать экран победы
+            function showVictoryScreen() {
+                const victoryScreen = document.createElement('div');
+                victoryScreen.className = 'victory-screen';
+                victoryScreen.innerHTML = `
+                    <div class="victory-text">ПОБЕДА!</div>
+                    <div class="victory-stats">
+                        Вы успешно прошли испытание Golden Master!<br>
+                        Вы продержались 50 дней без нажатия кнопки СТОП!
+                    </div>
+                    <button class="action-button new-game-button" id="victory-continue-btn">ПРОДОЛЖИТЬ</button>
+                `;
+                
+                glassPanel.appendChild(victoryScreen);
+                
+                document.getElementById('victory-continue-btn').addEventListener('click', function() {
+                    victoryScreen.remove();
+                    resetGoldenMasterChallenge();
+                    actionBtn.disabled = false;
+                    resetBtn.disabled = false;
+                });
+                
                 actionBtn.disabled = true;
-                goldenMasterBtn.disabled = true;
-                requirementDisplay.textContent = 'Golden Master активен! Обратный отсчет 50 дней...';
+                resetBtn.disabled = true;
                 
-                // Запускаем таймер Golden Master
-                startGoldenMasterTimer();
-                
-                // Сохраняем состояние
+                // Сохраняем состояние победы
+                gmChallengeActive = false;
                 saveGameState();
-                saveGoldenMasterState();
             }
             
-            // Запуск таймера Golden Master
-            function startGoldenMasterTimer() {
-                if (!goldenMasterActive) return;
-                
-                // Очищаем предыдущий интервал
-                if (goldenMasterInterval) {
-                    clearInterval(goldenMasterInterval);
-                }
-                
-                // Используем requestAnimationFrame для более точного таймера
-                function updateGoldenMaster() {
-                    if (!goldenMasterActive) return;
-                    
-                    const currentTime = Date.now();
-                    const elapsed = currentTime - goldenMasterStartTime;
-                    const remaining = GOLDEN_MASTER_DURATION - elapsed;
-                    
-                    if (remaining <= 0) {
-                        // Победа в Golden Master!
-                        goldenMasterWin();
+            // Переключение режима Golden Master
+            function toggleGoldenMaster() {
+                if (isGoldenMasterActive) {
+                    // Деактивация режима
+                    isGoldenMasterActive = false;
+                    updateGoldenMasterUI();
+                    saveGameState();
+                } else {
+                    if (gmChallengeActive) {
+                        alert('Испытание Golden Master уже активно! Не нажимайте кнопку СТОП в течение 50 дней.');
                         return;
                     }
                     
-                    timerDisplay.innerHTML = formatGoldenMasterTime(remaining);
-                    
-                    // Продолжаем обновление
-                    requestAnimationFrame(updateGoldenMaster);
+                    // Активация режима с подтверждением
+                    if (confirm('Активировать Golden Master?\n\nИспытание: 50 дней без нажатия кнопки СТОП\n\nПравила:\n- Нажмите СТОП = проигрыш\n- 50 дней без СТОП = победа\n- Испытание нельзя отменить')) {
+                        startGoldenMasterChallenge();
+                    }
                 }
-                
-                // Запускаем обновление
-                updateGoldenMaster();
             }
             
-            // Победа в Golden Master
-            function goldenMasterWin() {
-                goldenMasterActive = false;
+            // Начать испытание Golden Master
+            function startGoldenMasterChallenge() {
+                isGoldenMasterActive = true;
+                gmChallengeActive = true;
+                gmChallengeStartTime = Date.now();
+                gmChallengeEndTime = gmChallengeStartTime + GM_CHALLENGE_DURATION;
                 
-                // Показываем экран победы
-                const gameOverScreen = document.createElement('div');
-                gameOverScreen.className = 'game-over';
-                gameOverScreen.innerHTML = `
-                    <div class="game-over-text" style="color: #d4af37;">ПОБЕДА!</div>
-                    <div class="game-over-reason">
-                        Вы успешно завершили Golden Master Challenge!<br>
-                        Вы продержались все 50 дней без остановки таймера!
-                    </div>
-                    <div class="game-over-stats">
-                        Вы настоящий мастер таймера!<br>
-                        Это достижение будет сохранено в истории.
-                    </div>
-                    <button class="action-button new-game-button" id="new-game-btn">ВЕРНУТЬСЯ К ИГРЕ</button>
-                `;
+                startCountdownTimer();
+                updateGoldenMasterUI();
+                saveGameState();
                 
-                glassPanel.appendChild(gameOverScreen);
-                
-                // Добавляем запись в историю
-                const historyEntry = {
-                    round: 'GM WIN',
-                    time: GOLDEN_MASTER_DURATION,
-                    date: new Date().toLocaleString('ru-RU'),
-                    special: 'golden_master_victory'
-                };
-                
-                history.push(historyEntry);
-                updateHistory();
-                
-                // Обработчик для кнопки возврата
-                document.getElementById('new-game-btn').addEventListener('click', function() {
-                    gameOverScreen.remove();
-                    deactivateGoldenMaster();
-                    actionBtn.disabled = false;
-                    goldenMasterBtn.disabled = false;
-                    timerDisplay.textContent = '0.000';
-                    requirementDisplay.textContent = 'Golden Master завершен! Начните новую игру.';
+                alert('Golden Master активирован!\n\nИспытание началось. Не нажимайте кнопку СТОП в течение 50 дней!');
+            }
+            
+            // Обработка нажатия кнопки СТОП в режиме Golden Master
+            function handleGoldenMasterStop() {
+                if (gmChallengeActive) {
+                    // Проигрыш - нажали СТОП во время испытания
+                    gmChallengeActive = false;
+                    updateGoldenMasterUI();
                     saveGameState();
-                });
-                
-                // Очищаем состояние Golden Master
-                localStorage.removeItem(STORAGE_KEYS.GOLDEN_MASTER);
+                    
+                    alert('ВЫ ПРОИГРАЛИ!\n\nВы нажали кнопку СТОП во время испытания Golden Master.\nИспытание провалено.');
+                    
+                    // Показываем экран проигрыша
+                    const gameOverScreen = document.createElement('div');
+                    gameOverScreen.className = 'game-over';
+                    gameOverScreen.innerHTML = `
+                        <div class="game-over-text">ПРОИГРЫШ!</div>
+                        <div class="game-over-reason">
+                            Вы нажали кнопку СТОП во время испытания Golden Master!<br>
+                            Испытание длилось: ${formatTime(Date.now() - gmChallengeStartTime)}
+                        </div>
+                        <div class="game-over-stats">
+                            До победы оставалось: ${formatCountdownTime(gmChallengeEndTime - Date.now())}
+                        </div>
+                        <button class="action-button new-game-button" id="gm-failure-btn">ПОНЯТНО</button>
+                    `;
+                    
+                    glassPanel.appendChild(gameOverScreen);
+                    
+                    document.getElementById('gm-failure-btn').addEventListener('click', function() {
+                        gameOverScreen.remove();
+                        resetGoldenMasterChallenge();
+                    });
+                }
             }
             
-            // Деактивация Golden Master (при сбое)
-            function deactivateGoldenMaster() {
-                goldenMasterActive = false;
-                body.classList.remove('golden-master');
-                timerDisplay.classList.remove('golden-timer', 'countdown-pulse');
-                
-                // Анимация взрыва
-                createExplosionAnimation();
-                
-                // Показываем экран проигрыша
+            // Сброс испытания Golden Master
+            function resetGoldenMasterChallenge() {
+                if (gmCountdownInterval) {
+                    clearInterval(gmCountdownInterval);
+                    gmCountdownInterval = null;
+                }
+                isGoldenMasterActive = false;
+                gmChallengeActive = false;
+                gmChallengeStartTime = 0;
+                gmChallengeEndTime = 0;
+                updateGoldenMasterUI();
+                gmCountdownDisplay.style.display = 'none';
+                saveGameState();
+            }
+            
+            // Обновление интерфейса Golden Master
+            function updateGoldenMasterUI() {
+                if (isGoldenMasterActive) {
+                    gmToggle.classList.add('active');
+                    glassPanel.classList.add('gm-active');
+                    gmIndicator.style.display = 'inline-block';
+                    
+                    if (gmChallengeActive) {
+                        gmTimerDisplay.style.display = 'none';
+                        gmCountdownDisplay.style.display = 'block';
+                    } else {
+                        gmTimerDisplay.style.display = 'block';
+                        gmCountdownDisplay.style.display = 'none';
+                    }
+                } else {
+                    gmToggle.classList.remove('active');
+                    glassPanel.classList.remove('gm-active');
+                    gmIndicator.style.display = 'inline-block';
+                    gmTimerDisplay.style.display = 'none';
+                    
+                    if (gmChallengeActive) {
+                        gmCountdownDisplay.style.display = 'block';
+                    } else {
+                        gmCountdownDisplay.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Показать экран проигрыша
+            function showGameOver() {
                 const gameOverScreen = document.createElement('div');
                 gameOverScreen.className = 'game-over';
                 gameOverScreen.innerHTML = `
                     <div class="game-over-text">ПРОИГРЫШ!</div>
                     <div class="game-over-reason">
-                        Вы не смогли завершить Golden Master Challenge.<br>
-                        Таймер был остановлен до истечения 50 дней.
+                        Раунд ${currentRound} длился меньше минимального времени!<br>
+                        Нужно было: ${formatTime(minRequiredTime)}<br>
+                        Ваше время: ${formatTime(Date.now() - startTime)}
                     </div>
                     <div class="game-over-stats">
-                        Минимальное время: ${formatTime(minRequiredTime)}<br>
-                        Всего раундов: ${totalRounds}
+                        Пройдено раундов: ${totalRounds}<br>
+                        Лучшее время: ${formatTime(Math.max(...history.map(h => h.time), 0))}
                     </div>
                     <button class="action-button new-game-button" id="new-game-btn">НОВАЯ ИГРА</button>
                 `;
                 
                 glassPanel.appendChild(gameOverScreen);
                 
-                // Добавляем запись в историю
-                const historyEntry = {
-                    round: 'GM FAIL',
-                    time: Date.now() - goldenMasterStartTime,
-                    date: new Date().toLocaleString('ru-RU'),
-                    special: 'golden_master_failure'
-                };
-                
-                history.push(historyEntry);
-                updateHistory();
-                
-                // Обработчик для кнопки новой игры
                 document.getElementById('new-game-btn').addEventListener('click', function() {
-                    gameOverScreen.remove();
                     resetGame();
-                    saveGameState();
                 });
                 
-                // Очищаем состояние Golden Master
-                localStorage.removeItem(STORAGE_KEYS.GOLDEN_MASTER);
+                actionBtn.disabled = true;
+                resetBtn.disabled = true;
             }
             
-            // Функция сохранения состояния игры
-            function saveGameState() {
-                const gameState = {
-                    currentRound,
-                    lastRoundTime,
-                    totalRounds,
-                    history,
-                    minRequiredTime,
-                    isTimerRunning,
-                    startTime: isTimerRunning ? startTime : 0,
-                    gameOver,
-                    savedAt: Date.now()
-                };
-                
-                try {
-                    localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify(gameState));
-                    
-                    // Показываем индикатор сохранения
-                    saveIndicator.classList.add('save-flash');
-                    setTimeout(() => {
-                        saveIndicator.classList.remove('save-flash');
-                    }, 500);
-                    
-                    console.log('Игра сохранена:', gameState);
-                } catch (error) {
-                    console.error('Ошибка сохранения игры:', error);
-                }
-            }
-            
-            // Функция сохранения состояния Golden Master
-            function saveGoldenMasterState() {
-                if (!goldenMasterActive) return;
-                
-                const goldenMasterState = {
-                    active: goldenMasterActive,
-                    startTime: goldenMasterStartTime,
-                    savedAt: Date.now()
-                };
-                
-                try {
-                    localStorage.setItem(STORAGE_KEYS.GOLDEN_MASTER, JSON.stringify(goldenMasterState));
-                    console.log('Golden Master сохранен:', goldenMasterState);
-                } catch (error) {
-                    console.error('Ошибка сохранения Golden Master:', error);
-                }
-            }
-            
-            // Функция загрузки состояния игры
-            function loadGameState() {
-                try {
-                    const savedState = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
-                    
-                    if (savedState) {
-                        const gameState = JSON.parse(savedState);
-                        console.log('Загружено состояние игры:', gameState);
-                        
-                        // Восстанавливаем все переменные
-                        currentRound = gameState.currentRound || 1;
-                        lastRoundTime = gameState.lastRoundTime || 0;
-                        totalRounds = gameState.totalRounds || 0;
-                        history = gameState.history || [];
-                        minRequiredTime = gameState.minRequiredTime || 0;
-                        gameOver = gameState.gameOver || false;
-                        
-                        // Восстанавливаем таймер, если он был активен
-                        if (gameState.isTimerRunning && gameState.startTime) {
-                            startTime = gameState.startTime;
-                            isTimerRunning = true;
-                            startTimer(); // Запускаем таймер с учетом прошедшего времени
-                            actionBtn.textContent = 'СТОП';
-                        }
-                        
-                        updateDisplay();
-                        updateHistory();
-                        return true;
-                    }
-                } catch (error) {
-                    console.error('Ошибка загрузки состояния игры:', error);
-                }
-                return false;
-            }
-            
-            // Функция загрузки состояния Golden Master
-            function loadGoldenMasterState() {
-                try {
-                    const savedState = localStorage.getItem(STORAGE_KEYS.GOLDEN_MASTER);
-                    
-                    if (savedState) {
-                        const goldenMasterState = JSON.parse(savedState);
-                        console.log('Загружено состояние Golden Master:', goldenMasterState);
-                        
-                        if (goldenMasterState.active) {
-                            goldenMasterActive = true;
-                            goldenMasterStartTime = goldenMasterState.startTime;
-                            
-                            // Проверяем, не истекло ли время Golden Master
-                            const currentTime = Date.now();
-                            const elapsed = currentTime - goldenMasterStartTime;
-                            
-                            if (elapsed >= GOLDEN_MASTER_DURATION) {
-                                // Время истекло - победа
-                                goldenMasterWin();
-                            } else {
-                                // Продолжаем отсчет
-                                body.classList.add('golden-master');
-                                timerDisplay.classList.add('golden-timer', 'countdown-pulse');
-                                actionBtn.disabled = true;
-                                goldenMasterBtn.disabled = true;
-                                requirementDisplay.textContent = 'Golden Master активен! Обратный отсчет 50 дней...';
-                                
-                                startGoldenMasterTimer();
-                            }
-                            return true;
-                        }
-                    }
-                } catch (error) {
-                    console.error('Ошибка загрузки состояния Golden Master:', error);
-                }
-                return false;
-            }
-            
-            // Запуск таймера
-            function startTimer() {
-                if (!isTimerRunning) return;
-                
-                // Очищаем предыдущий интервал
+            // Полный сброс игры
+            function resetGame() {
                 if (timerInterval) {
                     clearInterval(timerInterval);
+                    timerInterval = null;
                 }
                 
-                // Используем requestAnimationFrame для более точного таймера
-                function updateTimer() {
-                    if (!isTimerRunning) return;
-                    
-                    const currentTime = Date.now();
-                    const elapsed = currentTime - startTime;
-                    
-                    timerDisplay.textContent = formatTimerTime(elapsed);
-                    updateTimerColor(elapsed);
-                    updateTimerClass(elapsed);
-                    
-                    // Продолжаем обновление
-                    requestAnimationFrame(updateTimer);
+                const gameOverScreen = document.querySelector('.game-over');
+                if (gameOverScreen) {
+                    gameOverScreen.remove();
                 }
                 
-                // Запускаем обновление
-                updateTimer();
-            }
-            
-            // Функция обновления отображения
-            function updateDisplay() {
-                currentRoundDisplay.textContent = currentRound;
-                lastTimeDisplay.textContent = formatTime(lastRoundTime);
-                totalRoundsDisplay.textContent = totalRounds;
-                minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
-                
-                if (currentRound === 1) {
-                    requirementDisplay.textContent = 'Нажмите кнопку, чтобы начать первый раунд';
-                } else {
-                    requirementDisplay.textContent = `Минимальное время для раунда ${currentRound}: ${formatTime(minRequiredTime)}`;
-                }
-                
-                // Проверяем автоактивацию Golden Master
-                checkForGoldenMasterActivation();
-            }
-            
-            // Функция обновления истории
-            function updateHistory() {
-                historyContainer.innerHTML = '';
-                
-                // Показываем только последние 10 записей
-                const recentHistory = history.slice(-10);
-                
-                recentHistory.forEach((entry, index) => {
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'history-item';
-                    
-                    if (entry.special === 'golden_master_victory') {
-                        historyItem.innerHTML = `
-                            <span style="color: #d4af37; font-weight: bold;">GOLDEN MASTER</span>
-                            <span style="color: #d4af37; font-weight: bold;">ПОБЕДА</span>
-                            <span>${entry.date}</span>
-                        `;
-                    } else if (entry.special === 'golden_master_failure') {
-                        historyItem.innerHTML = `
-                            <span style="color: #ff6b6b; font-weight: bold;">GOLDEN MASTER</span>
-                            <span style="color: #ff6b6b; font-weight: bold;">ПРОИГРЫШ</span>
-                            <span>${entry.date}</span>
-                        `;
-                    } else {
-                        historyItem.innerHTML = `
-                            <span>${entry.round}</span>
-                            <span>${formatTime(entry.time)}</span>
-                            <span>${entry.date}</span>
-                        `;
-                    }
-                    
-                    historyContainer.appendChild(historyItem);
-                });
-            }
-            
-            // Функция сброса игры
-            function resetGame() {
-                // Останавливаем все таймеры
                 isTimerRunning = false;
-                goldenMasterActive = false;
-                
-                // Сбрасываем все переменные
                 startTime = 0;
                 currentRound = 1;
                 lastRoundTime = 0;
                 totalRounds = 0;
                 history = [];
-                minRequiredTime = 0;
                 gameOver = false;
-                
-                // Сбрасываем интерфейс
-                body.classList.remove('golden-master');
-                timerDisplay.classList.remove('golden-timer', 'countdown-pulse', 'danger-time', 'safe-time', 'long-time');
-                
-                actionBtn.disabled = false;
-                goldenMasterBtn.disabled = false;
-                actionBtn.textContent = 'СТАРТ';
+                minRequiredTime = 0;
                 
                 timerDisplay.textContent = '0.000';
+                timerDisplay.classList.remove('long-time');
+                currentRoundDisplay.textContent = currentRound;
+                lastTimeDisplay.textContent = formatTime(lastRoundTime);
+                totalRoundsDisplay.textContent = totalRounds;
+                actionBtn.textContent = "СТАРТ";
+                actionBtn.disabled = false;
+                resetBtn.disabled = false;
+                requirementDisplay.textContent = 'Нажмите кнопку, чтобы начать первый раунд';
+                minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
                 
-                updateDisplay();
-                updateHistory();
+                historyContainer.innerHTML = '';
                 
-                // Очищаем localStorage
-                localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
-                localStorage.removeItem(STORAGE_KEYS.GOLDEN_MASTER);
-                
-                console.log('Игра сброшена');
+                saveGameState();
             }
             
-            // Обработчик для кнопки старт/стоп
+            // Обновление таймера
+            function updateTimer() {
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+                timerDisplay.textContent = formatTimerTime(elapsed);
+                updateTimerClass(elapsed);
+                
+                if (gameOver) return;
+                
+                if (minRequiredTime > 0 && elapsed < minRequiredTime) {
+                    timerDisplay.classList.add('error');
+                } else {
+                    timerDisplay.classList.remove('error');
+                }
+            }
+            
+            // Обновление истории
+            function updateHistory() {
+                historyContainer.innerHTML = '';
+                
+                if (history.length === 0) {
+                    historyContainer.innerHTML = '<div class="history-item"><span colspan="3" style="text-align: center; grid-column: span 3;">История пуста</span></div>';
+                    return;
+                }
+                
+                const recentHistory = [...history].reverse().slice(0, 20);
+                
+                recentHistory.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `
+                        <span>${item.round}</span>
+                        <span>${formatTime(item.time)}</span>
+                        <span>${item.date}</span>
+                    `;
+                    historyContainer.appendChild(historyItem);
+                });
+            }
+            
+            // Обработчик клика по основной кнопке
             actionBtn.addEventListener('click', function() {
                 if (gameOver) return;
                 
                 if (!isTimerRunning) {
-                    // Запуск таймера
-                    if (goldenMasterActive) {
-                        // Остановка Golden Master - проигрыш
-                        deactivateGoldenMaster();
-                        return;
-                    }
-                    
+                    // Старт таймера
                     startTime = Date.now();
+                    timerInterval = setInterval(updateTimer, 10);
                     isTimerRunning = true;
-                    startTimer();
-                    actionBtn.textContent = 'СТОП';
-                    
-                    // Обновляем требование для текущего раунда
-                    if (currentRound > 1) {
-                        requirementDisplay.textContent = `Минимальное время для раунда ${currentRound}: ${formatTime(minRequiredTime)}`;
-                    }
+                    actionBtn.textContent = "СТОП";
+                    requirementDisplay.textContent = `Раунд ${currentRound} запущен. Нажмите чтобы завершить.`;
+                    timerDisplay.classList.remove('error');
+                    timerDisplay.classList.remove('long-time');
                 } else {
                     // Остановка таймера
-                    isTimerRunning = false;
+                    clearInterval(timerInterval);
+                    timerInterval = null;
                     const endTime = Date.now();
                     const roundTime = endTime - startTime;
                     
-                    // Проверяем, соответствует ли время требованию (кроме первого раунда)
-                    if (currentRound > 1 && roundTime < minRequiredTime) {
-                        // Время не соответствует требованию - игра окончена
-                        gameOver = true;
-                        actionBtn.disabled = true;
-                        
-                        // Показываем экран проигрыша
-                        const gameOverScreen = document.createElement('div');
-                        gameOverScreen.className = 'game-over';
-                        gameOverScreen.innerHTML = `
-                            <div class="game-over-text">ПРОИГРЫШ!</div>
-                            <div class="game-over-reason">
-                                Время раунда ${currentRound} составило ${formatTime(roundTime)},<br>
-                                что меньше требуемого минимума ${formatTime(minRequiredTime)}.
-                            </div>
-                            <div class="game-over-stats">
-                                Минимальное время: ${formatTime(minRequiredTime)}<br>
-                                Всего раундов: ${totalRounds}
-                            </div>
-                            <button class="action-button new-game-button" id="new-game-btn">НОВАЯ ИГРА</button>
-                        `;
-                        
-                        glassPanel.appendChild(gameOverScreen);
-                        
-                        // Обработчик для кнопки новой игры
-                        document.getElementById('new-game-btn').addEventListener('click', function() {
-                            gameOverScreen.remove();
-                            resetGame();
-                        });
-                    } else {
-                        // Время соответствует требованию - переходим к следующему раунду
-                        lastRoundTime = roundTime;
-                        
-                        // Добавляем запись в историю
-                        const historyEntry = {
-                            round: currentRound,
-                            time: roundTime,
-                            date: new Date().toLocaleString('ru-RU')
-                        };
-                        
-                        history.push(historyEntry);
-                        totalRounds++;
-                        
-                        // Увеличиваем минимальное требование для следующего раунда
-                        if (currentRound === 1) {
-                            minRequiredTime = roundTime;
-                        } else {
-                            minRequiredTime = Math.max(minRequiredTime, roundTime);
-                        }
-                        
-                        currentRound++;
-                        actionBtn.textContent = 'СТАРТ';
-                        
-                        // Обновляем отображение
-                        updateDisplay();
-                        updateHistory();
-                        
-                        // Проверяем автоактивацию Golden Master
-                        checkForGoldenMasterActivation();
+                    // Проверяем, не активен ли Golden Master challenge
+                    if (gmChallengeActive) {
+                        handleGoldenMasterStop();
+                        return;
                     }
+                    
+                    if (minRequiredTime > 0 && roundTime < minRequiredTime) {
+                        gameOver = true;
+                        showGameOver();
+                        saveGameState();
+                        return;
+                    }
+                    
+                    minRequiredTime = roundTime;
+                    
+                    lastRoundTime = roundTime;
+                    const historyEntry = {
+                        round: currentRound,
+                        time: roundTime,
+                        date: new Date().toLocaleString('ru-RU')
+                    };
+                    
+                    history.push(historyEntry);
+                    totalRounds++;
+                    currentRound++;
+                    
+                    timerDisplay.textContent = formatTimerTime(roundTime);
+                    updateTimerClass(roundTime);
+                    currentRoundDisplay.textContent = currentRound;
+                    lastTimeDisplay.textContent = formatTime(roundTime);
+                    totalRoundsDisplay.textContent = totalRounds;
+                    minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
+                    actionBtn.textContent = "СТАРТ";
+                    requirementDisplay.textContent = `Нажмите чтобы начать раунд ${currentRound}`;
+                    isTimerRunning = false;
+                    
+                    updateHistory();
+                    
+                    document.querySelectorAll('.stat-box').forEach(box => {
+                        box.classList.add('pulse');
+                        setTimeout(() => box.classList.remove('pulse'), 600);
+                    });
                 }
                 
-                // Сохраняем состояние после каждого действия
                 saveGameState();
             });
             
-            // Обработчик для кнопки сброса
+            // Обработчик сброса игры
             resetBtn.addEventListener('click', function() {
                 if (confirm('Вы уверены, что хотите сбросить игру? Все данные будут потеряны.')) {
                     resetGame();
                 }
             });
             
-            // Обработчик для кнопки Golden Master
-            goldenMasterBtn.addEventListener('click', function() {
-                if (goldenMasterActive) return;
-                
-                if (minRequiredTime < GOLDEN_MASTER_AUTO_TRIGGER) {
-                    alert('Для активации Golden Master необходимо достичь минимального времени в 50 часов.');
-                    return;
-                }
-                
-                if (confirm('Активировать Golden Master режим? Это запустит обратный отсчет 50 дней. Если вы остановите таймер до завершения, вы проиграете!')) {
-                    activateGoldenMaster();
+            // Обработчик переключения Golden Master
+            gmToggle.addEventListener('click', toggleGoldenMaster);
+            
+            // Контекстное меню для сброса Golden Master
+            gmToggle.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                if (gmChallengeActive && confirm('Прервать испытание Golden Master? Это будет считаться проигрышем.')) {
+                    handleGoldenMasterStop();
                 }
             });
             
-            // Загружаем состояние при загрузке страницы
-            window.addEventListener('load', function() {
-                console.log('Загрузка состояния...');
-                loadGameState();
-                loadGoldenMasterState();
-            });
+            // Автосохранение каждые 30 секунд
+            setInterval(saveGameState, 30000);
             
-            // Автосохранение каждые 10 секунд
-            setInterval(saveGameState, 10000);
+            // Загрузка состояния при запуске
+            loadGameState();
             
-            // Сохраняем состояние при закрытии страницы
-            window.addEventListener('beforeunload', function() {
-                console.log('Сохранение перед закрытием...');
-                saveGameState();
-                if (goldenMasterActive) {
-                    saveGoldenMasterState();
-                }
-            });
-            
-            // Сохраняем состояние при изменении видимости страницы
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden) {
-                    console.log('Страница скрыта, сохраняем состояние...');
-                    saveGameState();
-                    if (goldenMasterActive) {
-                        saveGoldenMasterState();
-                    }
-                } else {
-                    console.log('Страница видима, проверяем состояние...');
-                    // При возвращении на страницу обновляем отображение
-                    updateDisplay();
-                }
-            });
+            // Анимация при загрузке
+            setTimeout(() => {
+                document.querySelectorAll('.neomorph-panel, .stat-box, .action-button').forEach(el => {
+                    el.style.transition = 'all 0.5s ease';
+                    el.style.opacity = 1;
+                });
+            }, 100);
         });
     </script>
 </body>
