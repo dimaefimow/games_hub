@@ -240,7 +240,7 @@
         <div class="top-section">
             <div class="header neumorphic">
                 <div class="timer" id="timer">00:00:00</div>
-                <div class="points" id="points">0 🎯</div>
+                <div class="points" id="points">0 $</div>
             </div>
             
             <div class="cigarettes-count" id="cigarettes">🚬 ×0</div>
@@ -261,7 +261,7 @@
             
             <button class="deposit-btn-compact" id="depositBtn">
                 Дэпнуть
-                <div class="deposit-cost" id="depositCost">30 🎯</div>
+                <div class="deposit-cost" id="depositCost">30 $</div>
             </button>
         </div>
         
@@ -386,7 +386,7 @@
                 pointsPaused = false;
             }
             
-            pointsElement.textContent = `${points} 🎯`;
+            pointsElement.textContent = `${points} $`;
         }
         
         // Обновление отображения сигареток
@@ -408,7 +408,7 @@
                 probability: circleOptions[currentOptionIndex].dataset.prob
             };
             
-            depositCostElement.textContent = `${selectedDeposit.cost} 🎯`;
+            depositCostElement.textContent = `${selectedDeposit.cost} $`;
         }
         
         // Выбор опции дэпа
@@ -428,7 +428,7 @@
             }
             
             if (points < selectedDeposit.cost) {
-                showResult('Недостаточно 🎯', `Для этого дэпа нужно ${selectedDeposit.cost} 🎯`);
+                showResult('Недостаточно $', `Для этого дэпа нужно ${selectedDeposit.cost} $`);
                 return;
             }
             
@@ -474,7 +474,7 @@
             debtEndTime = new Date(currentTime.getTime() + (15 * 24 * 60 * 60 * 1000));
             updateDebtInfo();
             
-            showResult('Долг получен', 'Вы получили 180 🎯. Начисление 🎯 приостановлено на 15 суток.');
+            showResult('Долг получен', 'Вы получили 180 $. Начисление $ приостановлено на 15 суток.');
             saveGameData();
         });
         
