@@ -19,10 +19,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 5cm; /* Сдвиг на 5 см вниз (2см + 3см) */
+            padding-top: 4cm; /* Подняли на 1 см вверх (было 5см, стало 4см) */
             padding-bottom: 20px;
             padding-left: 20px;
             padding-right: 20px;
+            transform: scale(1.1); /* Увеличение масштаба на 10% */
+            transform-origin: top center;
         }
         
         .container {
@@ -33,26 +35,26 @@
         /* Неоморфизм стили */
         .neumorphic {
             background: #e0e5ec;
-            border-radius: 14px;
-            box-shadow: 7px 7px 14px #b8bec7, -7px -7px 14px #ffffff;
-            padding: 11px;
-            margin-bottom: 17px;
+            border-radius: 18px; /* Увеличены скругления */
+            box-shadow: 8px 8px 16px #b8bec7, -8px -8px 16px #ffffff;
+            padding: 13px;
+            margin-bottom: 19px;
         }
         
         .neumorphic-inset {
             background: #e0e5ec;
-            border-radius: 11px;
-            box-shadow: inset 3px 3px 7px #b8bec7, inset -3px -3px 7px #ffffff;
-            padding: 11px;
+            border-radius: 14px; /* Увеличены скругления */
+            box-shadow: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px #ffffff;
+            padding: 13px;
         }
         
         .neumorphic-btn {
             background: #e0e5ec;
             border: none;
-            border-radius: 14px;
-            box-shadow: 3px 3px 7px #b8bec7, -3px -3px 7px #ffffff;
-            padding: 9px 14px;
-            font-size: 16px;
+            border-radius: 18px; /* Увеличены скругления */
+            box-shadow: 4px 4px 8px #b8bec7, -4px -4px 8px #ffffff;
+            padding: 11px 16px;
+            font-size: 18px; /* Увеличен шрифт */
             color: #4d4d4d;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -60,48 +62,48 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            margin-bottom: 11px;
-            height: 39px;
+            margin-bottom: 13px;
+            height: 43px; /* Увеличена высота на 10% */
         }
         
         .neumorphic-btn:active {
-            box-shadow: inset 3px 3px 7px #b8bec7, inset -3px -3px 7px #ffffff;
+            box-shadow: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px #ffffff;
         }
         
         .top-section {
             display: flex;
-            gap: 11px;
-            margin-bottom: 17px;
+            gap: 13px;
+            margin-bottom: 19px;
             align-items: stretch;
-            height: 39px;
+            height: 43px; /* Увеличена высота на 10% */
         }
         
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 9px 14px;
+            padding: 11px 16px;
             flex: 1;
             height: 100%;
         }
         
         .timer {
-            font-size: 16px;
+            font-size: 18px; /* Увеличен шрифт */
             font-weight: bold;
         }
         
         .points {
-            font-size: 16px;
+            font-size: 18px; /* Увеличен шрифт */
             font-weight: bold;
         }
         
         .cigarettes-count {
-            font-size: 16px;
+            font-size: 18px; /* Увеличен шрифт */
             cursor: pointer;
-            padding: 9px 14px;
-            border-radius: 14px;
+            padding: 11px 16px;
+            border-radius: 18px; /* Увеличены скругления */
             background: #e0e5ec;
-            box-shadow: 3px 3px 7px #b8bec7, -3px -3px 7px #ffffff;
+            box-shadow: 4px 4px 8px #b8bec7, -4px -4px 8px #ffffff;
             display: flex;
             align-items: center;
             white-space: nowrap;
@@ -111,18 +113,18 @@
         .deposit-container {
             display: flex;
             align-items: stretch;
-            gap: 11px;
-            margin-bottom: 17px;
-            height: 39px;
+            gap: 13px;
+            margin-bottom: 19px;
+            height: 43px; /* Увеличена высота на 10% */
         }
         
         .circles-pill {
             background: #e0e5ec;
-            border-radius: 14px;
-            box-shadow: 3px 3px 7px #b8bec7, -3px -3px 7px #ffffff;
-            padding: 9px 14px;
+            border-radius: 18px; /* Увеличены скругления */
+            box-shadow: 4px 4px 8px #b8bec7, -4px -4px 8px #ffffff;
+            padding: 11px 16px;
             display: flex;
-            gap: 11px;
+            gap: 13px;
             flex: 1;
             align-items: center;
             height: 100%;
@@ -136,15 +138,15 @@
         }
         
         .circle {
-            width: 18px;
-            height: 18px;
+            width: 20px; /* Увеличен размер кружков */
+            height: 20px; /* Увеличен размер кружков */
             border-radius: 50%;
-            box-shadow: 2px 2px 5px #b8bec7, -2px -2px 5px #ffffff;
+            box-shadow: 3px 3px 6px #b8bec7, -3px -3px 6px #ffffff;
             transition: all 0.2s ease;
         }
         
         .circle.selected {
-            box-shadow: inset 2px 2px 5px #b8bec7, inset -2px -2px 5px #ffffff;
+            box-shadow: inset 3px 3px 6px #b8bec7, inset -3px -3px 6px #ffffff;
         }
         
         .circle.red { background-color: #ff5f57; }
@@ -154,10 +156,10 @@
         .deposit-btn-compact {
             background: #e0e5ec;
             border: none;
-            border-radius: 14px;
-            box-shadow: 3px 3px 7px #b8bec7, -3px -3px 7px #ffffff;
-            padding: 9px 14px;
-            font-size: 14px;
+            border-radius: 18px; /* Увеличены скругления */
+            box-shadow: 4px 4px 8px #b8bec7, -4px -4px 8px #ffffff;
+            padding: 11px 16px;
+            font-size: 16px; /* Увеличен шрифт */
             color: #4d4d4d;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -165,25 +167,25 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 88px;
+            min-width: 97px; /* Увеличена ширина на 10% */
             height: 100%;
         }
         
         .deposit-btn-compact:active {
-            box-shadow: inset 3px 3px 7px #b8bec7, inset -3px -3px 7px #ffffff;
+            box-shadow: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px #ffffff;
         }
         
         .deposit-cost {
-            font-size: 11px;
+            font-size: 12px; /* Увеличен шрифт */
             color: #666;
-            margin-top: 2px;
+            margin-top: 3px;
         }
         
         .buttons-row {
             display: flex;
-            gap: 11px;
-            margin-bottom: 11px;
-            height: 39px;
+            gap: 13px;
+            margin-bottom: 13px;
+            height: 43px; /* Увеличена высота на 10% */
         }
         
         .buttons-row .neumorphic-btn {
@@ -193,9 +195,9 @@
         }
         
         .debt-info {
-            font-size: 11px;
+            font-size: 12px; /* Увеличен шрифт */
             text-align: center;
-            margin-top: 9px;
+            margin-top: 10px;
             color: #666;
         }
         
@@ -214,21 +216,21 @@
         
         .modal-content {
             background: #e0e5ec;
-            border-radius: 14px;
-            box-shadow: 7px 7px 14px #b8bec7, -7px -7px 14px #ffffff;
-            padding: 17px;
-            max-width: 280px;
+            border-radius: 18px; /* Увеличены скругления */
+            box-shadow: 8px 8px 16px #b8bec7, -8px -8px 16px #ffffff;
+            padding: 19px;
+            max-width: 300px;
             text-align: center;
         }
         
         .modal-title {
-            font-size: 18px;
+            font-size: 20px; /* Увеличен шрифт */
             font-weight: bold;
-            margin-bottom: 11px;
+            margin-bottom: 13px;
         }
         
         .modal-btn {
-            margin-top: 11px;
+            margin-top: 13px;
             height: auto;
         }
     </style>
