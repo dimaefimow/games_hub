@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Таймер раундов</title>
+    <title>Неоморфный сайт</title>
     <style>
         * {
             margin: 0;
@@ -13,1201 +13,562 @@
         }
         
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #e0e5ec;
+            color: #4d4d4d;
             min-height: 100vh;
-            background: #e0e5ec;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
         }
         
         .container {
             width: 100%;
-            max-width: 550px;
-            text-align: center;
+            max-width: 400px;
         }
         
-        .neomorph-panel {
+        /* Неоморфизм стили */
+        .neumorphic {
             background: #e0e5ec;
-            border-radius: 25px;
-            padding: 35px;
-            color: #6a7383;
-            margin-bottom: 25px;
-            box-shadow: 
-                10px 10px 20px #b8bec7, 
-                -10px -10px 20px #ffffff,
-                inset 1px 1px 3px #ffffff,
-                inset -2px -2px 5px #b8bec7;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 25px;
-            color: #6a7383;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-shadow: 
-                2px 2px 4px #b8bec7, 
-                -2px -2px 4px #ffffff;
-        }
-        
-        .save-indicator {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 0.8rem;
-            color: #6a7383;
-            background: #e0e5ec;
-            padding: 5px 10px;
-            border-radius: 15px;
-            box-shadow: 
-                3px 3px 6px #b8bec7, 
-                -3px -3px 6px #ffffff;
-            opacity: 0.7;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-box {
-            padding: 20px;
-            border-radius: 20px;
-            background: #e0e5ec;
-            min-width: 120px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 
-                5px 5px 10px #b8bec7, 
-                -5px -5px 10px #ffffff;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            color: #6a7383;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-        
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #6a7383;
-        }
-        
-        .timer-display {
-            font-size: 4.5rem;
-            font-weight: bold;
-            margin: 30px 0;
-            color: #6a7383;
+            border-radius: 12px;
+            box-shadow: 6px 6px 12px #b8bec7, -6px -6px 12px #ffffff;
             padding: 10px;
-            text-shadow: 
-                2px 2px 4px #b8bec7, 
-                -2px -2px 4px #ffffff;
-            background: #e0e5ec;
-            border-radius: 20px;
-            box-shadow: 
-                inset 3px 3px 6px #b8bec7, 
-                inset -3px -3px 6px #ffffff;
-        }
-        
-        .timer-display.long-time {
-            font-size: 3.5rem;
-        }
-        
-        .timer-requirement {
-            font-size: 1.3rem;
-            margin-bottom: 30px;
-            color: #6a7383;
-            padding: 12px;
-            border-radius: 10px;
-            background: #e0e5ec;
-            box-shadow: 
-                inset 2px 2px 5px #b8bec7, 
-                inset -2px -2px 5px #ffffff;
-        }
-        
-        .min-time-indicator {
-            font-size: 1.1rem;
             margin-bottom: 15px;
-            color: #6a7383;
-            padding: 8px;
-            border-radius: 8px;
+        }
+        
+        .neumorphic-inset {
             background: #e0e5ec;
-            box-shadow: 
-                inset 2px 2px 5px #b8bec7, 
-                inset -2px -2px 5px #ffffff;
-        }
-        
-        .action-button {
-            background: #e0e5ec;
-            border: none;
-            border-radius: 50px;
-            padding: 20px 45px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #6a7383;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 
-                5px 5px 10px #b8bec7, 
-                -5px -5px 10px #ffffff;
-            margin: 15px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .action-button:hover {
-            box-shadow: 
-                3px 3px 6px #b8bec7, 
-                -3px -3px 6px #ffffff;
-            transform: translateY(2px);
-        }
-        
-        .action-button:active {
-            box-shadow: 
-                inset 3px 3px 6px #b8bec7, 
-                inset -3px -3px 6px #ffffff;
-            transform: translateY(4px);
-        }
-        
-        .action-button:disabled {
-            color: #b8bec7;
-            cursor: not-allowed;
-            box-shadow: 
-                inset 3px 3px 6px #b8bec7, 
-                inset -3px -3px 6px #ffffff;
-        }
-        
-        .reset-button {
-            padding: 12px 25px;
-            font-size: 1rem;
-            margin-top: 10px;
-        }
-        
-        .new-game-button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            margin-top: 20px;
-        }
-        
-        .history {
-            margin-top: 35px;
-            max-height: 250px;
-            overflow-y: auto;
-            padding: 20px;
-            border-radius: 20px;
-            background: #e0e5ec;
-            box-shadow: 
-                inset 3px 3px 6px #b8bec7, 
-                inset -3px -3px 6px #ffffff;
-        }
-        
-        .history-item {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
-            padding: 12px;
-            border-bottom: 1px solid rgba(106, 115, 131, 0.2);
-            transition: background 0.3s ease;
-        }
-        
-        .history-item:hover {
-            background: rgba(255, 255, 255, 0.5);
             border-radius: 10px;
+            box-shadow: inset 3px 3px 6px #b8bec7, inset -3px -3px 6px #ffffff;
+            padding: 10px;
         }
         
-        .history-item:last-child {
-            border-bottom: none;
-        }
-        
-        .game-over {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(224, 229, 236, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 25px;
-            z-index: 100;
-            box-shadow: 
-                inset 5px 5px 10px #b8bec7, 
-                inset -5px -5px 10px #ffffff;
-        }
-        
-        .game-over-text {
-            font-size: 3rem;
-            color: #ff6b6b;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-shadow: 
-                2px 2px 4px #b8bec7, 
-                -2px -2px 4px #ffffff;
-        }
-        
-        .game-over-reason {
-            font-size: 1.5rem;
-            color: #6a7383;
-            text-align: center;
-            margin-bottom: 30px;
-            max-width: 80%;
-        }
-        
-        .game-over-stats {
-            font-size: 1.2rem;
-            color: #6a7383;
-            margin-bottom: 30px;
-        }
-        
-        /* Golden Master стили */
-        .golden-master-toggle {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            z-index: 10;
-        }
-        
-        .gm-toggle-btn {
+        .neumorphic-btn {
             background: #e0e5ec;
             border: none;
-            border-radius: 20px;
-            padding: 8px 15px;
-            font-size: 0.8rem;
-            color: #6a7383;
+            border-radius: 12px;
+            box-shadow: 3px 3px 6px #b8bec7, -3px -3px 6px #ffffff;
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #4d4d4d;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 
-                3px 3px 6px #b8bec7, 
-                -3px -3px 6px #ffffff;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 10px;
+            height: 35px;
         }
         
-        .gm-toggle-btn:hover {
-            box-shadow: 
-                2px 2px 4px #b8bec7, 
-                -2px -2px 4px #ffffff;
+        .neumorphic-btn:active {
+            box-shadow: inset 3px 3px 6px #b8bec7, inset -3px -3px 6px #ffffff;
         }
         
-        .gm-toggle-btn.active {
-            box-shadow: 
-                inset 2px 2px 4px #b8bec7, 
-                inset -2px -2px 4px #ffffff;
-            color: #d4af37;
+        .top-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: stretch;
+            height: 35px;
         }
         
-        .gm-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            flex: 1;
+            height: 100%;
+        }
+        
+        .timer {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .points {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .cigarettes-count {
+            font-size: 14px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: #e0e5ec;
+            box-shadow: 3px 3px 6px #b8bec7, -3px -3px 6px #ffffff;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            height: 100%;
+        }
+        
+        .deposit-container {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            margin-bottom: 15px;
+            height: 35px;
+        }
+        
+        .circles-pill {
+            background: #e0e5ec;
+            border-radius: 12px;
+            box-shadow: 3px 3px 6px #b8bec7, -3px -3px 6px #ffffff;
+            padding: 8px 12px;
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            align-items: center;
+            height: 100%;
+        }
+        
+        .circle-option {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .circle {
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background: #d4af37;
-            box-shadow: 
-                0 0 10px #d4af37,
-                inset 0 0 5px rgba(255, 255, 255, 0.5);
-            animation: gmGlow 2s infinite alternate;
+            box-shadow: 2px 2px 4px #b8bec7, -2px -2px 4px #ffffff;
+            transition: all 0.2s ease;
         }
         
-        .gm-active .timer-display {
-            color: #d4af37;
-            text-shadow: 
-                2px 2px 4px rgba(212, 175, 55, 0.3), 
-                -2px -2px 4px rgba(255, 255, 255, 0.8);
+        .circle.selected {
+            box-shadow: inset 2px 2px 4px #b8bec7, inset -2px -2px 4px #ffffff;
         }
         
-        .gm-active .stat-value {
-            color: #d4af37;
-        }
+        .circle.red { background-color: #ff5f57; }
+        .circle.yellow { background-color: #ffbd2e; }
+        .circle.green { background-color: #28ca42; }
         
-        .gm-active .action-button {
-            color: #d4af37;
-        }
-        
-        .gm-active .neomorph-panel {
-            box-shadow: 
-                10px 10px 20px rgba(212, 175, 55, 0.2), 
-                -10px -10px 20px #ffffff,
-                inset 1px 1px 3px #ffffff,
-                inset -2px -2px 5px rgba(212, 175, 55, 0.1);
-        }
-        
-        .gm-timer-display {
-            font-size: 1.1rem;
-            margin-top: 10px;
-            color: #d4af37;
-            font-weight: bold;
-            padding: 8px 15px;
-            border-radius: 15px;
-            background: rgba(212, 175, 55, 0.1);
-            box-shadow: 
-                inset 2px 2px 4px rgba(212, 175, 55, 0.2), 
-                inset -2px -2px 4px rgba(255, 255, 255, 0.8);
-        }
-        
-        .gm-countdown {
-            font-size: 1.3rem;
-            margin: 10px 0;
-            color: #4caf50;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 15px;
-            background: rgba(76, 175, 80, 0.1);
-            box-shadow: 
-                inset 2px 2px 4px rgba(76, 175, 80, 0.2), 
-                inset -2px -2px 4px rgba(255, 255, 255, 0.8);
-            animation: countdownPulse 2s infinite;
-        }
-        
-        .gm-countdown.warning {
-            color: #ffa726;
-            background: rgba(255, 167, 38, 0.1);
-            animation: warningPulse 1s infinite;
-        }
-        
-        .gm-countdown.danger {
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            animation: dangerPulse 0.5s infinite;
-        }
-        
-        .victory-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(224, 229, 236, 0.95);
+        .deposit-btn-compact {
+            background: #e0e5ec;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 3px 3px 6px #b8bec7, -3px -3px 6px #ffffff;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #4d4d4d;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            height: 100%;
+        }
+        
+        .deposit-btn-compact:active {
+            box-shadow: inset 3px 3px 6px #b8bec7, inset -3px -3px 6px #ffffff;
+        }
+        
+        .deposit-cost {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .buttons-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            height: 35px;
+        }
+        
+        .buttons-row .neumorphic-btn {
+            flex: 1;
+            margin-bottom: 0;
+            height: 100%;
+        }
+        
+        .debt-info {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 8px;
+            color: #666;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
-            border-radius: 25px;
             z-index: 100;
-            box-shadow: 
-                inset 5px 5px 10px #b8bec7, 
-                inset -5px -5px 10px #ffffff;
         }
         
-        .victory-text {
-            font-size: 3rem;
-            color: #4caf50;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-shadow: 
-                2px 2px 4px #b8bec7, 
-                -2px -2px 4px #ffffff;
-        }
-        
-        .victory-stats {
-            font-size: 1.5rem;
-            color: #6a7383;
+        .modal-content {
+            background: #e0e5ec;
+            border-radius: 12px;
+            box-shadow: 6px 6px 12px #b8bec7, -6px -6px 12px #ffffff;
+            padding: 15px;
+            max-width: 280px;
             text-align: center;
-            margin-bottom: 30px;
-            max-width: 80%;
         }
         
-        @keyframes gmGlow {
-            0% { box-shadow: 0 0 5px #d4af37, inset 0 0 3px rgba(255, 255, 255, 0.5); }
-            100% { box-shadow: 0 0 15px #d4af37, inset 0 0 5px rgba(255, 255, 255, 0.7); }
+        .modal-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
         
-        @keyframes countdownPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes warningPulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        
-        @keyframes dangerPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        @keyframes saveFlash {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        .pulse {
-            animation: pulse 0.6s ease-in-out;
-        }
-        
-        .save-flash {
-            animation: saveFlash 0.5s ease-in-out;
-        }
-        
-        .error {
-            color: #ff6b6b !important;
-        }
-        
-        @media (max-width: 600px) {
-            .neomorph-panel {
-                padding: 25px;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            
-            .timer-display {
-                font-size: 3.2rem;
-            }
-            
-            .timer-display.long-time {
-                font-size: 2.5rem;
-            }
-            
-            .stat-box {
-                padding: 15px;
-            }
-            
-            .stat-value {
-                font-size: 1.6rem;
-            }
-            
-            .action-button {
-                padding: 16px 35px;
-                font-size: 1.3rem;
-            }
-            
-            .game-over-text {
-                font-size: 2.2rem;
-            }
-            
-            .game-over-reason {
-                font-size: 1.2rem;
-            }
-            
-            .golden-master-toggle {
-                position: relative;
-                top: 0;
-                left: 0;
-                margin-bottom: 15px;
-            }
-            
-            .gm-countdown {
-                font-size: 1.1rem;
-                padding: 8px 15px;
-            }
-            
-            .victory-text {
-                font-size: 2.2rem;
-            }
-            
-            .victory-stats {
-                font-size: 1.2rem;
-            }
+        .modal-btn {
+            margin-top: 10px;
+            height: auto;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="neomorph-panel" id="glass-panel">
-            <div class="golden-master-toggle">
-                <button class="gm-toggle-btn" id="gm-toggle">
-                    <span class="gm-indicator" id="gm-indicator"></span>
-                    Golden Master
-                </button>
+        <div class="top-section">
+            <div class="header neumorphic">
+                <div class="timer" id="timer">00:00:00</div>
+                <div class="points" id="points">0 🎯</div>
             </div>
-            <div class="save-indicator" id="save-indicator">Автосохранение</div>
-            <h1>ТАЙМЕР РАУНДОВ</h1>
             
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <div class="stat-label">ТЕКУЩИЙ РАУНД</div>
-                    <div class="stat-value" id="current-round">1</div>
+            <div class="cigarettes-count" id="cigarettes">🚬 ×0</div>
+        </div>
+        
+        <div class="deposit-container">
+            <div class="circles-pill">
+                <div class="circle-option" data-index="0" data-cost="30" data-prob="1/6">
+                    <div class="circle red selected"></div>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-label">ПРЕДЫДУЩЕЕ ВРЕМЯ</div>
-                    <div class="stat-value" id="last-time">0.000</div>
+                <div class="circle-option" data-index="1" data-cost="45" data-prob="1/4">
+                    <div class="circle yellow"></div>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-label">ВСЕГО РАУНДОВ</div>
-                    <div class="stat-value" id="total-rounds">0</div>
+                <div class="circle-option" data-index="2" data-cost="70" data-prob="1.5/2">
+                    <div class="circle green"></div>
                 </div>
             </div>
             
-            <div class="timer-display" id="timer">0.000</div>
-            
-            <div class="gm-timer-display" id="gm-timer-display" style="display: none;">
-                Golden Master: <span id="gm-timer">0:00</span>
-            </div>
-            
-            <div class="gm-countdown" id="gm-countdown" style="display: none;">
-                До победы: <span id="gm-countdown-timer">50 дней 00:00:00</span>
-            </div>
-            
-            <div class="min-time-indicator" id="min-time-indicator">
-                Минимальное время: 0.000 сек
-            </div>
-            
-            <div class="timer-requirement" id="requirement">
-                Нажмите кнопку, чтобы начать первый раунд
-            </div>
-            
-            <button class="action-button" id="action-btn">СТАРТ</button>
-            <button class="action-button reset-button" id="reset-btn">СБРОСИТЬ ИГРУ</button>
-            
-            <div class="history">
-                <div class="history-item" id="history-header">
-                    <span>Раунд</span>
-                    <span>Время</span>
-                    <span>Дата</span>
-                </div>
-                <div id="history-container"></div>
-            </div>
+            <button class="deposit-btn-compact" id="depositBtn">
+                Дэпнуть
+                <div class="deposit-cost" id="depositCost">30 🎯</div>
+            </button>
+        </div>
+        
+        <div class="buttons-row">
+            <button class="neumorphic-btn debt-btn" id="debtBtn">Влезть в долги</button>
+            <button class="neumorphic-btn shame-btn" id="shameBtn">Опозориться</button>
+        </div>
+        <div class="debt-info" id="debtInfo"></div>
+    </div>
+    
+    <!-- Модальные окна -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content neumorphic">
+            <div class="modal-title" id="resultTitle">Результат</div>
+            <div id="resultMessage"></div>
+            <button class="neumorphic-btn modal-btn" id="closeResultModal">OK</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content neumorphic">
+            <div class="modal-title">Игра окончена</div>
+            <div>Вы опозорились! 😔</div>
+            <button class="neumorphic-btn modal-btn" id="restartGame">Начать заново</button>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const actionBtn = document.getElementById('action-btn');
-            const resetBtn = document.getElementById('reset-btn');
-            const timerDisplay = document.getElementById('timer');
-            const currentRoundDisplay = document.getElementById('current-round');
-            const lastTimeDisplay = document.getElementById('last-time');
-            const totalRoundsDisplay = document.getElementById('total-rounds');
-            const requirementDisplay = document.getElementById('requirement');
-            const minTimeIndicator = document.getElementById('min-time-indicator');
-            const historyContainer = document.getElementById('history-container');
-            const saveIndicator = document.getElementById('save-indicator');
-            const glassPanel = document.getElementById('glass-panel');
-            const gmToggle = document.getElementById('gm-toggle');
-            const gmIndicator = document.getElementById('gm-indicator');
-            const gmTimerDisplay = document.getElementById('gm-timer-display');
-            const gmTimerElement = document.getElementById('gm-timer');
-            const gmCountdownDisplay = document.getElementById('gm-countdown');
-            const gmCountdownTimer = document.getElementById('gm-countdown-timer');
+        // Инициализация переменных
+        let points = 0;
+        let cigarettes = 0;
+        let selectedDeposit = null;
+        let debtActive = false;
+        let debtEndTime = null;
+        let pointsPaused = false;
+        let currentOptionIndex = 0;
+        
+        // Элементы DOM
+        const timerElement = document.getElementById('timer');
+        const pointsElement = document.getElementById('points');
+        const cigarettesElement = document.getElementById('cigarettes');
+        const depositCostElement = document.getElementById('depositCost');
+        const circleOptions = document.querySelectorAll('.circle-option');
+        const depositBtn = document.getElementById('depositBtn');
+        const debtBtn = document.getElementById('debtBtn');
+        const debtInfo = document.getElementById('debtInfo');
+        const shameBtn = document.getElementById('shameBtn');
+        const resultModal = document.getElementById('resultModal');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultMessage = document.getElementById('resultMessage');
+        const closeResultModal = document.getElementById('closeResultModal');
+        const gameOverModal = document.getElementById('gameOverModal');
+        const restartGameBtn = document.getElementById('restartGame');
+        
+        // Сохранение и загрузка данных
+        function saveGameData() {
+            const gameData = {
+                startTime: localStorage.getItem('gameStartTime'),
+                points: points,
+                cigarettes: cigarettes,
+                debtActive: debtActive,
+                debtEndTime: debtEndTime,
+                pointsPaused: pointsPaused,
+                currentOptionIndex: currentOptionIndex
+            };
+            localStorage.setItem('gameData', JSON.stringify(gameData));
+        }
+        
+        function loadGameData() {
+            const savedData = localStorage.getItem('gameData');
+            if (savedData) {
+                const gameData = JSON.parse(savedData);
+                points = gameData.points || 0;
+                cigarettes = gameData.cigarettes || 0;
+                debtActive = gameData.debtActive || false;
+                debtEndTime = gameData.debtEndTime || null;
+                pointsPaused = gameData.pointsPaused || false;
+                currentOptionIndex = gameData.currentOptionIndex || 0;
+                
+                updatePoints();
+                updateCigarettes();
+                updateDebtInfo();
+                updateSelectedOption();
+            }
             
-            let startTime = 0;
-            let currentRound = 1;
-            let lastRoundTime = 0;
-            let totalRounds = 0;
-            let timerInterval = null;
-            let history = [];
-            let isTimerRunning = false;
-            let minRequiredTime = 0;
-            let gameOver = false;
+            // Устанавливаем время начала игры, если его нет
+            if (!localStorage.getItem('gameStartTime')) {
+                localStorage.setItem('gameStartTime', new Date().toISOString());
+            }
+        }
+        
+        // Обновление таймера на основе реального времени
+        function updateTimer() {
+            const startTime = new Date(localStorage.getItem('gameStartTime'));
+            const currentTime = new Date();
+            const elapsedTime = currentTime - startTime;
             
-            // Golden Master переменные
-            let isGoldenMasterActive = false;
-            let gmChallengeActive = false;
-            let gmChallengeStartTime = 0;
-            let gmChallengeEndTime = 0;
-            let gmCountdownInterval = null;
-            const GM_CHALLENGE_DURATION = 50 * 24 * 60 * 60 * 1000; // 50 дней в миллисекундах
+            const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+            const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
             
-            // Ключи для localStorage
-            const STORAGE_KEYS = {
-                GAME_STATE: 'round_timer_state_v9',
-                GOLDEN_MASTER: 'golden_master_state_v4'
+            timerElement.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Начисление очков каждый час
+            if (!debtActive && !pointsPaused) {
+                const newPoints = Math.floor(hours);
+                if (newPoints > points) {
+                    points = newPoints;
+                    updatePoints();
+                    saveGameData();
+                }
+            }
+        }
+        
+        // Обновление отображения очков
+        function updatePoints() {
+            // Проверка на максимальное количество очков
+            if (points >= 600) {
+                pointsPaused = true;
+            } else if (points < 600) {
+                pointsPaused = false;
+            }
+            
+            pointsElement.textContent = `${points} 🎯`;
+        }
+        
+        // Обновление отображения сигареток
+        function updateCigarettes() {
+            cigarettesElement.textContent = `🚬 ×${cigarettes}`;
+        }
+        
+        // Обновление выбранной опции
+        function updateSelectedOption() {
+            circleOptions.forEach(option => {
+                const circle = option.querySelector('.circle');
+                circle.classList.remove('selected');
+            });
+            
+            circleOptions[currentOptionIndex].querySelector('.circle').classList.add('selected');
+            
+            selectedDeposit = {
+                cost: parseInt(circleOptions[currentOptionIndex].dataset.cost),
+                probability: circleOptions[currentOptionIndex].dataset.prob
             };
             
-            // Функция форматирования времени
-            function formatTime(ms) {
-                const seconds = ms / 1000;
-                
-                if (seconds < 60) {
-                    return seconds.toFixed(3) + ' сек';
-                } else if (seconds < 3600) {
-                    const minutes = Math.floor(seconds / 60);
-                    const remainingSeconds = (seconds % 60).toFixed(1);
-                    return `${minutes} мин ${remainingSeconds} сек`;
-                } else {
-                    const hours = Math.floor(seconds / 3600);
-                    const minutes = Math.floor((seconds % 3600) / 60);
-                    const remainingSeconds = (seconds % 60).toFixed(0);
-                    return `${hours} ч ${minutes} мин ${remainingSeconds} сек`;
-                }
-            }
-            
-            // Функция форматирования времени для отображения в таймере
-            function formatTimerTime(ms) {
-                const seconds = ms / 1000;
-                
-                if (seconds < 60) {
-                    return seconds.toFixed(3);
-                } else if (seconds < 3600) {
-                    const minutes = Math.floor(seconds / 60);
-                    const remainingSeconds = (seconds % 60).toFixed(3);
-                    return `${minutes}:${remainingSeconds.padStart(6, '0')}`;
-                } else {
-                    const hours = Math.floor(seconds / 3600);
-                    const minutes = Math.floor((seconds % 3600) / 60);
-                    const remainingSeconds = (seconds % 60).toFixed(0).padStart(2, '0');
-                    return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds}`;
-                }
-            }
-            
-            // Функция форматирования времени для Golden Master
-            function formatGMTime(ms) {
-                const totalSeconds = Math.floor(ms / 1000);
-                const hours = Math.floor(totalSeconds / 3600);
-                const minutes = Math.floor((totalSeconds % 3600) / 60);
-                const seconds = totalSeconds % 60;
-                
-                if (hours > 0) {
-                    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                } else {
-                    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                }
-            }
-            
-            // Функция форматирования времени обратного отсчета
-            function formatCountdownTime(ms) {
-                const totalSeconds = Math.floor(ms / 1000);
-                const days = Math.floor(totalSeconds / (24 * 3600));
-                const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
-                const minutes = Math.floor((totalSeconds % 3600) / 60);
-                const seconds = totalSeconds % 60;
-                
-                if (days > 0) {
-                    return `${days} дней ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                } else {
-                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
-            }
-            
-            // Функция для обновления класса длительного времени
-            function updateTimerClass(ms) {
-                const seconds = ms / 1000;
-                if (seconds >= 60) {
-                    timerDisplay.classList.add('long-time');
-                } else {
-                    timerDisplay.classList.remove('long-time');
-                }
-            }
-            
-            // Сохранение состояния игры
-            function saveGameState() {
-                const gameData = {
-                    isTimerRunning,
-                    startTime,
-                    currentRound,
-                    lastRoundTime,
-                    totalRounds,
-                    history,
-                    minRequiredTime,
-                    gameOver,
-                    timestamp: Date.now()
-                };
-                
-                const gmData = {
-                    isActive: isGoldenMasterActive,
-                    challengeActive: gmChallengeActive,
-                    challengeStartTime: gmChallengeStartTime,
-                    challengeEndTime: gmChallengeEndTime,
-                    timestamp: Date.now()
-                };
-                
-                try {
-                    localStorage.setItem(STORAGE_KEYS.GAME_STATE, JSON.stringify(gameData));
-                    localStorage.setItem(STORAGE_KEYS.GOLDEN_MASTER, JSON.stringify(gmData));
-                    
-                    saveIndicator.classList.add('save-flash');
-                    setTimeout(() => saveIndicator.classList.remove('save-flash'), 500);
-                } catch (error) {
-                    console.error('Ошибка сохранения:', error);
-                }
-            }
-            
-            // Загрузка состояния игры
-            function loadGameState() {
-                try {
-                    const savedData = localStorage.getItem(STORAGE_KEYS.GAME_STATE);
-                    const savedGMData = localStorage.getItem(STORAGE_KEYS.GOLDEN_MASTER);
-                    
-                    if (savedData) {
-                        const gameData = JSON.parse(savedData);
-                        
-                        const now = Date.now();
-                        if (now - gameData.timestamp > 7 * 24 * 60 * 60 * 1000) {
-                            localStorage.removeItem(STORAGE_KEYS.GAME_STATE);
-                        } else {
-                            isTimerRunning = gameData.isTimerRunning || false;
-                            startTime = gameData.startTime || 0;
-                            currentRound = gameData.currentRound || 1;
-                            lastRoundTime = gameData.lastRoundTime || 0;
-                            totalRounds = gameData.totalRounds || 0;
-                            history = gameData.history || [];
-                            minRequiredTime = gameData.minRequiredTime || 0;
-                            gameOver = gameData.gameOver || false;
-                            
-                            currentRoundDisplay.textContent = currentRound;
-                            lastTimeDisplay.textContent = formatTime(lastRoundTime);
-                            totalRoundsDisplay.textContent = totalRounds;
-                            minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
-                            updateHistory();
-                            
-                            if (gameOver) {
-                                showGameOver();
-                            } else if (isTimerRunning) {
-                                const elapsed = Date.now() - startTime;
-                                timerDisplay.textContent = formatTimerTime(elapsed);
-                                updateTimerClass(elapsed);
-                                timerInterval = setInterval(updateTimer, 10);
-                                actionBtn.textContent = "СТОП";
-                                requirementDisplay.textContent = `Раунд ${currentRound} запущен. Нажмите чтобы завершить.`;
-                            } else {
-                                timerDisplay.textContent = '0.000';
-                                timerDisplay.classList.remove('long-time');
-                                actionBtn.textContent = "СТАРТ";
-                                requirementDisplay.textContent = totalRounds > 0 
-                                    ? `Нажмите чтобы начать раунд ${currentRound}`
-                                    : 'Нажмите кнопку, чтобы начать первый раунд';
-                            }
-                        }
-                    }
-                    
-                    if (savedGMData) {
-                        const gmData = JSON.parse(savedGMData);
-                        const now = Date.now();
-                        
-                        if (now - gmData.timestamp > 7 * 24 * 60 * 60 * 1000) {
-                            localStorage.removeItem(STORAGE_KEYS.GOLDEN_MASTER);
-                        } else {
-                            isGoldenMasterActive = gmData.isActive || false;
-                            gmChallengeActive = gmData.challengeActive || false;
-                            gmChallengeStartTime = gmData.challengeStartTime || 0;
-                            gmChallengeEndTime = gmData.challengeEndTime || 0;
-                            
-                            if (gmChallengeActive) {
-                                const remaining = gmChallengeEndTime - now;
-                                if (remaining > 0) {
-                                    startCountdownTimer();
-                                } else {
-                                    // Выигрыш - 50 дней прошли
-                                    showVictoryScreen();
-                                }
-                            }
-                            
-                            updateGoldenMasterUI();
-                        }
-                    }
-                    
-                    return true;
-                    
-                } catch (error) {
-                    console.error('Ошибка загрузки сохранения:', error);
-                    return false;
-                }
-            }
-            
-            // Запуск обратного отсчета
-            function startCountdownTimer() {
-                if (gmCountdownInterval) {
-                    clearInterval(gmCountdownInterval);
-                }
-                
-                gmCountdownDisplay.style.display = 'block';
-                updateCountdownTimer();
-                
-                gmCountdownInterval = setInterval(updateCountdownTimer, 1000);
-            }
-            
-            // Обновление обратного отсчета
-            function updateCountdownTimer() {
-                const now = Date.now();
-                const remaining = gmChallengeEndTime - now;
-                
-                if (remaining <= 0) {
-                    // Выигрыш - 50 дней прошли
-                    clearInterval(gmCountdownInterval);
-                    gmCountdownInterval = null;
-                    showVictoryScreen();
-                    return;
-                }
-                
-                // Обновляем стили в зависимости от оставшегося времени
-                const daysRemaining = Math.floor(remaining / (24 * 60 * 60 * 1000));
-                
-                if (daysRemaining <= 7) {
-                    gmCountdownDisplay.classList.add('warning');
-                    gmCountdownDisplay.classList.remove('danger');
-                } else if (daysRemaining <= 1) {
-                    gmCountdownDisplay.classList.remove('warning');
-                    gmCountdownDisplay.classList.add('danger');
-                } else {
-                    gmCountdownDisplay.classList.remove('warning', 'danger');
-                }
-                
-                gmCountdownTimer.textContent = formatCountdownTime(remaining);
-            }
-            
-            // Показать экран победы
-            function showVictoryScreen() {
-                const victoryScreen = document.createElement('div');
-                victoryScreen.className = 'victory-screen';
-                victoryScreen.innerHTML = `
-                    <div class="victory-text">ПОБЕДА!</div>
-                    <div class="victory-stats">
-                        Вы успешно прошли испытание Golden Master!<br>
-                        Вы продержались 50 дней без нажатия кнопки СТОП!
-                    </div>
-                    <button class="action-button new-game-button" id="victory-continue-btn">ПРОДОЛЖИТЬ</button>
-                `;
-                
-                glassPanel.appendChild(victoryScreen);
-                
-                document.getElementById('victory-continue-btn').addEventListener('click', function() {
-                    victoryScreen.remove();
-                    resetGoldenMasterChallenge();
-                    actionBtn.disabled = false;
-                    resetBtn.disabled = false;
-                });
-                
-                actionBtn.disabled = true;
-                resetBtn.disabled = true;
-                
-                // Сохраняем состояние победы
-                gmChallengeActive = false;
-                saveGameState();
-            }
-            
-            // Переключение режима Golden Master
-            function toggleGoldenMaster() {
-                if (isGoldenMasterActive) {
-                    // Деактивация режима
-                    isGoldenMasterActive = false;
-                    updateGoldenMasterUI();
-                    saveGameState();
-                } else {
-                    if (gmChallengeActive) {
-                        alert('Испытание Golden Master уже активно! Не нажимайте кнопку СТОП в течение 50 дней.');
-                        return;
-                    }
-                    
-                    // Активация режима с подтверждением
-                    if (confirm('Активировать Golden Master?\n\nИспытание: 50 дней без нажатия кнопки СТОП\n\nПравила:\n- Нажмите СТОП = проигрыш\n- 50 дней без СТОП = победа\n- Испытание нельзя отменить')) {
-                        startGoldenMasterChallenge();
-                    }
-                }
-            }
-            
-            // Начать испытание Golden Master
-            function startGoldenMasterChallenge() {
-                isGoldenMasterActive = true;
-                gmChallengeActive = true;
-                gmChallengeStartTime = Date.now();
-                gmChallengeEndTime = gmChallengeStartTime + GM_CHALLENGE_DURATION;
-                
-                startCountdownTimer();
-                updateGoldenMasterUI();
-                saveGameState();
-                
-                alert('Golden Master активирован!\n\nИспытание началось. Не нажимайте кнопку СТОП в течение 50 дней!');
-            }
-            
-            // Обработка нажатия кнопки СТОП в режиме Golden Master
-            function handleGoldenMasterStop() {
-                if (gmChallengeActive) {
-                    // Проигрыш - нажали СТОП во время испытания
-                    gmChallengeActive = false;
-                    updateGoldenMasterUI();
-                    saveGameState();
-                    
-                    alert('ВЫ ПРОИГРАЛИ!\n\nВы нажали кнопку СТОП во время испытания Golden Master.\nИспытание провалено.');
-                    
-                    // Показываем экран проигрыша
-                    const gameOverScreen = document.createElement('div');
-                    gameOverScreen.className = 'game-over';
-                    gameOverScreen.innerHTML = `
-                        <div class="game-over-text">ПРОИГРЫШ!</div>
-                        <div class="game-over-reason">
-                            Вы нажали кнопку СТОП во время испытания Golden Master!<br>
-                            Испытание длилось: ${formatTime(Date.now() - gmChallengeStartTime)}
-                        </div>
-                        <div class="game-over-stats">
-                            До победы оставалось: ${formatCountdownTime(gmChallengeEndTime - Date.now())}
-                        </div>
-                        <button class="action-button new-game-button" id="gm-failure-btn">ПОНЯТНО</button>
-                    `;
-                    
-                    glassPanel.appendChild(gameOverScreen);
-                    
-                    document.getElementById('gm-failure-btn').addEventListener('click', function() {
-                        gameOverScreen.remove();
-                        resetGoldenMasterChallenge();
-                    });
-                }
-            }
-            
-            // Сброс испытания Golden Master
-            function resetGoldenMasterChallenge() {
-                if (gmCountdownInterval) {
-                    clearInterval(gmCountdownInterval);
-                    gmCountdownInterval = null;
-                }
-                isGoldenMasterActive = false;
-                gmChallengeActive = false;
-                gmChallengeStartTime = 0;
-                gmChallengeEndTime = 0;
-                updateGoldenMasterUI();
-                gmCountdownDisplay.style.display = 'none';
-                saveGameState();
-            }
-            
-            // Обновление интерфейса Golden Master
-            function updateGoldenMasterUI() {
-                if (isGoldenMasterActive) {
-                    gmToggle.classList.add('active');
-                    glassPanel.classList.add('gm-active');
-                    gmIndicator.style.display = 'inline-block';
-                    
-                    if (gmChallengeActive) {
-                        gmTimerDisplay.style.display = 'none';
-                        gmCountdownDisplay.style.display = 'block';
-                    } else {
-                        gmTimerDisplay.style.display = 'block';
-                        gmCountdownDisplay.style.display = 'none';
-                    }
-                } else {
-                    gmToggle.classList.remove('active');
-                    glassPanel.classList.remove('gm-active');
-                    gmIndicator.style.display = 'inline-block';
-                    gmTimerDisplay.style.display = 'none';
-                    
-                    if (gmChallengeActive) {
-                        gmCountdownDisplay.style.display = 'block';
-                    } else {
-                        gmCountdownDisplay.style.display = 'none';
-                    }
-                }
-            }
-            
-            // Показать экран проигрыша
-            function showGameOver() {
-                const gameOverScreen = document.createElement('div');
-                gameOverScreen.className = 'game-over';
-                gameOverScreen.innerHTML = `
-                    <div class="game-over-text">ПРОИГРЫШ!</div>
-                    <div class="game-over-reason">
-                        Раунд ${currentRound} длился меньше минимального времени!<br>
-                        Нужно было: ${formatTime(minRequiredTime)}<br>
-                        Ваше время: ${formatTime(Date.now() - startTime)}
-                    </div>
-                    <div class="game-over-stats">
-                        Пройдено раундов: ${totalRounds}<br>
-                        Лучшее время: ${formatTime(Math.max(...history.map(h => h.time), 0))}
-                    </div>
-                    <button class="action-button new-game-button" id="new-game-btn">НОВАЯ ИГРА</button>
-                `;
-                
-                glassPanel.appendChild(gameOverScreen);
-                
-                document.getElementById('new-game-btn').addEventListener('click', function() {
-                    resetGame();
-                });
-                
-                actionBtn.disabled = true;
-                resetBtn.disabled = true;
-            }
-            
-            // Полный сброс игры
-            function resetGame() {
-                if (timerInterval) {
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                }
-                
-                const gameOverScreen = document.querySelector('.game-over');
-                if (gameOverScreen) {
-                    gameOverScreen.remove();
-                }
-                
-                isTimerRunning = false;
-                startTime = 0;
-                currentRound = 1;
-                lastRoundTime = 0;
-                totalRounds = 0;
-                history = [];
-                gameOver = false;
-                minRequiredTime = 0;
-                
-                timerDisplay.textContent = '0.000';
-                timerDisplay.classList.remove('long-time');
-                currentRoundDisplay.textContent = currentRound;
-                lastTimeDisplay.textContent = formatTime(lastRoundTime);
-                totalRoundsDisplay.textContent = totalRounds;
-                actionBtn.textContent = "СТАРТ";
-                actionBtn.disabled = false;
-                resetBtn.disabled = false;
-                requirementDisplay.textContent = 'Нажмите кнопку, чтобы начать первый раунд';
-                minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
-                
-                historyContainer.innerHTML = '';
-                
-                saveGameState();
-            }
-            
-            // Обновление таймера
-            function updateTimer() {
-                const currentTime = Date.now();
-                const elapsed = currentTime - startTime;
-                timerDisplay.textContent = formatTimerTime(elapsed);
-                updateTimerClass(elapsed);
-                
-                if (gameOver) return;
-                
-                if (minRequiredTime > 0 && elapsed < minRequiredTime) {
-                    timerDisplay.classList.add('error');
-                } else {
-                    timerDisplay.classList.remove('error');
-                }
-            }
-            
-            // Обновление истории
-            function updateHistory() {
-                historyContainer.innerHTML = '';
-                
-                if (history.length === 0) {
-                    historyContainer.innerHTML = '<div class="history-item"><span colspan="3" style="text-align: center; grid-column: span 3;">История пуста</span></div>';
-                    return;
-                }
-                
-                const recentHistory = [...history].reverse().slice(0, 20);
-                
-                recentHistory.forEach(item => {
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'history-item';
-                    historyItem.innerHTML = `
-                        <span>${item.round}</span>
-                        <span>${formatTime(item.time)}</span>
-                        <span>${item.date}</span>
-                    `;
-                    historyContainer.appendChild(historyItem);
-                });
-            }
-            
-            // Обработчик клика по основной кнопке
-            actionBtn.addEventListener('click', function() {
-                if (gameOver) return;
-                
-                if (!isTimerRunning) {
-                    // Старт таймера
-                    startTime = Date.now();
-                    timerInterval = setInterval(updateTimer, 10);
-                    isTimerRunning = true;
-                    actionBtn.textContent = "СТОП";
-                    requirementDisplay.textContent = `Раунд ${currentRound} запущен. Нажмите чтобы завершить.`;
-                    timerDisplay.classList.remove('error');
-                    timerDisplay.classList.remove('long-time');
-                } else {
-                    // Остановка таймера
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                    const endTime = Date.now();
-                    const roundTime = endTime - startTime;
-                    
-                    // Проверяем, не активен ли Golden Master challenge
-                    if (gmChallengeActive) {
-                        handleGoldenMasterStop();
-                        return;
-                    }
-                    
-                    if (minRequiredTime > 0 && roundTime < minRequiredTime) {
-                        gameOver = true;
-                        showGameOver();
-                        saveGameState();
-                        return;
-                    }
-                    
-                    minRequiredTime = roundTime;
-                    
-                    lastRoundTime = roundTime;
-                    const historyEntry = {
-                        round: currentRound,
-                        time: roundTime,
-                        date: new Date().toLocaleString('ru-RU')
-                    };
-                    
-                    history.push(historyEntry);
-                    totalRounds++;
-                    currentRound++;
-                    
-                    timerDisplay.textContent = formatTimerTime(roundTime);
-                    updateTimerClass(roundTime);
-                    currentRoundDisplay.textContent = currentRound;
-                    lastTimeDisplay.textContent = formatTime(roundTime);
-                    totalRoundsDisplay.textContent = totalRounds;
-                    minTimeIndicator.textContent = `Минимальное время: ${formatTime(minRequiredTime)}`;
-                    actionBtn.textContent = "СТАРТ";
-                    requirementDisplay.textContent = `Нажмите чтобы начать раунд ${currentRound}`;
-                    isTimerRunning = false;
-                    
-                    updateHistory();
-                    
-                    document.querySelectorAll('.stat-box').forEach(box => {
-                        box.classList.add('pulse');
-                        setTimeout(() => box.classList.remove('pulse'), 600);
-                    });
-                }
-                
-                saveGameState();
+            depositCostElement.textContent = `${selectedDeposit.cost} 🎯`;
+        }
+        
+        // Выбор опции дэпа
+        circleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                currentOptionIndex = parseInt(option.dataset.index);
+                updateSelectedOption();
+                saveGameData();
             });
-            
-            // Обработчик сброса игры
-            resetBtn.addEventListener('click', function() {
-                if (confirm('Вы уверены, что хотите сбросить игру? Все данные будут потеряны.')) {
-                    resetGame();
-                }
-            });
-            
-            // Обработчик переключения Golden Master
-            gmToggle.addEventListener('click', toggleGoldenMaster);
-            
-            // Контекстное меню для сброса Golden Master
-            gmToggle.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                if (gmChallengeActive && confirm('Прервать испытание Golden Master? Это будет считаться проигрышем.')) {
-                    handleGoldenMasterStop();
-                }
-            });
-            
-            // Автосохранение каждые 30 секунд
-            setInterval(saveGameState, 30000);
-            
-            // Загрузка состояния при запуске
-            loadGameState();
-            
-            // Анимация при загрузке
-            setTimeout(() => {
-                document.querySelectorAll('.neomorph-panel, .stat-box, .action-button').forEach(el => {
-                    el.style.transition = 'all 0.5s ease';
-                    el.style.opacity = 1;
-                });
-            }, 100);
         });
+        
+        // Кнопка дэпа
+        depositBtn.addEventListener('click', () => {
+            if (!selectedDeposit) {
+                showResult('Ошибка', 'Сначала выберите тип дэпа');
+                return;
+            }
+            
+            if (points < selectedDeposit.cost) {
+                showResult('Недостаточно 🎯', `Для этого дэпа нужно ${selectedDeposit.cost} 🎯`);
+                return;
+            }
+            
+            points -= selectedDeposit.cost;
+            updatePoints();
+            
+            // Расчет вероятности выигрыша
+            let winProbability;
+            if (selectedDeposit.probability === '1/6') {
+                winProbability = 1/6;
+            } else if (selectedDeposit.probability === '1/4') {
+                winProbability = 1/4;
+            } else if (selectedDeposit.probability === '1.5/2') {
+                winProbability = 1.5/2;
+            }
+            
+            const win = Math.random() < winProbability;
+            
+            if (win) {
+                cigarettes++;
+                updateCigarettes();
+                showResult('Победа!', 'Вы выиграли 🚬!');
+            } else {
+                showResult('Проигрыш', 'Попробуйте еще раз');
+            }
+            
+            saveGameData();
+        });
+        
+        // Кнопка долгов
+        debtBtn.addEventListener('click', () => {
+            if (debtActive) {
+                showResult('Долг активен', 'Вы уже в долгах');
+                return;
+            }
+            
+            debtActive = true;
+            points += 180;
+            updatePoints();
+            
+            // Установка времени окончания долга (15 суток)
+            const currentTime = new Date();
+            debtEndTime = new Date(currentTime.getTime() + (15 * 24 * 60 * 60 * 1000));
+            updateDebtInfo();
+            
+            showResult('Долг получен', 'Вы получили 180 🎯. Начисление 🎯 приостановлено на 15 суток.');
+            saveGameData();
+        });
+        
+        // Обновление информации о долге
+        function updateDebtInfo() {
+            if (debtActive && debtEndTime) {
+                const now = new Date();
+                const debtEnd = new Date(debtEndTime);
+                
+                if (now >= debtEnd) {
+                    debtActive = false;
+                    debtEndTime = null;
+                    debtInfo.textContent = '';
+                    saveGameData();
+                } else {
+                    const remainingTime = debtEnd - now;
+                    const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    
+                    debtInfo.textContent = `Долг активен. Осталось: ${days}д ${hours}ч`;
+                }
+            } else {
+                debtInfo.textContent = '';
+            }
+        }
+        
+        // Кнопка опозориться
+        shameBtn.addEventListener('click', () => {
+            gameOverModal.style.display = 'flex';
+        });
+        
+        // Использование сигаретки
+        cigarettesElement.addEventListener('click', () => {
+            if (cigarettes > 0) {
+                cigarettes--;
+                updateCigarettes();
+                showResult('🚬 использована', 'Вы использовали одну 🚬');
+                saveGameData();
+            } else {
+                showResult('Нет 🚬', 'У вас нет 🚬 для использования');
+            }
+        });
+        
+        // Показать результат
+        function showResult(title, message) {
+            resultTitle.textContent = title;
+            resultMessage.textContent = message;
+            resultModal.style.display = 'flex';
+        }
+        
+        // Закрыть модальное окно результата
+        closeResultModal.addEventListener('click', () => {
+            resultModal.style.display = 'none';
+        });
+        
+        // Перезапуск игры
+        restartGameBtn.addEventListener('click', () => {
+            // Сброс всех данных
+            localStorage.removeItem('gameStartTime');
+            localStorage.removeItem('gameData');
+            
+            points = 0;
+            cigarettes = 0;
+            selectedDeposit = null;
+            debtActive = false;
+            debtEndTime = null;
+            pointsPaused = false;
+            currentOptionIndex = 0;
+            
+            // Установка нового времени начала
+            localStorage.setItem('gameStartTime', new Date().toISOString());
+            
+            updateTimer();
+            updatePoints();
+            updateCigarettes();
+            updateDebtInfo();
+            updateSelectedOption();
+            
+            gameOverModal.style.display = 'none';
+        });
+        
+        // Инициализация
+        window.addEventListener('load', () => {
+            loadGameData();
+            
+            // Выбираем первую опцию по умолчанию
+            updateSelectedOption();
+            
+            updateTimer();
+            updatePoints();
+            updateCigarettes();
+            
+            // Обновление таймера каждую секунду
+            setInterval(updateTimer, 1000);
+            setInterval(updateDebtInfo, 60000); // Обновление информации о долге каждую минуту
+        });
+        
+        // Сохранение данных при закрытии страницы
+        window.addEventListener('beforeunload', saveGameData);
     </script>
 </body>
 </html>
