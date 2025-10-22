@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Неоморфный сайт</title>
+    <title>Казино у Бери</title>
     <style>
         * {
             margin: 0;
@@ -269,6 +269,13 @@
             <button class="neumorphic-btn debt-btn" id="debtBtn">Влезть в долги</button>
             <button class="neumorphic-btn shame-btn" id="shameBtn">Опозориться</button>
         </div>
+        
+        <!-- Новая кнопка Супердэп -->
+        <button class="neumorphic-btn" id="superDepositBtn">
+            Супердэп
+            <div style="font-size: 12px; margin-left: 8px;">700 $</div>
+        </button>
+        
         <div class="debt-info" id="debtInfo"></div>
     </div>
     
@@ -315,6 +322,7 @@
         const closeResultModal = document.getElementById('closeResultModal');
         const gameOverModal = document.getElementById('gameOverModal');
         const restartGameBtn = document.getElementById('restartGame');
+        const superDepositBtn = document.getElementById('superDepositBtn');
         
         // Сохранение и загрузка данных
         function saveGameData() {
@@ -441,8 +449,8 @@
                 winProbability = 1/6;
             } else if (selectedDeposit.probability === '1/4') {
                 winProbability = 1/4;
-            } else if (selectedDeposit.probability === '1.3/2') {
-                winProbability = 1.3/2;
+            } else if (selectedDeposit.probability === '1.5/2') {
+                winProbability = 1.5/2;
             }
             
             const win = Math.random() < winProbability;
@@ -454,6 +462,37 @@
             } else {
                 showResult('Проигрыш', 'Попробуйте еще раз');
             }
+            
+            saveGameData();
+        });
+        
+        // Кнопка Супердэпа
+        superDepositBtn.addEventListener('click', () => {
+            const superDepositCost = 700;
+            
+            if (points < superDepositCost) {
+                showResult('Недостаточно $', `Для супердэпа нужно ${superDepositCost} $`);
+                return;
+            }
+            
+            points -= superDepositCost;
+            updatePoints();
+            
+            // Равная вероятность выпадения 3, 10 или 15 сигарет
+            const randomValue = Math.random();
+            let wonCigarettes;
+            
+            if (randomValue < 0.333) {
+                wonCigarettes = 3;
+            } else if (randomValue < 0.666) {
+                wonCigarettes = 10;
+            } else {
+                wonCigarettes = 15;
+            }
+            
+            cigarettes += wonCigarettes;
+            updateCigarettes();
+            showResult('Супердэп!', `Вы выиграли ${wonCigarettes} 🚬!`);
             
             saveGameData();
         });
