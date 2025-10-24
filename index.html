@@ -303,9 +303,9 @@
         let selectedDeposit = null;
         let debtActive = false;
         let debtEndTime = null;
-        let pointsPaused = false;
         let currentOptionIndex = 0;
-        const MAX_POINTS = 800; // Максимальное количество долларов
+        const MAX_POINTS = 800;
+        const POINTS_PER_HOUR = 1; // Денег в час
         
         // Элементы DOM
         const timerElement = document.getElementById('timer');
@@ -334,8 +334,8 @@
                     cigarettes: cigarettes,
                     debtActive: debtActive,
                     debtEndTime: debtEndTime,
-                    pointsPaused: pointsPaused,
-                    currentOptionIndex: currentOptionIndex
+                    currentOptionIndex: currentOptionIndex,
+                    lastPointsUpdate: localStorage.getItem('lastPointsUpdate') || new Date().toISOString()
                 };
                 localStorage.setItem('gameData', JSON.stringify(gameData));
             } catch (error) {
@@ -351,8 +351,12 @@
                 cigarettes = gameData.cigarettes || 0;
                 debtActive = gameData.debtActive || false;
                 debtEndTime = gameData.debtEndTime || null;
-                pointsPaused = gameData.pointsPaused || false;
                 currentOptionIndex = gameData.currentOptionIndex || 0;
+                
+                // Восстанавливаем время последнего обновления денег
+                if (gameData.lastPointsUpdate) {
+                    localStorage.setItem('lastPointsUpdate', gameData.lastPointsUpdate);
+                }
                 
                 updatePoints();
                 updateCigarettes();
@@ -362,7 +366,9 @@
             
             // Устанавливаем время начала игры, если его нет
             if (!localStorage.getItem('gameStartTime')) {
-                localStorage.setItem('gameStartTime', new Date().toISOString());
+                const now = new Date().toISOString();
+                localStorage.setItem('gameStartTime', now);
+                localStorage.setItem('lastPointsUpdate', now);
             }
         }
         
@@ -378,12 +384,23 @@
             
             timerElement.textContent = 
                 `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Обновление денег на основе времени
+        function updateMoneyFromTime() {
+            if (debtActive) return; // Не начисляем деньги при активном долге
             
-            // Начисление очков каждый час (но не более MAX_POINTS)
-            if (!debtActive && !pointsPaused) {
-                const newPoints = Math.min(Math.floor(hours), MAX_POINTS);
-                if (newPoints > points) {
-                    points = newPoints;
+            const lastUpdate = new Date(localStorage.getItem('lastPointsUpdate') || localStorage.getItem('gameStartTime'));
+            const currentTime = new Date();
+            const elapsedHours = (currentTime - lastUpdate) / (1000 * 60 * 60);
+            
+            if (elapsedHours >= 1) {
+                const hoursPassed = Math.floor(elapsedHours);
+                const moneyToAdd = hoursPassed * POINTS_PER_HOUR;
+                
+                if (moneyToAdd > 0) {
+                    points = Math.min(points + moneyToAdd, MAX_POINTS);
+                    localStorage.setItem('lastPointsUpdate', currentTime.toISOString());
                     updatePoints();
                     saveGameData();
                 }
@@ -392,13 +409,6 @@
         
         // Обновление отображения очков
         function updatePoints() {
-            // Проверка на максимальное количество очков
-            if (points >= MAX_POINTS) {
-                pointsPaused = true;
-            } else if (points < MAX_POINTS) {
-                pointsPaused = false;
-            }
-            
             pointsElement.textContent = `${points} $`;
         }
         
@@ -591,17 +601,19 @@
             // Сброс всех данных
             localStorage.removeItem('gameStartTime');
             localStorage.removeItem('gameData');
+            localStorage.removeItem('lastPointsUpdate');
             
             points = 0;
             cigarettes = 0;
             selectedDeposit = null;
             debtActive = false;
             debtEndTime = null;
-            pointsPaused = false;
             currentOptionIndex = 0;
             
             // Установка нового времени начала
-            localStorage.setItem('gameStartTime', new Date().toISOString());
+            const now = new Date().toISOString();
+            localStorage.setItem('gameStartTime', now);
+            localStorage.setItem('lastPointsUpdate', now);
             
             updateTimer();
             updatePoints();
@@ -622,10 +634,14 @@
             updateTimer();
             updatePoints();
             updateCigarettes();
+            updateMoneyFromTime(); // Обновляем деньги при загрузке
             
             // Обновление таймера каждую секунду
             setInterval(updateTimer, 1000);
-            setInterval(updateDebtInfo, 60000); // Обновление информации о долге каждую минуту
+            // Обновление денег каждую минуту
+            setInterval(updateMoneyFromTime, 60000);
+            // Обновление информации о долге каждую минуту
+            setInterval(updateDebtInfo, 60000);
         });
         
         // Сохранение данных при закрытии страницы
