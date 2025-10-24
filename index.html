@@ -326,16 +326,20 @@
         
         // Сохранение и загрузка данных
         function saveGameData() {
-            const gameData = {
-                startTime: localStorage.getItem('gameStartTime'),
-                points: points,
-                cigarettes: cigarettes,
-                debtActive: debtActive,
-                debtEndTime: debtEndTime,
-                pointsPaused: pointsPaused,
-                currentOptionIndex: currentOptionIndex
-            };
-            localStorage.setItem('gameData', JSON.stringify(gameData));
+            try {
+                const gameData = {
+                    startTime: localStorage.getItem('gameStartTime'),
+                    points: points,
+                    cigarettes: cigarettes,
+                    debtActive: debtActive,
+                    debtEndTime: debtEndTime,
+                    pointsPaused: pointsPaused,
+                    currentOptionIndex: currentOptionIndex
+                };
+                localStorage.setItem('gameData', JSON.stringify(gameData));
+            } catch (error) {
+                console.error('Ошибка сохранения данных:', error);
+            }
         }
         
         function loadGameData() {
@@ -443,6 +447,9 @@
             points -= selectedDeposit.cost;
             updatePoints();
             
+            // Сохраняем данные сразу после списания денег
+            saveGameData();
+            
             // Расчет вероятности выигрыша
             let winProbability;
             if (selectedDeposit.probability === '1/6') {
@@ -477,6 +484,9 @@
             
             points -= superDepositCost;
             updatePoints();
+            
+            // Сохраняем данные сразу после списания денег
+            saveGameData();
             
             // Равная вероятность выпадения 3, 10 или 15 сигарет
             const randomValue = Math.random();
