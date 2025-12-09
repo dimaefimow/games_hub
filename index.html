@@ -2,650 +2,844 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Казино у Бери</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>💰</title>
     <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1c1c1e;
+            --bg-tertiary: #2c2c2e;
+            --text-primary: #ffffff;
+            --text-secondary: #8e8e93;
+            --accent-blue: #0a84ff;
+            --accent-green: #30d158;
+            --accent-red: #ff453a;
+            --accent-purple: #bf5af2;
+            --border-color: #38383a;
+            --card-radius: 14px;
+            --element-radius: 10px;
+        }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            background-color: #e0e5ec;
-            color: #4d4d4d;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            max-width: 430px;
+            margin: 0 auto;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 4cm;
-            padding-bottom: 20px;
-            padding-left: 20px;
-            padding-right: 20px;
-            transform: scale(1.1);
-            transform-origin: top center;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
         
-        .container {
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        /* Неоморфизм стили */
-        .neumorphic {
-            background: #e0e5ec;
-            border-radius: 18px;
-            box-shadow: 8px 8px 16px #b8bec7, -8px -8px 16px #ffffff;
-            padding: 13px;
-            margin-bottom: 19px;
-        }
-        
-        .neumorphic-inset {
-            background: #e0e5ec;
-            border-radius: 14px;
-            box-shadow: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px #ffffff;
-            padding: 13px;
-        }
-        
-        .neumorphic-btn {
-            background: #e0e5ec;
-            border: none;
-            border-radius: 18px;
-            box-shadow: 4px 4px 8px #b8bec7, -4px -4px 8px #ffffff;
-            padding: 11px 16px;
-            font-size: 18px;
-            color: #4d4d4d;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            margin-bottom: 13px;
-            height: 43px;
-        }
-        
-        .neumorphic-btn:active {
-            box-shadow: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px #ffffff;
-        }
-        
-        .top-section {
-            display: flex;
-            gap: 13px;
-            margin-bottom: 19px;
-            align-items: stretch;
-            height: 43px;
-        }
-        
-        .header {
+        .status-bar {
+            height: 44px;
+            padding: 0 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 11px 16px;
-            flex: 1;
-            height: 100%;
+            font-size: 15px;
+            color: var(--text-primary);
+            background: var(--bg-primary);
         }
         
-        .timer {
-            font-size: 18px;
-            font-weight: bold;
+        .time {
+            font-weight: 600;
         }
         
-        .points {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .cigarettes-count {
-            font-size: 18px;
-            cursor: pointer;
-            padding: 11px 16px;
-            border-radius: 18px;
-            background: #e0e5ec;
-            box-shadow: 4px 4px 8px #b8bec7, -4px -4px 8px #ffffff;
-            display: flex;
-            align-items: center;
-            white-space: nowrap;
-            height: 100%;
-        }
-        
-        .deposit-container {
-            display: flex;
-            align-items: stretch;
-            gap: 13px;
-            margin-bottom: 19px;
-            height: 43px;
-        }
-        
-        .circles-pill {
-            background: #e0e5ec;
-            border-radius: 18px;
-            box-shadow: 4px 4px 8px #b8bec7, -4px -4px 8px #ffffff;
-            padding: 11px 16px;
-            display: flex;
-            gap: 13px;
-            flex: 1;
-            align-items: center;
-            height: 100%;
-        }
-        
-        .circle-option {
-            cursor: pointer;
+        .dynamic-island {
+            width: 120px;
+            height: 36px;
+            background: var(--bg-primary);
+            border-radius: 40px;
+            margin: 8px auto 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            border: 1px solid var(--border-color);
         }
         
-        .circle {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            box-shadow: 3px 3px 6px #b8bec7, -3px -3px 6px #ffffff;
-            transition: all 0.2s ease;
+        .island-indicator {
+            width: 60px;
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
         }
         
-        .circle.selected {
-            box-shadow: inset 3px 3px 6px #b8bec7, inset -3px -3px 6px #ffffff;
+        .main-container {
+            padding: 0 20px 40px;
         }
         
-        .circle.red { background-color: #ff5f57; }
-        .circle.yellow { background-color: #ffbd2e; }
-        .circle.green { background-color: #28ca42; }
+        .card {
+            background: var(--bg-secondary);
+            border-radius: var(--card-radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
         
-        .deposit-btn-compact {
-            background: #e0e5ec;
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .daily-amount-display {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--accent-blue);
+        }
+        
+        .amount-input {
+            width: 100%;
+            background: var(--bg-tertiary);
             border: none;
-            border-radius: 18px;
-            box-shadow: 4px 4px 8px #b8bec7, -4px -4px 8px #ffffff;
-            padding: 11px 16px;
-            font-size: 16px;
-            color: #4d4d4d;
+            border-radius: var(--element-radius);
+            padding: 16px;
+            font-size: 34px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 20px;
+        }
+        
+        .amount-input:focus {
+            outline: none;
+            background: var(--bg-tertiary);
+        }
+        
+        .button {
+            width: 100%;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: var(--element-radius);
+            padding: 18px;
+            font-size: 17px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: opacity 0.2s;
+        }
+        
+        .button:active {
+            opacity: 0.7;
+        }
+        
+        .button-secondary {
+            background: var(--bg-tertiary);
+            margin-top: 12px;
+        }
+        
+        .item {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
+            position: relative;
+        }
+        
+        .item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .item-name {
+            font-size: 17px;
+            font-weight: 600;
+            flex: 1;
+            padding-right: 40px;
+        }
+        
+        .item-price {
+            font-size: 20px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent-green);
+        }
+        
+        .progress-container {
+            height: 4px;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-blue);
+            border-radius: 2px;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .days-left {
+            background: var(--accent-red);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            align-self: flex-start;
+        }
+        
+        .delete-btn {
+            position: absolute;
+            right: 20px;
+            top: 16px;
+            width: 30px;
+            height: 30px;
+            background: var(--bg-tertiary);
+            border: none;
+            border-radius: 15px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-width: 97px;
-            height: 100%;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s, background 0.2s;
         }
         
-        .deposit-btn-compact:active {
-            box-shadow: inset 4px 4px 8px #b8bec7, inset -4px -4px 8px #ffffff;
+        .item:hover .delete-btn {
+            opacity: 1;
         }
         
-        .deposit-cost {
-            font-size: 12px;
-            color: #666;
-            margin-top: 3px;
+        .delete-btn:active {
+            background: var(--accent-red);
+            color: white;
         }
         
-        .buttons-row {
-            display: flex;
-            gap: 13px;
-            margin-bottom: 13px;
-            height: 43px;
-        }
-        
-        .buttons-row .neumorphic-btn {
-            flex: 1;
-            margin-bottom: 0;
-            height: 100%;
-        }
-        
-        .debt-info {
-            font-size: 12px;
+        .empty-state {
             text-align: center;
-            margin-top: 10px;
-            color: #666;
+            padding: 60px 20px;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-text {
+            font-size: 17px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
         }
         
         .modal {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            z-index: 1000;
+            padding: 20px;
         }
         
         .modal-content {
-            background: #e0e5ec;
-            border-radius: 18px;
-            box-shadow: 8px 8px 16px #b8bec7, -8px -8px 16px #ffffff;
-            padding: 19px;
-            max-width: 300px;
-            text-align: center;
+            background: var(--bg-secondary);
+            border-radius: var(--card-radius);
+            width: 100%;
+            max-width: 340px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .modal-title {
             font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 13px;
+            font-weight: 600;
+            text-align: center;
         }
         
-        .modal-btn {
-            margin-top: 13px;
-            height: auto;
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .text-input {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: none;
+            border-radius: var(--element-radius);
+            padding: 16px;
+            font-size: 17px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        
+        .text-input:focus {
+            outline: none;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            padding: 20px;
+            background: var(--bg-tertiary);
+        }
+        
+        .button-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            flex: 1;
+        }
+        
+        .auto-save-info {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 20px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: var(--element-radius);
+        }
+        
+        .last-update {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .haptic-feedback {
+            animation: haptic 0.1s ease;
+        }
+        
+        @keyframes haptic {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.98); }
+            100% { transform: scale(1); }
+        }
+        
+        .success-animation {
+            animation: success 0.5s ease;
+        }
+        
+        @keyframes success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .progress-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .completion-badge {
+            position: absolute;
+            right: 20px;
+            top: 16px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-green);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        
+        /* Адаптация для маленьких экранов */
+        @media (max-width: 370px) {
+            .main-container {
+                padding: 0 12px 40px;
+            }
+            
+            .daily-amount-display {
+                font-size: 40px;
+            }
+            
+            .amount-input {
+                font-size: 28px;
+                padding: 14px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="top-section">
-            <div class="header neumorphic">
-                <div class="timer" id="timer">00:00:00</div>
-                <div class="points" id="points">0 $</div>
-            </div>
-            
-            <div class="cigarettes-count" id="cigarettes">🚬 ×0</div>
-        </div>
-        
-        <div class="deposit-container">
-            <div class="circles-pill">
-                <div class="circle-option" data-index="0" data-cost="30" data-prob="1/6">
-                    <div class="circle red selected"></div>
-                </div>
-                <div class="circle-option" data-index="1" data-cost="45" data-prob="1/4">
-                    <div class="circle yellow"></div>
-                </div>
-                <div class="circle-option" data-index="2" data-cost="70" data-prob="1.5/2">
-                    <div class="circle green"></div>
-                </div>
-            </div>
-            
-            <button class="deposit-btn-compact" id="depositBtn">
-                Дэпнуть
-                <div class="deposit-cost" id="depositCost">30 $</div>
-            </button>
-        </div>
-        
-        <div class="buttons-row">
-            <button class="neumorphic-btn debt-btn" id="debtBtn">Влезть в долги</button>
-            <button class="neumorphic-btn shame-btn" id="shameBtn">Опозориться</button>
-        </div>
-        
-        <!-- Новая кнопка Супердэп -->
-        <button class="neumorphic-btn" id="superDepositBtn">
-            Супердэп
-            <div style="font-size: 12px; margin-left: 8px;">700 $</div>
-        </button>
-        
-        <div class="debt-info" id="debtInfo"></div>
+    <!-- Статус бар -->
+    <div class="status-bar">
+        <div class="time" id="time">9:41</div>
+        <div>📶</div>
     </div>
     
-    <!-- Модальные окна -->
-    <div class="modal" id="resultModal">
-        <div class="modal-content neumorphic">
-            <div class="modal-title" id="resultTitle">Результат</div>
-            <div id="resultMessage"></div>
-            <button class="neumorphic-btn modal-btn" id="closeResultModal">OK</button>
+    <!-- Динамический остров -->
+    <div class="dynamic-island">
+        <div class="island-indicator"></div>
+    </div>
+    
+    <!-- Основной контейнер -->
+    <div class="main-container">
+        <!-- Ежедневная сумма -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Ежедневная сумма</div>
+            </div>
+            <div class="card-content">
+                <div class="daily-amount-display" id="dailyAmountDisplay">0 ₽</div>
+                <input type="number" class="amount-input" id="dailyAmountInput" placeholder="1000" min="1" inputmode="numeric">
+                <button class="button" id="setDailyAmountBtn">Сохранить</button>
+                
+                <div class="auto-save-info">
+                    ⚡ Сумма начисляется автоматически каждый день
+                </div>
+                
+                <div class="last-update" id="lastUpdate">
+                    Последнее начисление: сегодня
+                </div>
+            </div>
+        </div>
+        
+        <!-- Цели -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Цели</div>
+                <button class="button" id="addGoalBtn" style="width: auto; padding: 10px 20px; font-size: 15px;">+</button>
+            </div>
+            <div class="card-content" id="goalsList">
+                <!-- Цели будут добавлены динамически -->
+            </div>
         </div>
     </div>
     
-    <div class="modal" id="gameOverModal">
-        <div class="modal-content neumorphic">
-            <div class="modal-title">Игра окончена</div>
-            <div>Вы опозорились! 😔</div>
-            <button class="neumorphic-btn modal-btn" id="restartGame">Начать заново</button>
+    <!-- Модальное окно добавления цели -->
+    <div class="modal" id="addGoalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Новая цель</div>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="text-input" id="goalNameInput" placeholder="Название цели" maxlength="30">
+                <input type="number" class="text-input" id="goalPriceInput" placeholder="Стоимость (₽)" min="1" inputmode="numeric">
+            </div>
+            <div class="modal-actions">
+                <button class="button button-outline" id="cancelGoalBtn">Отмена</button>
+                <button class="button" id="saveGoalBtn">Сохранить</button>
+            </div>
         </div>
     </div>
-
+    
     <script>
-        // Инициализация переменных
-        let points = 0;
-        let cigarettes = 0;
-        let selectedDeposit = null;
-        let debtActive = false;
-        let debtEndTime = null;
-        let currentOptionIndex = 0;
-        const MAX_POINTS = 800;
-        const POINTS_PER_HOUR = 1; // Денег в час
+        // Инициализация данных - ПУСТЫЕ для первого входа
+        let dailyAmount = 0;
+        let goals = [];
+        let lastUpdateDate = null;
         
-        // Элементы DOM
-        const timerElement = document.getElementById('timer');
-        const pointsElement = document.getElementById('points');
-        const cigarettesElement = document.getElementById('cigarettes');
-        const depositCostElement = document.getElementById('depositCost');
-        const circleOptions = document.querySelectorAll('.circle-option');
-        const depositBtn = document.getElementById('depositBtn');
-        const debtBtn = document.getElementById('debtBtn');
-        const debtInfo = document.getElementById('debtInfo');
-        const shameBtn = document.getElementById('shameBtn');
-        const resultModal = document.getElementById('resultModal');
-        const resultTitle = document.getElementById('resultTitle');
-        const resultMessage = document.getElementById('resultMessage');
-        const closeResultModal = document.getElementById('closeResultModal');
-        const gameOverModal = document.getElementById('gameOverModal');
-        const restartGameBtn = document.getElementById('restartGame');
-        const superDepositBtn = document.getElementById('superDepositBtn');
+        // Загрузка данных из localStorage
+        function loadData() {
+            const savedDailyAmount = localStorage.getItem('ios26_dailyAmount');
+            const savedGoals = localStorage.getItem('ios26_goals');
+            const savedLastUpdate = localStorage.getItem('ios26_lastUpdate');
+            
+            // Только если данные уже существуют - загружаем их
+            if (savedDailyAmount) {
+                dailyAmount = parseInt(savedDailyAmount);
+                document.getElementById('dailyAmountDisplay').textContent = formatNumber(dailyAmount) + ' ₽';
+                document.getElementById('dailyAmountInput').value = dailyAmount;
+            }
+            
+            if (savedGoals) {
+                goals = JSON.parse(savedGoals);
+            }
+            
+            if (savedLastUpdate) {
+                lastUpdateDate = new Date(savedLastUpdate);
+                updateLastUpdateDisplay();
+            } else {
+                lastUpdateDate = new Date();
+                saveLastUpdate();
+            }
+            
+            renderGoals();
+            
+            // Проверяем начисления только если есть цели и сумма
+            if (goals.length > 0 && dailyAmount > 0) {
+                checkAndApplyDailyAmount();
+            }
+        }
         
-        // Сохранение и загрузка данных
-        function saveGameData() {
-            try {
-                const gameData = {
-                    startTime: localStorage.getItem('gameStartTime'),
-                    points: points,
-                    cigarettes: cigarettes,
-                    debtActive: debtActive,
-                    debtEndTime: debtEndTime,
-                    currentOptionIndex: currentOptionIndex,
-                    lastPointsUpdate: localStorage.getItem('lastPointsUpdate') || new Date().toISOString()
+        // Сохранение данных
+        function saveData() {
+            localStorage.setItem('ios26_dailyAmount', dailyAmount);
+            localStorage.setItem('ios26_goals', JSON.stringify(goals));
+        }
+        
+        // Сохранение даты последнего обновления
+        function saveLastUpdate() {
+            localStorage.setItem('ios26_lastUpdate', lastUpdateDate.toISOString());
+            updateLastUpdateDisplay();
+        }
+        
+        // Обновление отображения последнего начисления
+        function updateLastUpdateDisplay() {
+            if (!lastUpdateDate) return;
+            
+            const now = new Date();
+            const diffTime = Math.abs(now - lastUpdateDate);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            let text = "Последнее начисление: ";
+            
+            if (diffDays === 0) {
+                text += "сегодня";
+            } else if (diffDays === 1) {
+                text += "вчера";
+            } else if (diffDays === 2) {
+                text += "позавчера";
+            } else if (diffDays < 7) {
+                text += `${diffDays} дня назад`;
+            } else {
+                text += lastUpdateDate.toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long'
+                });
+            }
+            
+            document.getElementById('lastUpdate').textContent = text;
+        }
+        
+        // Проверка и применение ежедневного начисления
+        function checkAndApplyDailyAmount() {
+            if (dailyAmount <= 0 || goals.length === 0) return;
+            
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const lastUpdateDay = new Date(lastUpdateDate.getFullYear(), lastUpdateDate.getMonth(), lastUpdateDate.getDate());
+            
+            const timeDiff = today - lastUpdateDay;
+            const daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            
+            if (daysPassed > 0) {
+                // Применяем начисление за все прошедшие дни
+                let totalAdded = 0;
+                for (let day = 0; day < daysPassed; day++) {
+                    goals.forEach(goal => {
+                        if (goal.saved < goal.price) {
+                            const addedAmount = Math.min(dailyAmount, goal.price - goal.saved);
+                            goal.saved += addedAmount;
+                            totalAdded += addedAmount;
+                        }
+                    });
+                }
+                
+                lastUpdateDate = new Date();
+                saveData();
+                saveLastUpdate();
+                renderGoals();
+                
+                // Показываем уведомление только если что-то добавилось
+                if (totalAdded > 0) {
+                    showIslandNotification(`+${formatNumber(totalAdded)} ₽`);
+                }
+            }
+        }
+        
+        // Форматирование чисел
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        }
+        
+        // Отрисовка целей
+        function renderGoals() {
+            const goalsList = document.getElementById('goalsList');
+            
+            if (goals.length === 0) {
+                goalsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎯</div>
+                        <div class="empty-text">Нет целей</div>
+                        <div class="empty-text" style="font-size: 15px;">Нажмите + чтобы добавить первую цель</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            goalsList.innerHTML = '';
+            
+            goals.forEach((goal, index) => {
+                const progress = Math.min((goal.saved / goal.price) * 100, 100);
+                const daysLeft = Math.ceil((goal.price - goal.saved) / dailyAmount);
+                const isCompleted = goal.saved >= goal.price;
+                
+                const goalElement = document.createElement('div');
+                goalElement.className = 'item';
+                goalElement.innerHTML = `
+                    ${isCompleted ? 
+                        '<div class="completion-badge">✓</div>' : 
+                        `<button class="delete-btn" data-id="${goal.id}">×</button>`
+                    }
+                    <div class="item-header">
+                        <div class="item-name">${goal.name}</div>
+                        <div class="item-price" style="color: ${isCompleted ? 'var(--accent-green)' : 'var(--accent-green)'}">
+                            ${formatNumber(goal.price)} ₽
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar ${isCompleted ? 'progress-pulse' : ''}" style="width: ${progress}%; background: ${isCompleted ? 'var(--accent-green)' : 'var(--accent-blue)'}"></div>
+                    </div>
+                    <div class="progress-info">
+                        <span>${formatNumber(goal.saved)} ₽</span>
+                        <span>${Math.round(progress)}%</span>
+                    </div>
+                    ${!isCompleted ? `<div class="days-left">${daysLeft} дн.</div>` : ''}
+                `;
+                
+                goalsList.appendChild(goalElement);
+            });
+            
+            // Добавляем обработчики для кнопок удаления
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const goalId = parseInt(this.getAttribute('data-id'));
+                    deleteGoal(goalId);
+                });
+            });
+        }
+        
+        // Удаление цели
+        function deleteGoal(id) {
+            hapticFeedback();
+            
+            const goalIndex = goals.findIndex(goal => goal.id === id);
+            if (goalIndex !== -1) {
+                goals.splice(goalIndex, 1);
+                saveData();
+                renderGoals();
+                
+                showIslandNotification('Цель удалена');
+            }
+        }
+        
+        // Показать уведомление в динамическом острове
+        function showIslandNotification(message) {
+            const island = document.querySelector('.dynamic-island');
+            island.style.background = 'var(--accent-blue)';
+            island.innerHTML = `<div style="color: white; font-weight: 600; font-size: 14px;">${message}</div>`;
+            
+            setTimeout(() => {
+                island.style.background = 'var(--bg-primary)';
+                island.innerHTML = '<div class="island-indicator"></div>';
+            }, 2000);
+        }
+        
+        // Установка ежедневной суммы
+        document.getElementById('setDailyAmountBtn').addEventListener('click', function() {
+            const amount = parseInt(document.getElementById('dailyAmountInput').value);
+            
+            if (amount && amount > 0) {
+                dailyAmount = amount;
+                document.getElementById('dailyAmountDisplay').textContent = formatNumber(dailyAmount) + ' ₽';
+                document.getElementById('dailyAmountDisplay').classList.add('success-animation');
+                
+                setTimeout(() => {
+                    document.getElementById('dailyAmountDisplay').classList.remove('success-animation');
+                }, 500);
+                
+                saveData();
+                renderGoals();
+                hapticFeedback();
+                
+                showIslandNotification(`Сумма: ${formatNumber(dailyAmount)} ₽/день`);
+                
+                // После установки суммы запускаем проверку начислений
+                if (goals.length > 0) {
+                    checkAndApplyDailyAmount();
+                }
+            }
+        });
+        
+        // Открытие модального окна добавления цели
+        document.getElementById('addGoalBtn').addEventListener('click', function() {
+            if (dailyAmount === 0) {
+                showIslandNotification('Сначала установите ежедневную сумму');
+                document.getElementById('dailyAmountInput').focus();
+                return;
+            }
+            
+            document.getElementById('addGoalModal').style.display = 'flex';
+            document.getElementById('goalNameInput').focus();
+            hapticFeedback();
+        });
+        
+        // Закрытие модального окна
+        document.getElementById('cancelGoalBtn').addEventListener('click', function() {
+            document.getElementById('addGoalModal').style.display = 'none';
+            document.getElementById('goalNameInput').value = '';
+            document.getElementById('goalPriceInput').value = '';
+            hapticFeedback();
+        });
+        
+        // Сохранение новой цели
+        document.getElementById('saveGoalBtn').addEventListener('click', function() {
+            const name = document.getElementById('goalNameInput').value.trim();
+            const price = parseInt(document.getElementById('goalPriceInput').value);
+            
+            if (name && price && price > 0) {
+                const newGoal = {
+                    id: Date.now(),
+                    name: name,
+                    price: price,
+                    saved: 0
                 };
-                localStorage.setItem('gameData', JSON.stringify(gameData));
-            } catch (error) {
-                console.error('Ошибка сохранения данных:', error);
-            }
-        }
-        
-        function loadGameData() {
-            const savedData = localStorage.getItem('gameData');
-            if (savedData) {
-                const gameData = JSON.parse(savedData);
-                points = gameData.points || 0;
-                cigarettes = gameData.cigarettes || 0;
-                debtActive = gameData.debtActive || false;
-                debtEndTime = gameData.debtEndTime || null;
-                currentOptionIndex = gameData.currentOptionIndex || 0;
                 
-                // Восстанавливаем время последнего обновления денег
-                if (gameData.lastPointsUpdate) {
-                    localStorage.setItem('lastPointsUpdate', gameData.lastPointsUpdate);
-                }
+                goals.push(newGoal);
                 
-                updatePoints();
-                updateCigarettes();
-                updateDebtInfo();
-                updateSelectedOption();
-            }
-            
-            // Устанавливаем время начала игры, если его нет
-            if (!localStorage.getItem('gameStartTime')) {
-                const now = new Date().toISOString();
-                localStorage.setItem('gameStartTime', now);
-                localStorage.setItem('lastPointsUpdate', now);
-            }
-        }
-        
-        // Обновление таймера на основе реального времени
-        function updateTimer() {
-            const startTime = new Date(localStorage.getItem('gameStartTime'));
-            const currentTime = new Date();
-            const elapsedTime = currentTime - startTime;
-            
-            const hours = Math.floor(elapsedTime / (1000 * 60 * 60));
-            const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
-            
-            timerElement.textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-        
-        // Обновление денег на основе времени
-        function updateMoneyFromTime() {
-            if (debtActive) return; // Не начисляем деньги при активном долге
-            
-            const lastUpdate = new Date(localStorage.getItem('lastPointsUpdate') || localStorage.getItem('gameStartTime'));
-            const currentTime = new Date();
-            const elapsedHours = (currentTime - lastUpdate) / (1000 * 60 * 60);
-            
-            if (elapsedHours >= 1) {
-                const hoursPassed = Math.floor(elapsedHours);
-                const moneyToAdd = hoursPassed * POINTS_PER_HOUR;
+                document.getElementById('addGoalModal').style.display = 'none';
+                document.getElementById('goalNameInput').value = '';
+                document.getElementById('goalPriceInput').value = '';
                 
-                if (moneyToAdd > 0) {
-                    points = Math.min(points + moneyToAdd, MAX_POINTS);
-                    localStorage.setItem('lastPointsUpdate', currentTime.toISOString());
-                    updatePoints();
-                    saveGameData();
+                saveData();
+                renderGoals();
+                hapticFeedback();
+                
+                showIslandNotification(`Цель добавлена`);
+                
+                // Проверяем начисления для новой цели
+                if (dailyAmount > 0) {
+                    checkAndApplyDailyAmount();
                 }
             }
+        });
+        
+        // Тактильный отклик
+        function hapticFeedback() {
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
+            
+            document.body.classList.add('haptic-feedback');
+            setTimeout(() => {
+                document.body.classList.remove('haptic-feedback');
+            }, 100);
         }
         
-        // Обновление отображения очков
-        function updatePoints() {
-            pointsElement.textContent = `${points} $`;
+        // Обновление времени
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.getHours().toString().padStart(2, '0') + ':' + 
+                              now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('time').textContent = timeString;
         }
-        
-        // Обновление отображения сигареток
-        function updateCigarettes() {
-            cigarettesElement.textContent = `🚬 ×${cigarettes}`;
-        }
-        
-        // Обновление выбранной опции
-        function updateSelectedOption() {
-            circleOptions.forEach(option => {
-                const circle = option.querySelector('.circle');
-                circle.classList.remove('selected');
-            });
-            
-            circleOptions[currentOptionIndex].querySelector('.circle').classList.add('selected');
-            
-            selectedDeposit = {
-                cost: parseInt(circleOptions[currentOptionIndex].dataset.cost),
-                probability: circleOptions[currentOptionIndex].dataset.prob
-            };
-            
-            depositCostElement.textContent = `${selectedDeposit.cost} $`;
-        }
-        
-        // Выбор опции дэпа
-        circleOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                currentOptionIndex = parseInt(option.dataset.index);
-                updateSelectedOption();
-                saveGameData();
-            });
-        });
-        
-        // Кнопка дэпа
-        depositBtn.addEventListener('click', () => {
-            if (!selectedDeposit) {
-                showResult('Ошибка', 'Сначала выберите тип дэпа');
-                return;
-            }
-            
-            if (points < selectedDeposit.cost) {
-                showResult('Недостаточно $', `Для этого дэпа нужно ${selectedDeposit.cost} $`);
-                return;
-            }
-            
-            points -= selectedDeposit.cost;
-            updatePoints();
-            
-            // Сохраняем данные сразу после списания денег
-            saveGameData();
-            
-            // Расчет вероятности выигрыша
-            let winProbability;
-            if (selectedDeposit.probability === '1/6') {
-                winProbability = 1/6;
-            } else if (selectedDeposit.probability === '1/4') {
-                winProbability = 1/4;
-            } else if (selectedDeposit.probability === '1.5/2') {
-                winProbability = 1.5/2;
-            }
-            
-            const win = Math.random() < winProbability;
-            
-            if (win) {
-                cigarettes++;
-                updateCigarettes();
-                showResult('Победа!', 'Вы выиграли 🚬!');
-            } else {
-                showResult('Проигрыш', 'Попробуйте еще раз');
-            }
-            
-            saveGameData();
-        });
-        
-        // Кнопка Супердэпа
-        superDepositBtn.addEventListener('click', () => {
-            const superDepositCost = 700;
-            
-            if (points < superDepositCost) {
-                showResult('Недостаточно $', `Для супердэпа нужно ${superDepositCost} $`);
-                return;
-            }
-            
-            points -= superDepositCost;
-            updatePoints();
-            
-            // Сохраняем данные сразу после списания денег
-            saveGameData();
-            
-            // Равная вероятность выпадения 3, 10 или 15 сигарет
-            const randomValue = Math.random();
-            let wonCigarettes;
-            
-            if (randomValue < 0.333) {
-                wonCigarettes = 3;
-            } else if (randomValue < 0.666) {
-                wonCigarettes = 10;
-            } else {
-                wonCigarettes = 15;
-            }
-            
-            cigarettes += wonCigarettes;
-            updateCigarettes();
-            showResult('Супердэп!', `Вы выиграли ${wonCigarettes} 🚬!`);
-            
-            saveGameData();
-        });
-        
-        // Кнопка долгов
-        debtBtn.addEventListener('click', () => {
-            if (debtActive) {
-                showResult('Долг активен', 'Вы уже в долгах');
-                return;
-            }
-            
-            debtActive = true;
-            points += 180;
-            
-            // Проверяем, чтобы не превысить максимальное количество
-            if (points > MAX_POINTS) {
-                points = MAX_POINTS;
-            }
-            
-            updatePoints();
-            
-            // Установка времени окончания долга (15 суток)
-            const currentTime = new Date();
-            debtEndTime = new Date(currentTime.getTime() + (15 * 24 * 60 * 60 * 1000));
-            updateDebtInfo();
-            
-            showResult('Долг получен', 'Вы получили 180 $. Начисление $ приостановлено на 15 суток.');
-            saveGameData();
-        });
-        
-        // Обновление информации о долге
-        function updateDebtInfo() {
-            if (debtActive && debtEndTime) {
-                const now = new Date();
-                const debtEnd = new Date(debtEndTime);
-                
-                if (now >= debtEnd) {
-                    debtActive = false;
-                    debtEndTime = null;
-                    debtInfo.textContent = '';
-                    saveGameData();
-                } else {
-                    const remainingTime = debtEnd - now;
-                    const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    
-                    debtInfo.textContent = `Долг активен. Осталось: ${days}д ${hours}ч`;
-                }
-            } else {
-                debtInfo.textContent = '';
-            }
-        }
-        
-        // Кнопка опозориться
-        shameBtn.addEventListener('click', () => {
-            gameOverModal.style.display = 'flex';
-        });
-        
-        // Использование сигаретки
-        cigarettesElement.addEventListener('click', () => {
-            if (cigarettes > 0) {
-                cigarettes--;
-                updateCigarettes();
-                showResult('🚬 использована', 'Вы использовали одну 🚬');
-                saveGameData();
-            } else {
-                showResult('Нет 🚬', 'У вас нет 🚬 для использования');
-            }
-        });
-        
-        // Показать результат
-        function showResult(title, message) {
-            resultTitle.textContent = title;
-            resultMessage.textContent = message;
-            resultModal.style.display = 'flex';
-        }
-        
-        // Закрыть модальное окно результата
-        closeResultModal.addEventListener('click', () => {
-            resultModal.style.display = 'none';
-        });
-        
-        // Перезапуск игры
-        restartGameBtn.addEventListener('click', () => {
-            // Сброс всех данных
-            localStorage.removeItem('gameStartTime');
-            localStorage.removeItem('gameData');
-            localStorage.removeItem('lastPointsUpdate');
-            
-            points = 0;
-            cigarettes = 0;
-            selectedDeposit = null;
-            debtActive = false;
-            debtEndTime = null;
-            currentOptionIndex = 0;
-            
-            // Установка нового времени начала
-            const now = new Date().toISOString();
-            localStorage.setItem('gameStartTime', now);
-            localStorage.setItem('lastPointsUpdate', now);
-            
-            updateTimer();
-            updatePoints();
-            updateCigarettes();
-            updateDebtInfo();
-            updateSelectedOption();
-            
-            gameOverModal.style.display = 'none';
-        });
         
         // Инициализация
-        window.addEventListener('load', () => {
-            loadGameData();
+        window.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            updateTime();
             
-            // Выбираем первую опцию по умолчанию
-            updateSelectedOption();
+            // Обновление времени каждую минуту
+            setInterval(updateTime, 60000);
             
-            updateTimer();
-            updatePoints();
-            updateCigarettes();
-            updateMoneyFromTime(); // Обновляем деньги при загрузке
+            // Проверка ежедневного начисления каждые 5 минут
+            setInterval(() => {
+                if (goals.length > 0 && dailyAmount > 0) {
+                    checkAndApplyDailyAmount();
+                }
+            }, 300000);
             
-            // Обновление таймера каждую секунду
-            setInterval(updateTimer, 1000);
-            // Обновление денег каждую минуту
-            setInterval(updateMoneyFromTime, 60000);
-            // Обновление информации о долге каждую минуту
-            setInterval(updateDebtInfo, 60000);
+            // Закрытие модального окна по клику на фон
+            document.getElementById('addGoalModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.style.display = 'none';
+                    document.getElementById('goalNameInput').value = '';
+                    document.getElementById('goalPriceInput').value = '';
+                }
+            });
+            
+            // Автофокус на инпуте суммы при загрузке
+            if (dailyAmount === 0) {
+                setTimeout(() => {
+                    document.getElementById('dailyAmountInput').focus();
+                }, 300);
+            }
+            
+            // УБРАНЫ ДЕМО-ДАННЫЕ - при первом входе всё пусто
         });
         
-        // Сохранение данных при закрытии страницы
-        window.addEventListener('beforeunload', saveGameData);
+        // iOS-style инпуты
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.background = 'var(--bg-tertiary)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.background = 'var(--bg-tertiary)';
+            });
+        });
+        
+        // Автоматическое сохранение при изменении суммы
+        document.getElementById('dailyAmountInput').addEventListener('change', function() {
+            const amount = parseInt(this.value);
+            if (amount && amount > 0 && amount !== dailyAmount) {
+                document.getElementById('setDailyAmountBtn').click();
+            }
+        });
+        
+        // Enter для сохранения
+        document.getElementById('goalNameInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('saveGoalBtn').click();
+            }
+        });
+        
+        document.getElementById('goalPriceInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('saveGoalBtn').click();
+            }
+        });
+        
+        // Enter для установки суммы
+        document.getElementById('dailyAmountInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('setDailyAmountBtn').click();
+            }
+        });
     </script>
 </body>
 </html>
