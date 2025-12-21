@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>💰</title>
+    <title>💰 Копилка</title>
     <style>
         :root {
             --bg-primary: #000000;
@@ -31,10 +31,10 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            max-width: 430px;
             margin: 0 auto;
             min-height: 100vh;
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            padding-bottom: 30px;
         }
         
         .status-bar {
@@ -46,34 +46,34 @@
             font-size: 15px;
             color: var(--text-primary);
             background: var(--bg-primary);
+            padding-top: env(safe-area-inset-top);
         }
         
         .time {
             font-weight: 600;
         }
         
-        .dynamic-island {
-            width: 120px;
-            height: 36px;
-            background: var(--bg-primary);
-            border-radius: 40px;
-            margin: 8px auto 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            border: 1px solid var(--border-color);
-        }
-        
-        .island-indicator {
-            width: 60px;
-            height: 4px;
-            background: var(--bg-tertiary);
-            border-radius: 2px;
-        }
-        
         .main-container {
-            padding: 0 20px 40px;
+            padding: 0 16px 20px;
+        }
+        
+        .header {
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        
+        .app-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--accent-blue);
+        }
+        
+        .app-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
         }
         
         .card {
@@ -147,6 +147,11 @@
             margin-top: 12px;
         }
         
+        .button-danger {
+            background: var(--accent-red);
+            margin-top: 8px;
+        }
+        
         .item {
             padding: 16px 20px;
             border-bottom: 1px solid var(--border-color);
@@ -202,6 +207,13 @@
             color: var(--text-secondary);
         }
         
+        .days-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
         .days-left {
             background: var(--accent-red);
             color: white;
@@ -209,7 +221,15 @@
             border-radius: 20px;
             font-size: 13px;
             font-weight: 600;
-            align-self: flex-start;
+        }
+        
+        .days-passed {
+            background: var(--accent-purple);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
         }
         
         .delete-btn {
@@ -333,11 +353,48 @@
             border-radius: var(--element-radius);
         }
         
-        .last-update {
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .stat-item {
+            flex: 1;
+            min-width: 120px;
+            background: var(--bg-tertiary);
+            border-radius: var(--element-radius);
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
             font-size: 12px;
             color: var(--text-secondary);
-            text-align: center;
-            margin-top: 10px;
+        }
+        
+        .completion-badge {
+            position: absolute;
+            right: 20px;
+            top: 16px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-green);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
         }
         
         .haptic-feedback {
@@ -370,25 +427,10 @@
             100% { opacity: 1; }
         }
         
-        .completion-badge {
-            position: absolute;
-            right: 20px;
-            top: 16px;
-            width: 30px;
-            height: 30px;
-            background: var(--accent-green);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 16px;
-        }
-        
         /* Адаптация для маленьких экранов */
         @media (max-width: 370px) {
             .main-container {
-                padding: 0 12px 40px;
+                padding: 0 12px 20px;
             }
             
             .daily-amount-display {
@@ -399,23 +441,58 @@
                 font-size: 28px;
                 padding: 14px;
             }
+            
+            .stat-item {
+                min-width: 100px;
+            }
+        }
+        
+        /* Адаптация для больших экранов */
+        @media (min-width: 430px) {
+            body {
+                max-width: 430px;
+                margin: 0 auto;
+                border-left: 1px solid var(--border-color);
+                border-right: 1px solid var(--border-color);
+            }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--accent-blue);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1001;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .notification.show {
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
 <body>
-    <!-- Статус бар -->
+    <!-- Статус бар (только время) -->
     <div class="status-bar">
-        <div class="time" id="time">9:41</div>
-        <div>📶</div>
-    </div>
-    
-    <!-- Динамический остров -->
-    <div class="dynamic-island">
-        <div class="island-indicator"></div>
+        <div class="time" id="time">00:00</div>
+        <div style="width: 60px;"></div> <!-- Пустой элемент для балансировки -->
     </div>
     
     <!-- Основной контейнер -->
     <div class="main-container">
+        <!-- Заголовок -->
+        <div class="header">
+            <div class="app-title">💰 Копилка</div>
+            <div class="app-subtitle">Копите на цели каждый день</div>
+        </div>
+        
         <!-- Ежедневная сумма -->
         <div class="card">
             <div class="card-header">
@@ -426,12 +503,29 @@
                 <input type="number" class="amount-input" id="dailyAmountInput" placeholder="1000" min="1" inputmode="numeric">
                 <button class="button" id="setDailyAmountBtn">Сохранить</button>
                 
+                <!-- Статистика -->
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <div class="stat-value" id="daysPassedDisplay">0</div>
+                        <div class="stat-label">Дней прошло</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalSavedDisplay">0 ₽</div>
+                        <div class="stat-label">Всего накоплено</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="activeGoalsDisplay">0</div>
+                        <div class="stat-label">Активных целей</div>
+                    </div>
+                </div>
+                
                 <div class="auto-save-info">
                     ⚡ Сумма начисляется автоматически каждый день
                 </div>
                 
-                <div class="last-update" id="lastUpdate">
-                    Последнее начисление: сегодня
+                <!-- Кнопка сброса данных -->
+                <div style="margin-top: 16px;">
+                    <button class="button button-danger" id="resetDataBtn">Сбросить все данные</button>
                 </div>
             </div>
         </div>
@@ -440,7 +534,7 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-title">Цели</div>
-                <button class="button" id="addGoalBtn" style="width: auto; padding: 10px 20px; font-size: 15px;">+</button>
+                <button class="button" id="addGoalBtn" style="width: auto; padding: 10px 20px; font-size: 15px;">+ Добавить</button>
             </div>
             <div class="card-content" id="goalsList">
                 <!-- Цели будут добавлены динамически -->
@@ -465,19 +559,43 @@
         </div>
     </div>
     
+    <!-- Модальное окно подтверждения сброса -->
+    <div class="modal" id="resetConfirmModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Сбросить все данные?</div>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center; color: var(--text-secondary); margin-bottom: 16px;">
+                    Это действие удалит все цели, сбросит ежедневную сумму и историю начислений.
+                </p>
+                <p style="text-align: center; color: var(--accent-red); font-weight: 600;">
+                    Это действие нельзя отменить!
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button class="button button-outline" id="cancelResetBtn">Отмена</button>
+                <button class="button button-danger" id="confirmResetBtn">Сбросить всё</button>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // Инициализация данных - ПУСТЫЕ для первого входа
+        // Инициализация данных
         let dailyAmount = 0;
         let goals = [];
         let lastUpdateDate = null;
+        let daysPassed = 0;
+        let startDate = null;
         
         // Загрузка данных из localStorage
         function loadData() {
-            const savedDailyAmount = localStorage.getItem('ios26_dailyAmount');
-            const savedGoals = localStorage.getItem('ios26_goals');
-            const savedLastUpdate = localStorage.getItem('ios26_lastUpdate');
+            const savedDailyAmount = localStorage.getItem('savings_dailyAmount');
+            const savedGoals = localStorage.getItem('savings_goals');
+            const savedLastUpdate = localStorage.getItem('savings_lastUpdate');
+            const savedStartDate = localStorage.getItem('savings_startDate');
+            const savedDaysPassed = localStorage.getItem('savings_daysPassed');
             
-            // Только если данные уже существуют - загружаем их
             if (savedDailyAmount) {
                 dailyAmount = parseInt(savedDailyAmount);
                 document.getElementById('dailyAmountDisplay').textContent = formatNumber(dailyAmount) + ' ₽';
@@ -490,12 +608,24 @@
             
             if (savedLastUpdate) {
                 lastUpdateDate = new Date(savedLastUpdate);
-                updateLastUpdateDisplay();
             } else {
                 lastUpdateDate = new Date();
                 saveLastUpdate();
             }
             
+            if (savedStartDate) {
+                startDate = new Date(savedStartDate);
+            } else {
+                startDate = new Date();
+                saveStartDate();
+            }
+            
+            if (savedDaysPassed) {
+                daysPassed = parseInt(savedDaysPassed);
+            }
+            
+            updateDaysPassed();
+            updateStats();
             renderGoals();
             
             // Проверяем начисления только если есть цели и сумма
@@ -506,42 +636,103 @@
         
         // Сохранение данных
         function saveData() {
-            localStorage.setItem('ios26_dailyAmount', dailyAmount);
-            localStorage.setItem('ios26_goals', JSON.stringify(goals));
+            localStorage.setItem('savings_dailyAmount', dailyAmount);
+            localStorage.setItem('savings_goals', JSON.stringify(goals));
         }
         
         // Сохранение даты последнего обновления
         function saveLastUpdate() {
-            localStorage.setItem('ios26_lastUpdate', lastUpdateDate.toISOString());
-            updateLastUpdateDisplay();
+            localStorage.setItem('savings_lastUpdate', lastUpdateDate.toISOString());
         }
         
-        // Обновление отображения последнего начисления
-        function updateLastUpdateDisplay() {
-            if (!lastUpdateDate) return;
+        // Сохранение даты начала
+        function saveStartDate() {
+            localStorage.setItem('savings_startDate', startDate.toISOString());
+        }
+        
+        // Сохранение дней прошедших
+        function saveDaysPassed() {
+            localStorage.setItem('savings_daysPassed', daysPassed);
+        }
+        
+        // Сброс всех данных
+        function resetAllData() {
+            dailyAmount = 0;
+            goals = [];
+            lastUpdateDate = new Date();
+            startDate = new Date();
+            daysPassed = 0;
             
-            const now = new Date();
-            const diffTime = Math.abs(now - lastUpdateDate);
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            // Очищаем localStorage
+            localStorage.removeItem('savings_dailyAmount');
+            localStorage.removeItem('savings_goals');
+            localStorage.removeItem('savings_lastUpdate');
+            localStorage.removeItem('savings_startDate');
+            localStorage.removeItem('savings_daysPassed');
             
-            let text = "Последнее начисление: ";
+            // Обновляем интерфейс
+            document.getElementById('dailyAmountDisplay').textContent = '0 ₽';
+            document.getElementById('dailyAmountInput').value = '';
             
-            if (diffDays === 0) {
-                text += "сегодня";
-            } else if (diffDays === 1) {
-                text += "вчера";
-            } else if (diffDays === 2) {
-                text += "позавчера";
-            } else if (diffDays < 7) {
-                text += `${diffDays} дня назад`;
-            } else {
-                text += lastUpdateDate.toLocaleDateString('ru-RU', {
-                    day: 'numeric',
-                    month: 'long'
-                });
+            // Сохраняем начальные данные
+            saveStartDate();
+            saveDaysPassed();
+            
+            // Сбрасываем анимацию
+            document.getElementById('dailyAmountDisplay').classList.add('success-animation');
+            setTimeout(() => {
+                document.getElementById('dailyAmountDisplay').classList.remove('success-animation');
+            }, 500);
+            
+            updateDaysPassed();
+            updateStats();
+            renderGoals();
+            hapticFeedback();
+            
+            // Фокус на инпут суммы
+            setTimeout(() => {
+                document.getElementById('dailyAmountInput').focus();
+            }, 300);
+            
+            showNotification('Данные сброшены');
+        }
+        
+        // Обновление количества прошедших дней
+        function updateDaysPassed() {
+            if (!startDate) {
+                daysPassed = 0;
+                return;
             }
             
-            document.getElementById('lastUpdate').textContent = text;
+            const now = new Date();
+            const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            
+            const timeDiff = today - start;
+            daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            
+            // Сохраняем в localStorage
+            saveDaysPassed();
+            
+            // Обновляем отображение
+            document.getElementById('daysPassedDisplay').textContent = daysPassed;
+        }
+        
+        // Обновление статистики
+        function updateStats() {
+            // Общее количество накопленных средств
+            let totalSaved = 0;
+            let activeGoals = 0;
+            
+            goals.forEach(goal => {
+                totalSaved += goal.saved;
+                if (goal.saved < goal.price) {
+                    activeGoals++;
+                }
+            });
+            
+            document.getElementById('totalSavedDisplay').textContent = formatNumber(totalSaved) + ' ₽';
+            document.getElementById('activeGoalsDisplay').textContent = activeGoals;
         }
         
         // Проверка и применение ежедневного начисления
@@ -553,12 +744,12 @@
             const lastUpdateDay = new Date(lastUpdateDate.getFullYear(), lastUpdateDate.getMonth(), lastUpdateDate.getDate());
             
             const timeDiff = today - lastUpdateDay;
-            const daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const daysToAdd = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
             
-            if (daysPassed > 0) {
+            if (daysToAdd > 0) {
                 // Применяем начисление за все прошедшие дни
                 let totalAdded = 0;
-                for (let day = 0; day < daysPassed; day++) {
+                for (let day = 0; day < daysToAdd; day++) {
                     goals.forEach(goal => {
                         if (goal.saved < goal.price) {
                             const addedAmount = Math.min(dailyAmount, goal.price - goal.saved);
@@ -571,11 +762,12 @@
                 lastUpdateDate = new Date();
                 saveData();
                 saveLastUpdate();
+                updateStats();
                 renderGoals();
                 
                 // Показываем уведомление только если что-то добавилось
                 if (totalAdded > 0) {
-                    showIslandNotification(`+${formatNumber(totalAdded)} ₽`);
+                    showNotification(`+${formatNumber(totalAdded)} ₽ за ${daysToAdd} дн.`);
                 }
             }
         }
@@ -594,7 +786,7 @@
                     <div class="empty-state">
                         <div class="empty-icon">🎯</div>
                         <div class="empty-text">Нет целей</div>
-                        <div class="empty-text" style="font-size: 15px;">Нажмите + чтобы добавить первую цель</div>
+                        <div class="empty-text" style="font-size: 15px;">Нажмите "+ Добавить" чтобы создать первую цель</div>
                     </div>
                 `;
                 return;
@@ -604,8 +796,9 @@
             
             goals.forEach((goal, index) => {
                 const progress = Math.min((goal.saved / goal.price) * 100, 100);
-                const daysLeft = Math.ceil((goal.price - goal.saved) / dailyAmount);
+                const daysLeft = dailyAmount > 0 ? Math.ceil((goal.price - goal.saved) / dailyAmount) : 0;
                 const isCompleted = goal.saved >= goal.price;
+                const daysForGoal = dailyAmount > 0 ? Math.ceil(goal.price / dailyAmount) : 0;
                 
                 const goalElement = document.createElement('div');
                 goalElement.className = 'item';
@@ -627,7 +820,10 @@
                         <span>${formatNumber(goal.saved)} ₽</span>
                         <span>${Math.round(progress)}%</span>
                     </div>
-                    ${!isCompleted ? `<div class="days-left">${daysLeft} дн.</div>` : ''}
+                    <div class="days-info">
+                        ${!isCompleted ? `<div class="days-left">Осталось: ${daysLeft} дн.</div>` : ''}
+                        <div class="days-passed">Всего: ${daysForGoal} дн.</div>
+                    </div>
                 `;
                 
                 goalsList.appendChild(goalElement);
@@ -651,21 +847,29 @@
             if (goalIndex !== -1) {
                 goals.splice(goalIndex, 1);
                 saveData();
+                updateStats();
                 renderGoals();
                 
-                showIslandNotification('Цель удалена');
+                showNotification('Цель удалена');
             }
         }
         
-        // Показать уведомление в динамическом острове
-        function showIslandNotification(message) {
-            const island = document.querySelector('.dynamic-island');
-            island.style.background = 'var(--accent-blue)';
-            island.innerHTML = `<div style="color: white; font-weight: 600; font-size: 14px;">${message}</div>`;
+        // Показать уведомление
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
             
             setTimeout(() => {
-                island.style.background = 'var(--bg-primary)';
-                island.innerHTML = '<div class="island-indicator"></div>';
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
             }, 2000);
         }
         
@@ -683,10 +887,11 @@
                 }, 500);
                 
                 saveData();
+                updateStats();
                 renderGoals();
                 hapticFeedback();
                 
-                showIslandNotification(`Сумма: ${formatNumber(dailyAmount)} ₽/день`);
+                showNotification(`Сумма: ${formatNumber(dailyAmount)} ₽/день`);
                 
                 // После установки суммы запускаем проверку начислений
                 if (goals.length > 0) {
@@ -697,12 +902,6 @@
         
         // Открытие модального окна добавления цели
         document.getElementById('addGoalBtn').addEventListener('click', function() {
-            if (dailyAmount === 0) {
-                showIslandNotification('Сначала установите ежедневную сумму');
-                document.getElementById('dailyAmountInput').focus();
-                return;
-            }
-            
             document.getElementById('addGoalModal').style.display = 'flex';
             document.getElementById('goalNameInput').focus();
             hapticFeedback();
@@ -736,16 +935,36 @@
                 document.getElementById('goalPriceInput').value = '';
                 
                 saveData();
+                updateStats();
                 renderGoals();
                 hapticFeedback();
                 
-                showIslandNotification(`Цель добавлена`);
+                showNotification(`Цель "${name}" добавлена`);
                 
                 // Проверяем начисления для новой цели
                 if (dailyAmount > 0) {
                     checkAndApplyDailyAmount();
                 }
             }
+        });
+        
+        // Кнопка сброса данных
+        document.getElementById('resetDataBtn').addEventListener('click', function() {
+            hapticFeedback();
+            document.getElementById('resetConfirmModal').style.display = 'flex';
+        });
+        
+        // Отмена сброса
+        document.getElementById('cancelResetBtn').addEventListener('click', function() {
+            hapticFeedback();
+            document.getElementById('resetConfirmModal').style.display = 'none';
+        });
+        
+        // Подтверждение сброса
+        document.getElementById('confirmResetBtn').addEventListener('click', function() {
+            hapticFeedback();
+            document.getElementById('resetConfirmModal').style.display = 'none';
+            resetAllData();
         });
         
         // Тактильный отклик
@@ -783,13 +1002,19 @@
                 }
             }, 300000);
             
-            // Закрытие модального окна по клику на фон
-            document.getElementById('addGoalModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.style.display = 'none';
-                    document.getElementById('goalNameInput').value = '';
-                    document.getElementById('goalPriceInput').value = '';
-                }
+            // Закрытие модальных окон по клику на фон
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                        
+                        // Очищаем поля только в модалке добавления цели
+                        if (this.id === 'addGoalModal') {
+                            document.getElementById('goalNameInput').value = '';
+                            document.getElementById('goalPriceInput').value = '';
+                        }
+                    }
+                });
             });
             
             // Автофокус на инпуте суммы при загрузке
@@ -798,8 +1023,6 @@
                     document.getElementById('dailyAmountInput').focus();
                 }, 300);
             }
-            
-            // УБРАНЫ ДЕМО-ДАННЫЕ - при первом входе всё пусто
         });
         
         // iOS-style инпуты
@@ -824,7 +1047,7 @@
         // Enter для сохранения
         document.getElementById('goalNameInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                document.getElementById('saveGoalBtn').click();
+                document.getElementById('goalPriceInput').focus();
             }
         });
         
